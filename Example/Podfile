@@ -1,0 +1,12 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+target 'ohmoc', :exclusive => true do
+  pod "ohmoc", :path => "../"
+end
+
+target 'Tests', :exclusive => true do
+  pod "ohmoc", :path => "../"
+
+  pod 'Specta'
+  pod 'Expecta'
+end
