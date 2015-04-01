@@ -22,6 +22,10 @@
 		6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
+		6B67D38F30E8FEA532B51790 /* libPods-ohmoc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9266BC6051C2C32202898C73 /* libPods-ohmoc.a */; };
+		AC9C5AAA2183ACF867159510 /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF124D2D1785CCA7F469E827 /* libPods-Tests.a */; };
+		C928BC941ACDE8FE0003FE89 /* OOCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = C928BC931ACDE8FE0003FE89 /* OOCUser.m */; };
+		C928BC971ACDE9080003FE89 /* OOCPost.m in Sources */ = {isa = PBXBuildFile; fileRef = C928BC961ACDE9080003FE89 /* OOCPost.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,9 +39,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2953F62851390261555EA741 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		2953F62851390261555EA741 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		373B396BBF6D7152E119AC8E /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		3A656FB08E53B17209E799E5 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		5F8588BDB81EB17715B1F8C2 /* ohmoc.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file; name = ohmoc.podspec; path = ../ohmoc.podspec; sourceTree = "<group>"; };
+		3C052AD545FBB8C9D7F0FD91 /* Pods-ohmoc.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ohmoc.release.xcconfig"; path = "Pods/Target Support Files/Pods-ohmoc/Pods-ohmoc.release.xcconfig"; sourceTree = "<group>"; };
+		54B8A86FD695223B2AED2100 /* Pods-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.release.xcconfig"; sourceTree = "<group>"; };
+		5F8588BDB81EB17715B1F8C2 /* ohmoc.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ohmoc.podspec; path = ../ohmoc.podspec; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* ohmoc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ohmoc.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6003F58F195388D20070C39A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -59,6 +66,13 @@
 		6003F5B9195388D20070C39A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6003F5BB195388D20070C39A /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
+		70B55BD5F2FC5A260AB20C38 /* Pods-ohmoc.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ohmoc.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ohmoc/Pods-ohmoc.debug.xcconfig"; sourceTree = "<group>"; };
+		9266BC6051C2C32202898C73 /* libPods-ohmoc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ohmoc.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C928BC921ACDE8FE0003FE89 /* OOCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCUser.h; sourceTree = "<group>"; };
+		C928BC931ACDE8FE0003FE89 /* OOCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCUser.m; sourceTree = "<group>"; };
+		C928BC951ACDE9080003FE89 /* OOCPost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCPost.h; sourceTree = "<group>"; };
+		C928BC961ACDE9080003FE89 /* OOCPost.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCPost.m; sourceTree = "<group>"; };
+		FF124D2D1785CCA7F469E827 /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +83,7 @@
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
+				6B67D38F30E8FEA532B51790 /* libPods-ohmoc.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,12 +94,24 @@
 				6003F5B0195388D20070C39A /* XCTest.framework in Frameworks */,
 				6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */,
+				AC9C5AAA2183ACF867159510 /* libPods-Tests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4B2D8EA083E1223EDA1D907C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				373B396BBF6D7152E119AC8E /* Pods-Tests.debug.xcconfig */,
+				54B8A86FD695223B2AED2100 /* Pods-Tests.release.xcconfig */,
+				70B55BD5F2FC5A260AB20C38 /* Pods-ohmoc.debug.xcconfig */,
+				3C052AD545FBB8C9D7F0FD91 /* Pods-ohmoc.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		6003F581195388D10070C39A = {
 			isa = PBXGroup;
 			children = (
@@ -93,6 +120,7 @@
 				6003F5B5195388D20070C39A /* Tests */,
 				6003F58C195388D20070C39A /* Frameworks */,
 				6003F58B195388D20070C39A /* Products */,
+				4B2D8EA083E1223EDA1D907C /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -112,6 +140,8 @@
 				6003F58F195388D20070C39A /* CoreGraphics.framework */,
 				6003F591195388D20070C39A /* UIKit.framework */,
 				6003F5AF195388D20070C39A /* XCTest.framework */,
+				FF124D2D1785CCA7F469E827 /* libPods-Tests.a */,
+				9266BC6051C2C32202898C73 /* libPods-ohmoc.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -127,6 +157,10 @@
 				6003F5A6195388D20070C39A /* OOCViewController.m */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				6003F594195388D20070C39A /* Supporting Files */,
+				C928BC921ACDE8FE0003FE89 /* OOCUser.h */,
+				C928BC931ACDE8FE0003FE89 /* OOCUser.m */,
+				C928BC951ACDE9080003FE89 /* OOCPost.h */,
+				C928BC961ACDE9080003FE89 /* OOCPost.m */,
 			);
 			path = ohmoc;
 			sourceTree = "<group>";
@@ -178,9 +212,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6003F5BF195388D20070C39A /* Build configuration list for PBXNativeTarget "ohmoc" */;
 			buildPhases = (
+				9F47035B52A674B90B5D42F0 /* Check Pods Manifest.lock */,
 				6003F586195388D20070C39A /* Sources */,
 				6003F587195388D20070C39A /* Frameworks */,
 				6003F588195388D20070C39A /* Resources */,
+				EE7D47EEF2C6CAE8D21E24E9 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -195,9 +231,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6003F5C2195388D20070C39A /* Build configuration list for PBXNativeTarget "Tests" */;
 			buildPhases = (
+				4AD436101FA1279827BF2782 /* Check Pods Manifest.lock */,
 				6003F5AA195388D20070C39A /* Sources */,
 				6003F5AB195388D20070C39A /* Frameworks */,
 				6003F5AC195388D20070C39A /* Resources */,
+				6E6B7F5EF572500566668EEE /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -224,7 +262,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 6003F585195388D10070C39A /* Build configuration list for PBXProject "PROJECT" */;
+			buildConfigurationList = 6003F585195388D10070C39A /* Build configuration list for PBXProject "ohmoc" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -265,11 +303,76 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		4AD436101FA1279827BF2782 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		6E6B7F5EF572500566668EEE /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Tests/Pods-Tests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9F47035B52A674B90B5D42F0 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		EE7D47EEF2C6CAE8D21E24E9 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ohmoc/Pods-ohmoc-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		6003F586195388D20070C39A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C928BC941ACDE8FE0003FE89 /* OOCUser.m in Sources */,
+				C928BC971ACDE9080003FE89 /* OOCPost.m in Sources */,
 				6003F59E195388D20070C39A /* OOCAppDelegate.m in Sources */,
 				6003F5A7195388D20070C39A /* OOCViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
@@ -404,6 +507,7 @@
 		};
 		6003F5C0195388D20070C39A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 70B55BD5F2FC5A260AB20C38 /* Pods-ohmoc.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -417,6 +521,7 @@
 		};
 		6003F5C1195388D20070C39A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3C052AD545FBB8C9D7F0FD91 /* Pods-ohmoc.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -430,6 +535,7 @@
 		};
 		6003F5C3195388D20070C39A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 373B396BBF6D7152E119AC8E /* Pods-Tests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/ohmoc.app/ohmoc";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -452,6 +558,7 @@
 		};
 		6003F5C4195388D20070C39A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 54B8A86FD695223B2AED2100 /* Pods-Tests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/ohmoc.app/ohmoc";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -471,7 +578,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6003F585195388D10070C39A /* Build configuration list for PBXProject "PROJECT" */ = {
+		6003F585195388D10070C39A /* Build configuration list for PBXProject "ohmoc" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6003F5BD195388D20070C39A /* Debug */,

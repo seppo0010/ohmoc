@@ -6,39 +6,22 @@
 //  Copyright (c) 2014 Sebastian Waisbrot. All rights reserved.
 //
 
-SpecBegin(InitialSpecs)
+#import "OOCUser.h"
+#import "OOCPost.h"
 
-describe(@"these will fail", ^{
+SpecBegin(ohmoc)
 
-    it(@"can do maths", ^{
-        expect(1).to.equal(2);
+describe(@"association", ^{
+    __block OOCUser* u;
+    __block OOCPost* p;
+    before(^{
+        u = [OOCUser create:@{}];
+        p = [OOCPost create:@{@"user": u}];
     });
-
-    it(@"can read", ^{
-        expect(@"number").to.equal(@"string");
-    });
-    
-    it(@"will wait for 10 seconds and fail", ^{
-        waitUntil(^(DoneCallback done) {
-        
-        });
-    });
-});
-
-describe(@"these will pass", ^{
-    
-    it(@"can do maths", ^{
-        expect(1).beLessThan(23);
-    });
-    
-    it(@"can read", ^{
-        expect(@"team").toNot.contain(@"I");
-    });
-    
-    it(@"will wait and succeed", ^AsyncBlock {
-        waitUntil(^(DoneCallback done) {
-            done();
-        });
+    it(@"basic shake and bake", ^{
+        XCTAssert([u.posts contains:p]);
+        OOCPost* p2 = [u.posts get:p.id];
+        XCTAssertEqualObjects(u, p2.user);
     });
 });
 
