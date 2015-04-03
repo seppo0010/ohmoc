@@ -33,18 +33,21 @@ static ObjCHirlite* r = NULL;
     return [args copy];
 }
 
+static NSString* path;
+
 + (ObjCHirlite*) rlite {
     if (!r) {
 //        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 //        NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
-//        r = [[ObjCHirlite alloc] initWithPath:[basePath stringByAppendingPathComponent:@"db.rld"]];
+//        path = [basePath stringByAppendingPathComponent:@"db.rld"]
+//        r = [[ObjCHirlite alloc] initWithPath:path];
         r = [[ObjCHirlite alloc] init];
     }
     return r;
 }
 
 + (void) flush {
-    [[self rlite] command:@[@"FLUSHDB"]];
+    [r command:@[@"FLUSHDB"]];
 }
 
 @end
