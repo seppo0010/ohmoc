@@ -13,3 +13,6 @@ install:
 script:
 - set -o pipefail && xcodebuild test -workspace Example/ohmoc.xcworkspace -scheme ohmoc-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO | xcpretty -c
 - pod lib lint --quick
+
+notifications:
+  email: false
