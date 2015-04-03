@@ -195,6 +195,11 @@ static NSString* lua_delete = nil;
 
 static NSMutableDictionary* cache = nil;
 
++ (BOOL)isCached:(NSString*)id {
+    NSString* cacheKey = [@[NSStringFromClass(self), id] componentsJoinedByString:@":"];
+    return !![cache valueForKey:cacheKey];
+}
+
 + (OOCModel*)get:(NSString*)id {
     if (!id) {
         return nil;
@@ -331,7 +336,28 @@ static NSMutableDictionary* cache = nil;
 }
 
 - (void) load {
-    
+    NSArray* properties = [[Ohmoc rlite] command:@[@"HGETALL", [@[NSStringFromClass([self class]), self.id] componentsJoinedByString:@":"]]];
+    NSDictionary* classProperties = [[self class] spec].properties;
+    for (NSUInteger i = 0; i < properties.count; i += 2) {
+        NSString* key = [properties objectAtIndex:i];
+        id value = [properties objectAtIndex:i + 1];
+        if ([classProperties valueForKey:key]) {
+            [self setValue:value forKey:key];
+        } else if ([key hasSuffix:@"_id"]) {
+            NSString* shortkey = [key substringToIndex:key.length - 3];
+            OOCModelProperty* property = [classProperties valueForKey:shortkey];
+            if (!property) {
+                [NSException raise:@"UnknownKey" format:@"Unknown key %@", key];
+            }
+            if (![property isKindOfClass:[OOCModelObjectProperty class]]) {
+                [NSException raise:@"ExpectedObject" format:@"Property is not an object property for key '%@'", key];
+            }
+            OOCModelObjectProperty* objProperty = (OOCModelObjectProperty*)property;
+            [self setValue:[objProperty.klass get:value] forKey:shortkey];
+        } else {
+            [NSException raise:@"UnknownProperty" format:@"Uknown property %@", key];
+        }
+    }
 }
 
 - (void) save {

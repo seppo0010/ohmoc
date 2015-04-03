@@ -1,6 +1,6 @@
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/Expecta" "${PODS_ROOT}/Headers/Public/Specta" "${PODS_ROOT}/Headers/Public/msgpack" "${PODS_ROOT}/Headers/Public/objc-rlite" "${PODS_ROOT}/Headers/Public/ohmoc"
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/Expecta" "${PODS_ROOT}/Headers/Public/Specta" "${PODS_ROOT}/Headers/Public/msgpack" "${PODS_ROOT}/Headers/Public/objc-rlite" "${PODS_ROOT}/Headers/Public/ohmoc"
 OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/Expecta" -isystem "${PODS_ROOT}/Headers/Public/Specta" -isystem "${PODS_ROOT}/Headers/Public/msgpack" -isystem "${PODS_ROOT}/Headers/Public/objc-rlite" -isystem "${PODS_ROOT}/Headers/Public/ohmoc"
-OTHER_LDFLAGS = -ObjC -l"Pods-ohmoc-msgpack" -l"Pods-ohmoc-objc-rlite" -l"Pods-ohmoc-ohmoc"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"Pods-ohmoc-msgpack" -l"Pods-ohmoc-objc-rlite" -l"Pods-ohmoc-ohmoc"
 OTHER_LIBTOOLFLAGS = $(OTHER_LDFLAGS)
 PODS_ROOT = ${SRCROOT}/Pods

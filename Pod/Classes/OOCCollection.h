@@ -24,7 +24,7 @@
 @property NSArray* ids;
 // key or {model and propertyName} may be set
 // {model and propertyName} will be used to generate the key if absent
-@property OOCModel* model;
+@property (weak) OOCModel* model;
 @property NSString* propertyName;
 @property NSString* key;
 @property NSUInteger ns;

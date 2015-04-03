@@ -20,5 +20,6 @@
 + (instancetype)get:(NSString*)id;
 + (instancetype)create:(NSDictionary*)properties;
 + (OOCSet*)all;
++ (BOOL)isCached:(NSString*)id;
 
 @end

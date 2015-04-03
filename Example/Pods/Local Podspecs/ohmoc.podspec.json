@@ -17,16 +17,10 @@
   },
   "requires_arc": true,
   "source_files": "Pod/Classes/**/*",
-  "resource_bundles": {
-    "ohmoc": [
-      "Pod/Assets/*",
-      "Pod/Assets/*.lua"
-    ]
-  },
   "public_header_files": "Pod/Classes/**/*.h",
   "dependencies": {
     "objc-rlite": [
-      "~> 0.1.0"
+      "~> 0.1.1"
     ],
     "msgpack": [
       "~> 0.1.3"
