@@ -66,7 +66,7 @@
             // TODO: pipeline
             // TODO: make model
             NSString* _id = [self idAtIndex:countOfItemsAlreadyEnumerated];
-            id obj = [[self.modelClass alloc] initWithDictionary:[_rlite command:@[@"HGET", _id]]];
+            id obj = [self.modelClass get:_id];
             [objects addObject:obj]; // need to retain while the collection is alive
             stackbuf[count] = obj;
             countOfItemsAlreadyEnumerated++;

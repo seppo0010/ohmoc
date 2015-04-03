@@ -9,6 +9,7 @@
 #import "OOCUser.h"
 #import "OOCPost.h"
 #import "OOCEvent.h"
+#import "OOCContact.h"
 #import "Ohmoc.h"
 #import "ObjCHirlite.h"
 
@@ -72,7 +73,7 @@ describe(@"core", ^{
         XCTAssertEqualObjects(event1.id, @"1");
         XCTAssertEqualObjects(event2.id, @"2");
     });
-    
+
     it(@"save the attributes in UTF8", ^{
         NSString* eid;
         @autoreleasepool {
@@ -81,7 +82,36 @@ describe(@"core", ^{
         }
         XCTAssertFalse([OOCEvent isCached:eid]);
         OOCEvent* event = [OOCEvent get:eid];
-        XCTAssertEqualObjects(event.name, @"32° Kisei-sen"); 
+        XCTAssertEqualObjects(event.name, @"32° Kisei-sen");
+    });
+});
+
+describe(@"enumerable", ^{
+    __block OOCContact* john;
+    __block OOCContact* jane;
+
+    beforeEach(^{
+        [Ohmoc flush];
+        john = [OOCContact create:@{@"name": @"John Doe"}];
+        jane = [OOCContact create:@{@"name": @"John Doe"}];
+    });
+    afterEach(^{
+        john = nil;
+        jane = nil;
+    });
+
+    it(@"Set.each as an Enumerator", ^{
+        NSUInteger count = 0;
+        for (OOCContact* contact in [OOCContact all]) {
+            count++;
+            if (contact != john || contact != jane) {
+                [NSException raise:@"UnknownContact" format:@"Expected contact to be john or jane, got %@ instead", contact];
+            }
+        }
+        XCTAssertEqual(count, 2);
+    });
+    it(@"select", ^{
+        // todo?
     });
 });
 

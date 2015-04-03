@@ -27,6 +27,7 @@
 		C928BC941ACDE8FE0003FE89 /* OOCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = C928BC931ACDE8FE0003FE89 /* OOCUser.m */; };
 		C928BC971ACDE9080003FE89 /* OOCPost.m in Sources */ = {isa = PBXBuildFile; fileRef = C928BC961ACDE9080003FE89 /* OOCPost.m */; };
 		C9D03F961ACF3B7400D23778 /* OOCEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D03F951ACF3B7400D23778 /* OOCEvent.m */; };
+		C9D03F991ACF528B00D23778 /* OOCContact.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D03F981ACF528B00D23778 /* OOCContact.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,8 @@
 		C928BC961ACDE9080003FE89 /* OOCPost.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCPost.m; sourceTree = "<group>"; };
 		C9D03F941ACF3B7400D23778 /* OOCEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCEvent.h; sourceTree = "<group>"; };
 		C9D03F951ACF3B7400D23778 /* OOCEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCEvent.m; sourceTree = "<group>"; };
+		C9D03F971ACF528B00D23778 /* OOCContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCContact.h; sourceTree = "<group>"; };
+		C9D03F981ACF528B00D23778 /* OOCContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCContact.m; sourceTree = "<group>"; };
 		FF124D2D1785CCA7F469E827 /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -166,6 +169,8 @@
 				C928BC961ACDE9080003FE89 /* OOCPost.m */,
 				C9D03F941ACF3B7400D23778 /* OOCEvent.h */,
 				C9D03F951ACF3B7400D23778 /* OOCEvent.m */,
+				C9D03F971ACF528B00D23778 /* OOCContact.h */,
+				C9D03F981ACF528B00D23778 /* OOCContact.m */,
 			);
 			path = ohmoc;
 			sourceTree = "<group>";
@@ -380,6 +385,7 @@
 				C928BC941ACDE8FE0003FE89 /* OOCUser.m in Sources */,
 				C928BC971ACDE9080003FE89 /* OOCPost.m in Sources */,
 				6003F59E195388D20070C39A /* OOCAppDelegate.m in Sources */,
+				C9D03F991ACF528B00D23778 /* OOCContact.m in Sources */,
 				6003F5A7195388D20070C39A /* OOCViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 			);
