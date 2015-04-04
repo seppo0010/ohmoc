@@ -22,6 +22,7 @@
 // if the class is OOCList use key and list commands
 // if the class is OOCSet use key and set commands
 @property NSArray* ids;
+
 // key or {model and propertyName} may be set
 // {model and propertyName} will be used to generate the key if absent
 @property (weak) OOCModel* model;
@@ -38,6 +39,5 @@
 - (NSArray*)arrayValue;
 - (NSUInteger) size;
 - (BOOL) contains:(OOCModel*)model;
-- (NSArray*)ids;
 
 @end

@@ -24,5 +24,6 @@
 + (ObjCHirlite*) rlite;
 + (NSArray*) sortBy:(NSString*)by get:(NSString*)get limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store;
 + (void) flush;
++ (NSString*)tmpKey;
 
 @end

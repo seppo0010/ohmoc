@@ -255,15 +255,21 @@ static NSMutableDictionary* cache = nil;
     return [filters copy];
 }
 
-+ (OOCCollection*) find:(NSDictionary*)dict {
++ (OOCSet*) find:(NSDictionary*)dict {
     NSArray* filters = [self filters:dict];
     if (filters.count == 1) {
         // TODO: namespace?
         return [OOCSet collectionWithKey:[filters objectAtIndex:0] namespace:0 modelClass:self];
     } else {
-        NSMutableArray* command = [filters mutableCopy];
-        [command insertObject:@"SINTER" atIndex:0];
-        return [OOCCollection collectionWithIds:[[Ohmoc rlite] command:command] namespace:0 modelClass:self];
+        return [OOCSet setWithBlock:^(void(^block)(NSString*)) {
+            ObjCHirlite* conn = [Ohmoc rlite];
+            NSString* key = [Ohmoc tmpKey];
+            NSMutableArray* sunionCommand = [@[@"SINTERSTORE", key] mutableCopy];
+            [sunionCommand addObjectsFromArray:filters];
+            [conn command:sunionCommand];
+            block(key);
+            [conn command:@[@"DEL", key]];
+        } namespace:0 modelClass:self];
     }
 }
 

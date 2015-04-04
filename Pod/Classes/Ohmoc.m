@@ -13,6 +13,11 @@
 
 static ObjCHirlite* r = NULL;
 
+static long tmpkey = 0;
++ (NSString*)tmpKey {
+    return [NSString stringWithFormat:@"tmp%ld", tmpkey++];
+}
+
 + (NSArray*) sortBy:(NSString*)by get:(NSString*)get limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store {
     NSMutableArray* args = [NSMutableArray array];
     if (by) {
