@@ -27,7 +27,7 @@ static long tmpkey = 0;
         [args addObjectsFromArray:@[@"GET", by]];
     }
     if (limit) {
-        [args addObjectsFromArray:@[@"LIMIT", [NSString stringWithFormat:@"%zu", limit], [NSString stringWithFormat:@"%zu", offset]]];
+        [args addObjectsFromArray:@[@"LIMIT", [NSString stringWithFormat:@"%lu", (long unsigned)limit], [NSString stringWithFormat:@"%lu", (long unsigned)offset]]];
     }
     if (order) {
         [args addObjectsFromArray:[order componentsSeparatedByString:@" "]];

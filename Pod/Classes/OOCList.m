@@ -38,7 +38,7 @@
 }
 
 - (OOCCollection*)collectionWithRange:(NSRange)range {
-    NSArray* _ids = [[self conn] command:@[@"LRANGE", self.key, [NSString stringWithFormat:@"%zu", range.location], [NSString stringWithFormat:@"%zu", range.length + range.location - 1]]];
+    NSArray* _ids = [[self conn] command:@[@"LRANGE", self.key, [NSString stringWithFormat:@"%lu", (long unsigned)range.location], [NSString stringWithFormat:@"%lu", (long unsigned)range.length + (long unsigned)range.location - 1]]];
     return [OOCCollection collectionWithIds:_ids namespace:self.ns modelClass:self.modelClass];
 }
 

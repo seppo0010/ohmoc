@@ -61,7 +61,7 @@
     if (countOfItemsAlreadyEnumerated < [self size]) {
         state->itemsPtr = stackbuf;
         ObjCHirlite* _rlite = [self conn];
-        [_rlite command:@[@"SELECT", [NSString stringWithFormat:@"%zu", self.ns]]];
+        [_rlite command:@[@"SELECT", [NSString stringWithFormat:@"%lu", (long unsigned)self.ns]]];
         while((countOfItemsAlreadyEnumerated < [self size]) && (count < stackbufLength)) {
             // TODO: pipeline
             // TODO: make model
