@@ -18,11 +18,19 @@
 }
 
 - (NSUInteger) size {
-    return [[[self conn] command:@[@"LLEN", self.key]] unsignedIntegerValue];
+    __block NSUInteger s = 0;
+    [self blockWithKey:^(NSString* mykey) {
+        s = [[[self conn] command:@[@"LLEN", mykey]] unsignedIntegerValue];
+    }];
+    return s;
 }
 
 - (id)idAtIndex:(NSInteger)index {
-    return [[self conn] command:@[@"LINDEX", self.key, [NSString stringWithFormat:@"%lld", (long long)index]]];
+    __block id obj = 0;
+    [self blockWithKey:^(NSString* mykey) {
+        obj = [[self conn] command:@[@"LINDEX", mykey, [NSString stringWithFormat:@"%lld", (long long)index]]];
+    }];
+    return obj;
 }
 
 - (id)objectAtIndex:(NSInteger)index {
@@ -38,7 +46,10 @@
 }
 
 - (OOCCollection*)collectionWithRange:(NSRange)range {
-    NSArray* _ids = [[self conn] command:@[@"LRANGE", self.key, [NSString stringWithFormat:@"%lu", (long unsigned)range.location], [NSString stringWithFormat:@"%lu", (long unsigned)range.length + (long unsigned)range.location - 1]]];
+    __block NSArray* _ids;
+    [self blockWithKey:^(NSString* mykey) {
+        _ids = [[self conn] command:@[@"LRANGE", mykey, [NSString stringWithFormat:@"%lu", (long unsigned)range.location], [NSString stringWithFormat:@"%lu", (long unsigned)range.length + (long unsigned)range.location - 1]]];
+    }];
     return [OOCCollection collectionWithIds:_ids namespace:self.ns modelClass:self.modelClass];
 }
 
@@ -49,27 +60,39 @@
 - (void)replace:(id<NSFastEnumeration>)models {
     ObjCHirlite* _rlite = [self conn];
     [_rlite command:@[@"MULTI"]];
-    [_rlite command:@[@"DEL", self.key]];
-    for (OOCModel* submodel in models) {
-        [_rlite command:@[@"RPUSH", self.key, submodel.id]];
-    }
+    [self blockWithKey:^(NSString* mykey) {
+        [_rlite command:@[@"DEL", mykey]];
+        for (OOCModel* submodel in models) {
+            [_rlite command:@[@"RPUSH", mykey, submodel.id]];
+        }
+    }];
     [_rlite command:@[@"COMMIT"]];
 }
 
 - (void)push:(OOCModel*)submodel {
-    [[self conn] command:@[@"RPUSH", self.key, submodel.id]];
+    [self blockWithKey:^(NSString* mykey) {
+        [[self conn] command:@[@"RPUSH", mykey, submodel.id]];
+    }];
 }
 
 - (void)unshift:(OOCModel*)submodel {
-    [[self conn] command:@[@"LPUSH", submodel.id]];
+    [self blockWithKey:^(NSString* mykey) {
+        [[self conn] command:@[@"LPUSH", mykey, submodel.id]];
+    }];
 }
 
 - (void)remove:(OOCModel*)submodel {
-    [[self conn] command:@[@"LREM", self.key, @"0", submodel.id]];
+    [self blockWithKey:^(NSString* mykey) {
+        [[self conn] command:@[@"LREM", mykey, @"0", submodel.id]];
+    }];
 }
 
 - (NSArray*)ids {
-    return [[self conn] command:@[@"LRANGE", self.key, @"0", @"-1"]];
+    __block NSArray* _ids;
+    [self blockWithKey:^(NSString* mykey) {
+        _ids = [[self conn] command:@[@"LRANGE", mykey, @"0", @"-1"]];
+    }];
+    return _ids;
 }
 
 
@@ -77,10 +100,7 @@
     _key = key;
 }
 
-- (NSString*)key {
-    if (_key) {
-        return _key;
-    }
+- (NSString*)keyForProperty:(NSString*)propertyName {
     return [self.model listForProperty:self.propertyName];
 }
 

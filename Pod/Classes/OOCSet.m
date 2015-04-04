@@ -13,24 +13,12 @@
 
 @implementation OOCSet
 
-+ (instancetype)setWithBlock:(void(^)(void(^)(NSString*)))block namespace:(NSUInteger)ns modelClass:(Class)modelClass {
-    OOCSet* set = [[self alloc] init];
-    set.block = block;
-    set.ns = ns;
-    set.modelClass = modelClass;
-    return set;
-}
-
 - (ObjCHirlite*)conn {
     return [Ohmoc rlite];
 }
 
 - (NSString*)toKey:(NSString*)att {
-    if ([[self.modelClass counters] valueForKey:att]) {
-        return [NSString stringWithFormat:@"*:counters->%@", att];
-    } else {
-        return [NSString stringWithFormat:@"*->%@", att];
-    }
+    return [NSString stringWithFormat:@"%@:*->%@", NSStringFromClass(self.modelClass), att];
 }
 
 - (NSUInteger) size {
@@ -71,20 +59,27 @@
 - (id<NSFastEnumeration>) _sortBy:(NSString*)by get:(NSString*)get limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store {
     if (get) {
         get = [self toKey:get];
-        NSMutableArray* command = [NSMutableArray arrayWithObjects:@"SORT", self.key, nil];
-        [command addObjectsFromArray:[Ohmoc sortBy:by get:get limit:limit offset:offset order:order store:store]];
-        return [[self conn] command:command];
+        NSMutableArray*  command = [NSMutableArray array];
+        __block id<NSFastEnumeration> r;
+        [self blockWithKey:^(NSString* mykey) {
+            [command addObjectsFromArray:@[@"SORT", mykey]];
+            [command addObjectsFromArray:[Ohmoc sortBy:by get:get limit:limit offset:offset order:order store:store]];
+            r = [[self conn] command:command];
+        }];
+        return r;
     } else {
-        return [OOCSet setWithBlock:^(void(^localblock)(NSString*)) {
+        return [OOCList collectionWithBlock:^(void(^localblock)(NSString*)) {
             ObjCHirlite* conn = [self conn];
             NSString* key = store;
             if (!store) {
                 key = [Ohmoc tmpKey];
             }
-            NSMutableArray* command = [NSMutableArray arrayWithObjects:@"SORT", self.key, nil];
-            [command addObjectsFromArray:[Ohmoc sortBy:by get:get limit:limit offset:offset order:order store:key]];
-            [conn command:command];
-            localblock(key);
+            [self blockWithKey:^(NSString* mykey) {
+                NSMutableArray* command = [NSMutableArray arrayWithObjects:@"SORT", mykey, nil];
+                [command addObjectsFromArray:[Ohmoc sortBy:by get:get limit:limit offset:offset order:order store:key]];
+                [conn command:command];
+                localblock(key);
+            }];
             if (!store) {
                 [conn command:@[@"DEL", key]];
             }
@@ -102,11 +97,13 @@
 
 - (OOCSet*)find:(NSDictionary*)dict {
     NSArray* filters = [self.modelClass filters:dict];
-    return [OOCSet setWithBlock:^(void(^localblock)(NSString*)) {
+    return [OOCSet collectionWithBlock:^(void(^localblock)(NSString*)) {
         ObjCHirlite* conn = [self conn];
         NSString* key = [Ohmoc tmpKey];
         NSMutableArray* command = [NSMutableArray arrayWithCapacity:filters.count + 2];
-        [command addObjectsFromArray:@[@"SINTERSTORE", key, self.key]];
+        [self blockWithKey:^(NSString* mykey) {
+            [command addObjectsFromArray:@[@"SINTERSTORE", key, mykey]];
+        }];
         [command addObjectsFromArray:filters];
         [conn command:command];
         localblock(key);
@@ -115,14 +112,17 @@
 }
 
 - (OOCSet*)except:(NSDictionary*)dict {
-    return [OOCSet setWithBlock:^(void(^localblock)(NSString*)) {
+    return [OOCSet collectionWithBlock:^(void(^localblock)(NSString*)) {
         ObjCHirlite* conn = [self conn];
         NSString* key1 = [Ohmoc tmpKey];
         NSString* key2 = [Ohmoc tmpKey];
         NSMutableArray* sunionCommand = [@[@"SUNIONSTORE", key1] mutableCopy];
         [sunionCommand addObjectsFromArray:[self.modelClass filters:dict]];
         [conn command:sunionCommand];
-        NSArray* sdiffCommand = @[@"SDIFFSTORE", key2, self.key, key1];
+        NSMutableArray* sdiffCommand = [NSMutableArray arrayWithCapacity:4];
+        [self blockWithKey:^(NSString* mykey) {
+            [sdiffCommand addObjectsFromArray:@[@"SDIFFSTORE", key2, mykey, key1]];
+        }];
         [conn command:sdiffCommand];
         localblock(key2);
         [conn command:@[@"DEL", key1, key2]];
@@ -130,14 +130,17 @@
 }
 
 - (OOCCollection*)combine:(NSDictionary*)dict {
-    return [OOCSet setWithBlock:^(void(^localblock)(NSString*)) {
+    return [OOCSet collectionWithBlock:^(void(^localblock)(NSString*)) {
         ObjCHirlite* conn = [self conn];
         NSString* key1 = [Ohmoc tmpKey];
         NSString* key2 = [Ohmoc tmpKey];
         NSMutableArray* sunionCommand = [@[@"SUNIONSTORE", key1] mutableCopy];
         [sunionCommand addObjectsFromArray:[self.modelClass filters:dict]];
         [conn command:sunionCommand];
-        NSArray* sdiffCommand = @[@"SINTERSTORE", key2, self.key, key1];
+        NSMutableArray* sdiffCommand = [NSMutableArray arrayWithCapacity:4];
+        [self blockWithKey:^(NSString* mykey) {
+            [sdiffCommand addObjectsFromArray:@[@"SINTERSTORE", key2, mykey, key1]];
+        }];
         [conn command:sdiffCommand];
         localblock(key2);
         [conn command:@[@"DEL", key1, key2]];
@@ -145,37 +148,36 @@
 }
 
 - (OOCCollection*)union:(NSDictionary*)dict {
-    return [OOCSet setWithBlock:^(void(^localblock)(NSString*)) {
+    return [OOCSet collectionWithBlock:^(void(^localblock)(NSString*)) {
         ObjCHirlite* conn = [self conn];
         NSString* key1 = [Ohmoc tmpKey];
         NSString* key2 = [Ohmoc tmpKey];
         NSMutableArray* sunionCommand = [@[@"SINTERSTORE", key1] mutableCopy];
         [sunionCommand addObjectsFromArray:[self.modelClass filters:dict]];
         [conn command:sunionCommand];
-        NSArray* sdiffCommand = @[@"SUNIONSTORE", key2, self.key, key1];
+        NSMutableArray* sdiffCommand = [NSMutableArray arrayWithCapacity:4];
+        [self blockWithKey:^(NSString* mykey) {
+            [sdiffCommand addObjectsFromArray:@[@"SINTERSTORE", key2, mykey, key1]];
+        }];
         [conn command:sdiffCommand];
         localblock(key2);
         [conn command:@[@"DEL", key1, key2]];
     } namespace:self.ns modelClass:self.modelClass];
 }
 
-- (void)setKey:(NSString *)key {
-    _key = key;
+- (id)firstBy:(NSString*)by get:(NSString*)get order:(NSString*)order {
+    for (id obj in [self sortBy:@"fname" get:get limit:1 offset:0 order:order store:nil]) {
+        return obj;
+    }
+    return nil;
 }
 
-- (NSString*)key {
-    if (_key) {
-        return _key;
-    }
+- (id)firstBy:(NSString*)by order:(NSString*)order {
+    return [self firstBy:by get:nil order:order];
+}
+
+- (NSString*)keyForProperty:(NSString*)propertyName {
     return [self.model indexForProperty:self.propertyName];
-}
-
-- (void) blockWithKey:(void(^)(NSString*))localblock {
-    if (_block) {
-        _block(localblock);
-        return;
-    }
-    localblock(self.key);
 }
 
 @end

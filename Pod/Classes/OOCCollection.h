@@ -15,6 +15,7 @@
 @interface OOCCollection : NSObject <NSFastEnumeration> {
     NSMutableArray* objects;
     NSString* _key;
+    void(^_block)(void(^)(NSString*));
 }
 
 // collections behave either like a set, a list or an array of ids
@@ -31,7 +32,10 @@
 @property NSUInteger ns;
 @property (strong) Class modelClass;
 
+@property (strong) void(^block)(void(^)(NSString*));
 
+
++ (instancetype)collectionWithBlock:(void(^)(void(^)(NSString*)))block namespace:(NSUInteger)ns modelClass:(Class)modelClass;
 + (instancetype)collectionWithIds:(NSArray*)ids namespace:(NSUInteger)ns modelClass:(Class)model;
 + (instancetype)collectionWithKey:(NSString*)key namespace:(NSUInteger)ns modelClass:(Class)model;
 + (instancetype)collectionWithModel:(OOCModel*)model property:(NSString*)propertyName namespace:(NSUInteger)ns modelClass:(Class)modelClass;
@@ -39,5 +43,6 @@
 - (NSArray*)arrayValue;
 - (NSUInteger) size;
 - (BOOL) contains:(OOCModel*)model;
+- (void) blockWithKey:(void(^)(NSString*))localblock;
 
 @end

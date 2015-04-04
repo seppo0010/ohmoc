@@ -181,10 +181,6 @@ static NSString* lua_delete = nil;
     return [NSSet set];
 }
 
-+ (NSDictionary*) counters {
-    return @{};
-}
-
 + (BOOL)exists:(NSString*)id {
     return [[[Ohmoc rlite] command:@[@"SISMEMBER", [@[NSStringFromClass(self), @"all"] componentsJoinedByString:@":"], id]] boolValue];
 }
@@ -261,7 +257,7 @@ static NSMutableDictionary* cache = nil;
         // TODO: namespace?
         return [OOCSet collectionWithKey:[filters objectAtIndex:0] namespace:0 modelClass:self];
     } else {
-        return [OOCSet setWithBlock:^(void(^block)(NSString*)) {
+        return [OOCSet collectionWithBlock:^(void(^block)(NSString*)) {
             ObjCHirlite* conn = [Ohmoc rlite];
             NSString* key = [Ohmoc tmpKey];
             NSMutableArray* sunionCommand = [@[@"SINTERSTORE", key] mutableCopy];

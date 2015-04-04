@@ -27,7 +27,7 @@ static long tmpkey = 0;
         [args addObjectsFromArray:@[@"GET", by]];
     }
     if (limit) {
-        [args addObjectsFromArray:@[@"LIMIT", [NSString stringWithFormat:@"%lu", (long unsigned)limit], [NSString stringWithFormat:@"%lu", (long unsigned)offset]]];
+        [args addObjectsFromArray:@[@"LIMIT", [NSString stringWithFormat:@"%lu", (long unsigned)offset], [NSString stringWithFormat:@"%lu", (long unsigned)limit]]];
     }
     if (order) {
         [args addObjectsFromArray:[order componentsSeparatedByString:@" "]];
@@ -52,7 +52,8 @@ static NSString* path;
 }
 
 + (void) flush {
-    [r command:@[@"FLUSHDB"]];
+    [[self rlite] command:@[@"FLUSHDB"]];
+    r = nil;
 }
 
 @end

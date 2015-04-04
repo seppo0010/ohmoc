@@ -108,23 +108,6 @@
 }
 
 - (id) command:(NSArray*)command {
-    for (id obj in command) {
-        if ([obj isKindOfClass:[NSData class]]) {
-            const char *cstr = [obj bytes];
-            for (NSUInteger i = 0; i < [obj length]; i++) {
-                if ((cstr[i] >= 'A' && cstr[i] <= 'Z') ||
-                    (cstr[i] >= 'a' && cstr[i] <= 'z') ||
-                    (cstr[i] >= '0' && cstr[i] <= '9') || cstr[i] == '_') {
-                    printf("%c", cstr[i]);
-                } else {
-                    printf("%#x", cstr[i]);
-                }
-            }
-            printf("\n");
-        } else {
-            NSLog(@"%@", [obj description]);
-        }
-    }
     return [self command:command binary:NO];
 }
 

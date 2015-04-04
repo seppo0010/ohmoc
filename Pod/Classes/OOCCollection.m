@@ -15,6 +15,14 @@
 
 @implementation OOCCollection
 
++ (instancetype)collectionWithBlock:(void(^)(void(^)(NSString*)))block namespace:(NSUInteger)ns modelClass:(Class)modelClass {
+    OOCCollection* set = [[self alloc] init];
+    set.block = block;
+    set.ns = ns;
+    set.modelClass = modelClass;
+    return set;
+}
+
 + (OOCCollection*)collectionWithIds:(NSArray*)ids namespace:(NSUInteger)ns modelClass:(Class)modelClass {
     OOCCollection* c = [[self alloc] init];
     c.ids = ids;
@@ -58,11 +66,12 @@
         state->mutationsPtr = &state->extra[0];
     }
 
-    if (countOfItemsAlreadyEnumerated < [self size]) {
+    NSUInteger size = [self size];
+    if (countOfItemsAlreadyEnumerated < size) {
         state->itemsPtr = stackbuf;
         ObjCHirlite* _rlite = [self conn];
         [_rlite command:@[@"SELECT", [NSString stringWithFormat:@"%lu", (long unsigned)self.ns]]];
-        while((countOfItemsAlreadyEnumerated < [self size]) && (count < stackbufLength)) {
+        while((countOfItemsAlreadyEnumerated < size) && (count < stackbufLength)) {
             // TODO: pipeline
             // TODO: make model
             NSString* _id = [self idAtIndex:countOfItemsAlreadyEnumerated];
@@ -97,6 +106,30 @@
 
 - (BOOL) contains:(OOCModel*)submodel {
     return [self.ids containsObject:submodel.id];
+}
+
+- (void)setKey:(NSString *)key {
+    _key = key;
+}
+
+- (NSString*)key {
+    [NSException raise:@"Must not call OOCSet.key" format:@"Use blockWithKey instead"];
+    return nil;
+}
+
+- (NSString*)keyForProperty:(NSString*)propertyName {
+    return nil;
+}
+
+- (void) blockWithKey:(void(^)(NSString*))localblock {
+    if (_block) {
+        _block(localblock);
+    }
+    else if (_key) {
+        localblock(_key);
+    } else {
+        localblock([self keyForProperty:self.propertyName]);
+    }
 }
 
 @end

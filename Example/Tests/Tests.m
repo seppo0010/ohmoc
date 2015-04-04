@@ -53,9 +53,6 @@ describe(@"association", ^{
 });
 
 describe(@"connection", ^{
-    beforeEach(^{
-        [Ohmoc flush];
-    });
     // TODO
 });
 
@@ -71,9 +68,8 @@ describe(@"core", ^{
     it(@"assign an ID and save the object", ^{
         OOCEvent* event1 = [OOCEvent create:@{@"name": @"Ruby Tuesday"}];
         OOCEvent* event2 = [OOCEvent create:@{@"name": @"Ruby Meetup"}];
-        // FIXME: these should be 1 and 2
-        XCTAssertEqualObjects(event1.id, @"2");
-        XCTAssertEqualObjects(event2.id, @"3");
+        XCTAssertEqualObjects(event1.id, @"1");
+        XCTAssertEqualObjects(event2.id, @"2");
     });
     
     it(@"save the attributes in UTF8", ^{
@@ -123,6 +119,10 @@ describe(@"enumerable", ^{
         __block OOCPost* p;
         
         beforeEach(^{
+            c1 = nil;
+            c2 = nil;
+            p = nil;
+            [Ohmoc flush];
             c1 = [OOCComment create:@{}];
             c2 = [OOCComment create:@{}];
             p = [OOCPost create:@{}];
@@ -147,21 +147,24 @@ describe(@"enumerable", ^{
 });
 
 describe(@"filtering", ^{
-    __block OOCUser* u1;
-    __block OOCUser* u2;
+    __block OOCUser* john;
+    __block OOCUser* jane;
     beforeEach(^{
-        u1 = [OOCUser create:@{@"fname": @"John", @"lname": @"Doe", @"status": @"active"}];
-        u2 = [OOCUser create:@{@"fname": @"Jane", @"lname": @"Doe", @"status": @"active"}];
+        john = nil;
+        jane = nil;
+        [Ohmoc flush];
+        john = [OOCUser create:@{@"fname": @"John", @"lname": @"Doe", @"status": @"active"}];
+        jane = [OOCUser create:@{@"fname": @"Jane", @"lname": @"Doe", @"status": @"active"}];
     });
     it(@"findability", ^{
         NSUInteger size = [[OOCUser find:@{@"lname": @"Doe", @"fname": @"John"}] size];
         XCTAssertEqual(1, size);
-        BOOL contains = [[OOCUser find:@{@"lname": @"Doe", @"fname": @"John"}] contains:u1];
+        BOOL contains = [[OOCUser find:@{@"lname": @"Doe", @"fname": @"John"}] contains:john];
         XCTAssert(contains);
 
         size = [[OOCUser find:@{@"lname": @"Doe", @"fname": @"Jane"}] size];
         XCTAssertEqual(1, size);
-        contains = [[OOCUser find:@{@"lname": @"Doe", @"fname": @"Jane"}] contains:u2];
+        contains = [[OOCUser find:@{@"lname": @"Doe", @"fname": @"Jane"}] contains:jane];
         XCTAssert(contains);
     });
     it(@"sets aren't mutable", ^{
@@ -173,6 +176,18 @@ describe(@"filtering", ^{
         canAdd = [collection respondsToSelector:@selector(add:)];
         XCTAssertFalse(canAdd);
     });
+    it(@"first", ^{
+        OOCSet* set = [OOCUser find:@{@"lname": @"Doe", @"status": @"active"}];
+        OOCUser* first = [set firstBy:@"fname" order:@"ALPHA"];
+        XCTAssertEqual(first, jane);
+        first = [set firstBy:@"fname" order:@"ALPHA DESC"];
+        XCTAssertEqual(first, john);
+
+        NSString* firstName = [set firstBy:@"fname" get:@"fname" order:@"ALPHA"];
+        XCTAssertEqualObjects(firstName, jane.fname);
+        firstName = [set firstBy:@"fname" get:@"fname" order:@"ALPHA DESC"];
+        XCTAssertEqualObjects(firstName, john.fname);
+});
 });
 
 SpecEnd
