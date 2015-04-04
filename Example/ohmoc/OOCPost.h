@@ -9,11 +9,14 @@
 #import "OOCModel.h"
 #import "Ohmoc.h"
 
+@protocol OOCComment;
+@class OOCComment;
 @class OOCUser;
 
 @interface OOCPost : OOCModel
 
 @property OOCUser<OOCIndex>* user;
+@property OOCList<OOCComment>* comments;
 
 @end
 
