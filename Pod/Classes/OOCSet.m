@@ -103,4 +103,15 @@
     return [OOCCollection collectionWithIds:[conn command:sunionCommand] namespace:self.ns modelClass:self.modelClass];
 }
 
+- (void)setKey:(NSString *)key {
+    _key = key;
+}
+
+- (NSString*)key {
+    if (_key) {
+        return _key;
+    }
+    return [self.model indexForProperty:self.propertyName];
+}
+
 @end

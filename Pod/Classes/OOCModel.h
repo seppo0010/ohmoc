@@ -14,7 +14,8 @@
 
 @property NSString<OOCUnique>* id;
 
-- (NSString*)keyForProperty:(NSString*)property;
+- (NSString*)indexForProperty:(NSString*)property;
+- (NSString*)listForProperty:(NSString*)property;
 + (NSDictionary*) counters;
 + (NSArray*) filters:(NSDictionary*)filters;
 + (instancetype)get:(NSString*)id;

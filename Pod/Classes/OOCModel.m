@@ -390,10 +390,12 @@ static NSMutableDictionary* cache = nil;
     NSMutableDictionary* indices = [NSMutableDictionary dictionary];
     for (NSString* index in spec.indices) {
         id value = [self valueForKey:index];
-        if ([value isKindOfClass:[OOCModel class]]) {
-            [indices setValue:@[[value id]] forKey:[NSString stringWithFormat:@"%@_id", index]];
-        } else {
-            [indices setValue:@[value] forKey:index];
+        if (value) {
+            if ([value isKindOfClass:[OOCModel class]]) {
+                [indices setValue:@[[value id]] forKey:[NSString stringWithFormat:@"%@_id", index]];
+            } else {
+                [indices setValue:@[value] forKey:index];
+            }
         }
     }
     NSMutableDictionary* uniques = [NSMutableDictionary dictionary];
@@ -417,9 +419,15 @@ static NSMutableDictionary* cache = nil;
     [cache setValue:self forKey:cacheKey];
 }
 
-- (NSString*)keyForProperty:(NSString *)propertyName {
+- (NSString*)indexForProperty:(NSString *)propertyName {
     OOCModelObjectProperty* property = [[[[self class] spec] properties] valueForKey:propertyName];
     NSString* referenceProperty = property.referenceProperty;
     return [@[NSStringFromClass(property.subtype), @"indices", [NSString stringWithFormat:@"%@_id", referenceProperty], self.id] componentsJoinedByString:@":"];
 }
+
+- (NSString*)listForProperty:(NSString *)propertyName {
+    OOCModelObjectProperty* property = [[[[self class] spec] properties] valueForKey:propertyName];
+    return [@[NSStringFromClass(property.subtype), self.id, propertyName] componentsJoinedByString:@":"];
+}
+
 @end

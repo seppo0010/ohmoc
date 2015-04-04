@@ -57,7 +57,7 @@
 }
 
 - (void)push:(OOCModel*)submodel {
-    [[self conn] command:@[@"RPUSH", submodel.id]];
+    [[self conn] command:@[@"RPUSH", self.key, submodel.id]];
 }
 
 - (void)unshift:(OOCModel*)submodel {
@@ -70,6 +70,18 @@
 
 - (NSArray*)ids {
     return [[self conn] command:@[@"LRANGE", self.key, @"0", @"-1"]];
+}
+
+
+- (void)setKey:(NSString *)key {
+    _key = key;
+}
+
+- (NSString*)key {
+    if (_key) {
+        return _key;
+    }
+    return [self.model listForProperty:self.propertyName];
 }
 
 @end

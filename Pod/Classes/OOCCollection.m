@@ -99,15 +99,4 @@
     return [self.ids containsObject:submodel.id];
 }
 
-- (void)setKey:(NSString *)key {
-    _key = key;
-}
-
-- (NSString*)key {
-    if (_key) {
-        return _key;
-    }
-    return [_model keyForProperty:self.propertyName];
-}
-
 @end
