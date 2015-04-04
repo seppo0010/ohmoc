@@ -177,10 +177,6 @@ static NSString* lua_delete = nil;
     return spec;
 }
 
-+ (NSSet*)indices {
-    return [NSSet set];
-}
-
 + (NSSet*)uniques {
     return [NSSet set];
 }
@@ -222,7 +218,8 @@ static NSMutableDictionary* cache = nil;
 }
 
 + (OOCModel*) with:(NSString*)att value:(NSString*)value {
-    if ([[self uniques] containsObject:att] == FALSE) {
+    OOCModelProperty* property = [[[[self class] spec] properties] valueForKey:att];
+    if (!property.hasIndex) {
         [OOCIndexNotFoundException raise:@"IndexNotFound" format:@"Index not found: '%@'", att];
     }
     NSString* _id = [[Ohmoc rlite] command:@[@"HGET", [@[NSStringFromClass(self), @"uniques", att] componentsJoinedByString:@":"]]];
@@ -235,7 +232,8 @@ static NSMutableDictionary* cache = nil;
 }
 
 + (NSArray*) toIndices:(NSString*)key value:(id)value {
-    if ([[self indices] containsObject:key] == FALSE) {
+    OOCModelProperty* property = [[[[self class] spec] properties] valueForKey:key];
+    if (!property.hasIndex) {
         [OOCIndexNotFoundException raise:@"IndexNotFound" format:@"Index not found: '%@'", key];
     }
     if ([value conformsToProtocol:@protocol(NSFastEnumeration)]) {

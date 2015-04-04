@@ -75,7 +75,7 @@ describe(@"core", ^{
         XCTAssertEqualObjects(event1.id, @"2");
         XCTAssertEqualObjects(event2.id, @"3");
     });
-
+    
     it(@"save the attributes in UTF8", ^{
         NSString* eid;
         @autoreleasepool {
@@ -121,7 +121,7 @@ describe(@"enumerable", ^{
         __block OOCComment* c1;
         __block OOCComment* c2;
         __block OOCPost* p;
-
+        
         beforeEach(^{
             c1 = [OOCComment create:@{}];
             c2 = [OOCComment create:@{}];
@@ -129,7 +129,7 @@ describe(@"enumerable", ^{
             [p.comments push:c1];
             [p.comments push:c2];
         });
-
+        
         it(@"List size", ^{
             XCTAssertEqual(p.comments.size, 2);
         });
@@ -143,6 +143,35 @@ describe(@"enumerable", ^{
             }
             XCTAssertEqual(count, 2);
         });
+    });
+});
+
+describe(@"filtering", ^{
+    __block OOCUser* u1;
+    __block OOCUser* u2;
+    beforeEach(^{
+        u1 = [OOCUser create:@{@"fname": @"John", @"lname": @"Doe", @"status": @"active"}];
+        u2 = [OOCUser create:@{@"fname": @"Jane", @"lname": @"Doe", @"status": @"active"}];
+    });
+    it(@"findability", ^{
+        NSUInteger size = [[OOCUser find:@{@"lname": @"Doe", @"fname": @"John"}] size];
+        XCTAssertEqual(1, size);
+        BOOL contains = [[OOCUser find:@{@"lname": @"Doe", @"fname": @"John"}] contains:u1];
+        XCTAssert(contains);
+
+        size = [[OOCUser find:@{@"lname": @"Doe", @"fname": @"Jane"}] size];
+        XCTAssertEqual(1, size);
+        contains = [[OOCUser find:@{@"lname": @"Doe", @"fname": @"Jane"}] contains:u2];
+        XCTAssert(contains);
+    });
+    it(@"sets aren't mutable", ^{
+        OOCCollection* collection = [OOCUser find:@{@"lname": @"Doe"}];
+        BOOL canAdd = [collection respondsToSelector:@selector(add:)];
+        XCTAssertFalse(canAdd);
+
+        collection = [OOCUser find:@{@"lname": @"Doe", @"fname": @"John"}];
+        canAdd = [collection respondsToSelector:@selector(add:)];
+        XCTAssertFalse(canAdd);
     });
 });
 

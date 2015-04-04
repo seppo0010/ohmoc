@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "OOCUnique.h"
 
+@class OOCCollection;
 @class OOCSet;
 @interface OOCModel : NSObject
 
@@ -18,6 +19,7 @@
 - (NSString*)listForProperty:(NSString*)property;
 + (NSDictionary*) counters;
 + (NSArray*) filters:(NSDictionary*)filters;
++ (OOCCollection*) find:(NSDictionary*)dict;
 + (instancetype)get:(NSString*)id;
 + (instancetype)create:(NSDictionary*)properties;
 + (OOCSet*)all;

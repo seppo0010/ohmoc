@@ -13,6 +13,9 @@
 @class OOCPost;
 @interface OOCUser : OOCModel
 
+@property NSString<OOCIndex>* fname;
+@property NSString<OOCIndex>* lname;
+@property NSString<OOCIndex>* status;
 @property OOCSet<OOCPost>* posts;
 @property id<OOCCollection> posts__user;
 
