@@ -188,6 +188,20 @@ describe(@"filtering", ^{
         firstName = [set firstBy:@"fname" get:@"fname" order:@"ALPHA DESC"];
         XCTAssertEqualObjects(firstName, john.fname);
     });
+
+    it(@"contains", ^{
+        OOCSet* set = [OOCUser find:@{@"lname": @"Doe", @"status": @"active"}];
+        BOOL contains = [set contains:jane];
+        XCTAssert(contains);
+        contains = [set contains:john];
+        XCTAssert(contains);
+
+        set = [OOCUser find:@{@"fname": @"Jane", @"status": @"active"}];
+        contains = [set contains:jane];
+        XCTAssert(contains);
+        contains = [set contains:john];
+        XCTAssertFalse(contains);
+    });
 });
 
 SpecEnd
