@@ -391,6 +391,18 @@ static NSMutableDictionary* cache = nil;
         NSString* key = [properties objectAtIndex:i];
         id value = [properties objectAtIndex:i + 1];
         if ([classProperties valueForKey:key]) {
+            OOCModelProperty* property = [classProperties valueForKey:key];
+            if ([property isKindOfClass:[OOCModelBasicProperty class]]) {
+                OOCModelBasicProperty* basicProperty = (OOCModelBasicProperty*)property;
+                // This is bullshit. BOOL is sometimes _C_CHR and sometimes _C_BOOL
+                // depending on the context. Since booleans are more common, we
+                // have to assume all chars are booleans.
+                // But I wish we could support char as well.
+                if (basicProperty.identifier == _C_CHR) {
+                    [self setValue:[value boolValue] ? @TRUE : @FALSE forKey:key];
+                    continue;
+                }
+            }
             [self setValue:value forKey:key];
         } else if ([key hasSuffix:@"_id"]) {
             NSString* shortkey = [key substringToIndex:key.length - 3];
