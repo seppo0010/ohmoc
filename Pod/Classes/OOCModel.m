@@ -336,6 +336,12 @@ static NSMutableDictionary* cache = nil;
     return self;
 }
 
++ (instancetype)create {
+    id instance = [[self alloc] init];
+    [instance save];
+    return instance;
+}
+
 + (instancetype)create:(NSDictionary*)properties {
     id instance = [[self alloc] initWithDictionary:properties];
     [instance save];

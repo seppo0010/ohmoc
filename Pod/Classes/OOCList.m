@@ -61,7 +61,7 @@
             [Ohmoc command:@[@"RPUSH", mykey, submodel.id]];
         }
     }];
-    [Ohmoc command:@[@"COMMIT"]];
+    [Ohmoc command:@[@"EXEC"]];
 }
 
 - (void)push:(OOCModel*)submodel {

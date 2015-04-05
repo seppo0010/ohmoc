@@ -463,6 +463,12 @@ describe(@"list", ^{
         XCTAssertEqual(c3, p.comments.last);
         XCTAssertFalse(p.comments.isEmpty);
     });
+
+    it(@"replace", ^{
+        OOCComment* c4 = [OOCComment create];
+        [p.comments replace:@[c4]];
+        XCTAssertEqualObjects([p.comments ids], @[c4.id]);
+    });
 });
 
 SpecEnd
