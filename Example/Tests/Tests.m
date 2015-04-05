@@ -315,6 +315,11 @@ describe(@"book author", ^{
             XCTAssertEqual(author.book, b2);
         }
     });
+
+    it(@"@myobie usecase", ^{
+        OOCSet* res = [[b1.authors find:@{@"mood": @"happy"}] union:@{@"mood": @"sad", @"book_id": b1.id}];
+        XCTAssertEqual(res.size, 2);
+    });
 });
 
 SpecEnd
