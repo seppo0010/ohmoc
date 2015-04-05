@@ -925,6 +925,19 @@ describe(@"model", ^{
         expected = @[];
         XCTAssertEqualObjects(attendeesC, expected);
     });
+    it(@"delete elements", ^{
+        OOCPerson* p1 = [OOCPerson create:@{@"name": @"Albert"}];
+        OOCPerson* p2 = [OOCPerson create:@{@"name": @"Bertrand"}];
+        [OOCPerson create:@{@"name": @"Charles"}];
+        OOCEvent* event = [OOCEvent create:@{@"name": @"Ruby Tuesday"}];
+        [event.attendees add:p1];
+        [event.attendees add:p2];
+
+        XCTAssertEqual(event.attendees.size, 2);
+
+        [event.attendees remove:p2];
+        XCTAssertEqual(event.attendees.size, 1);
+    });
 });
 
 SpecEnd
