@@ -52,8 +52,17 @@ static NSString* path;
 }
 
 + (void) flush {
-    [[self rlite] command:@[@"FLUSHDB"]];
+    [self command:@[@"FLUSHDB"]];
     r = nil;
+}
+
++ (id)command:(NSArray*)command {
+    id retval = [[self rlite] command:command];
+    if ([retval isKindOfClass:[NSException class]]) {
+        NSLog(@"%@", command);
+        [retval raise];
+    }
+    return retval;
 }
 
 @end

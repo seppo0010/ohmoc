@@ -182,7 +182,7 @@ static NSString* lua_delete = nil;
 }
 
 + (BOOL)exists:(NSString*)id {
-    return [[[Ohmoc rlite] command:@[@"SISMEMBER", [@[NSStringFromClass(self), @"all"] componentsJoinedByString:@":"], id]] boolValue];
+    return [[Ohmoc command:@[@"SISMEMBER", [@[NSStringFromClass(self), @"all"] componentsJoinedByString:@":"], id]] boolValue];
 }
 
 static NSMutableDictionary* cache = nil;
@@ -218,7 +218,7 @@ static NSMutableDictionary* cache = nil;
     if (!property.hasIndex) {
         [OOCIndexNotFoundException raise:@"IndexNotFound" format:@"Index not found: '%@'", att];
     }
-    NSString* _id = [[Ohmoc rlite] command:@[@"HGET", [@[NSStringFromClass(self), @"uniques", att] componentsJoinedByString:@":"]]];
+    NSString* _id = [Ohmoc command:@[@"HGET", [@[NSStringFromClass(self), @"uniques", att] componentsJoinedByString:@":"]]];
     if (_id) {
         OOCModel* model = [[OOCModel alloc] initWithId:_id];
         [model load];
@@ -258,13 +258,12 @@ static NSMutableDictionary* cache = nil;
         return [OOCSet collectionWithKey:[filters objectAtIndex:0] namespace:0 modelClass:self];
     } else {
         return [OOCSet collectionWithBlock:^(void(^block)(NSString*)) {
-            ObjCHirlite* conn = [Ohmoc rlite];
             NSString* key = [Ohmoc tmpKey];
             NSMutableArray* sunionCommand = [@[@"SINTERSTORE", key] mutableCopy];
             [sunionCommand addObjectsFromArray:filters];
-            [conn command:sunionCommand];
+            [Ohmoc command:sunionCommand];
             block(key);
-            [conn command:@[@"DEL", key]];
+            [Ohmoc command:@[@"DEL", key]];
         } namespace:0 modelClass:self];
     }
 }
@@ -336,7 +335,7 @@ static NSMutableDictionary* cache = nil;
 }
 
 - (void) load {
-    NSArray* properties = [[Ohmoc rlite] command:@[@"HGETALL", [@[NSStringFromClass([self class]), self.id] componentsJoinedByString:@":"]]];
+    NSArray* properties = [Ohmoc command:@[@"HGETALL", [@[NSStringFromClass([self class]), self.id] componentsJoinedByString:@":"]]];
     NSDictionary* classProperties = [[self class] spec].properties;
     for (NSUInteger i = 0; i < properties.count; i += 2) {
         NSString* key = [properties objectAtIndex:i];
@@ -406,7 +405,7 @@ static NSMutableDictionary* cache = nil;
     if (!lua_save) {
         lua_save = [NSString stringWithCString:savelua encoding:NSUTF8StringEncoding];
     }
-    id ret = [[Ohmoc rlite] command:@[@"EVAL", lua_save, @"0", [features messagePack], [properties messagePack], [indices messagePack], [uniques messagePack]]];
+    id ret = [Ohmoc command:@[@"EVAL", lua_save, @"0", [features messagePack], [properties messagePack], [indices messagePack], [uniques messagePack]]];
     if ([ret isKindOfClass:[NSException class]]) {
         // ugh;
         [ret raise];

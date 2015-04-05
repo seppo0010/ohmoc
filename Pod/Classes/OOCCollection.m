@@ -48,10 +48,6 @@
     return c;
 }
 
-- (ObjCHirlite*)conn {
-    return [Ohmoc rlite];
-}
-
 - (NSString*)idAtIndex:(NSUInteger)index {
     return [self.ids objectAtIndex:index];
 }
@@ -69,8 +65,7 @@
     NSUInteger size = [self size];
     if (countOfItemsAlreadyEnumerated < size) {
         state->itemsPtr = stackbuf;
-        ObjCHirlite* _rlite = [self conn];
-        [_rlite command:@[@"SELECT", [NSString stringWithFormat:@"%lu", (long unsigned)self.ns]]];
+        [Ohmoc command:@[@"SELECT", [NSString stringWithFormat:@"%lu", (long unsigned)self.ns]]];
         while((countOfItemsAlreadyEnumerated < size) && (count < stackbufLength)) {
             // TODO: pipeline
             // TODO: make model
