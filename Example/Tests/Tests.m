@@ -852,6 +852,26 @@ describe(@"model", ^{
         id expected = @[@"A", @"B", @"C", @"D"];
         XCTAssertEqualObjects([[objects arrayValue] valueForKey:@"name"], expected);
     });
+    it(@"return an empty array if there are no elements to sort", ^{
+        XCTAssertEqualObjects([[[OOCPerson all] sortBy:@"name"] arrayValue], @[]);
+    });
+    it(@"return the first element sorted by id when using first", ^{
+        [OOCPerson create:@{@"name": @"A"}];
+        [OOCPerson create:@{@"name": @"B"}];
+        XCTAssertEqualObjects([[[OOCPerson all] first] name], @"A");
+    });
+    it(@"return the first element sorted by name if first receives a sorting option", ^{
+        [OOCPerson create:@{@"name": @"B"}];
+        [OOCPerson create:@{@"name": @"A"}];
+        XCTAssertEqualObjects([[[OOCPerson all] firstBy:@"name" order:@"ALPHA"] name], @"A");
+    });
+    it(@"return attribute values when the get parameter is specified", ^{
+        [OOCPerson create:@{@"name": @"B"}];
+        [OOCPerson create:@{@"name": @"A"}];
+        NSArray* expected = @[@"A", @"B"];
+        XCTAssertEqualObjects([[OOCPerson all] sortBy:@"name" get:@"name" limit:0 offset:0 order:@"ALPHA" store:nil], expected);
+    });
 });
+
 
 SpecEnd

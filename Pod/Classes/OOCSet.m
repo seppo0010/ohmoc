@@ -90,8 +90,8 @@
     return [self _sortBy:[self toKey:by] get:get limit:limit offset:offset order:order store:store];
 }
 
-- (id<NSFastEnumeration>) sortBy:(NSString*)by {
-    return [self sortBy:by get:nil limit:0 offset:0 order:nil store:nil];
+- (OOCList*) sortBy:(NSString*)by {
+    return (OOCList*)[self sortBy:by get:nil limit:0 offset:0 order:nil store:nil];
 }
 
 - (OOCSet*)find:(NSDictionary*)dict {
@@ -161,7 +161,7 @@
 }
 
 - (id)firstBy:(NSString*)by get:(NSString*)get order:(NSString*)order {
-    for (id obj in [self sortBy:@"fname" get:get limit:1 offset:0 order:order store:nil]) {
+    for (id obj in [self sortBy:by get:get limit:1 offset:0 order:order store:nil]) {
         return obj;
     }
     return nil;
@@ -172,7 +172,7 @@
 }
 
 - (id)first {
-    return [self firstBy:nil order:nil];
+    return [self firstBy:@"id" order:nil];
 }
 
 - (NSString*)keyForProperty:(NSString*)propertyName {
