@@ -13,6 +13,7 @@
 #import "OOCComment.h"
 #import "OOCBook.h"
 #import "OOCAuthor.h"
+#import "OOCNode.h"
 #import "Ohmoc.h"
 #import "ObjCHirlite.h"
 #import "NSArray+arrayWithFastEnumeration.h"
@@ -399,6 +400,22 @@ describe(@"indices2", ^{
         NSArray* arr = [NSArray arrayWithFastEnumeration:[res sortBy:@"id"]];
         NSArray* arr2 = @[u1, u2];
         XCTAssertEqualObjects(arr, arr2);
+    });
+});
+
+describe(@"indices3", ^{
+    beforeEach(^{
+        [Ohmoc flush];
+    });
+    it(@"index bug", ^{
+        OOCNode* n = [OOCNode create:@{}];
+        n.capacity = 91;
+        [n save];
+
+        OOCSet* res = [OOCNode find:@{@"available": @TRUE}];
+        XCTAssertEqual(res.size, 0);
+        res = [OOCNode find:@{@"available": @FALSE}];
+        XCTAssertEqual(res.size, 1);
     });
 });
 

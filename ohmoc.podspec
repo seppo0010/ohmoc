@@ -17,6 +17,6 @@ Pod::Spec.new do |s|
   s.source_files = 'Pod/Classes/**/*'
 
   s.public_header_files = 'Pod/Classes/**/*.h'
-  s.dependency 'objc-rlite', '~> 0.1.4'
+  s.dependency 'objc-rlite', '~> 0.1.5'
   s.dependency 'msgpack', '~> 0.1.3'
 end

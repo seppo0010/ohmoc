@@ -231,6 +231,17 @@ static NSMutableDictionary* cache = nil;
     return nil;
 }
 
++ (NSString*)indexForKey:(NSString*)key value:(id)v {
+    OOCModelProperty* prop = [[self spec].properties valueForKey:key];
+    if ([prop isKindOfClass:[OOCModelBasicProperty class]]) {
+        OOCModelBasicProperty* basicProp = (OOCModelBasicProperty*)prop;
+        if (basicProp.identifier == _C_BOOL) {
+            v = [v boolValue] ? @"true" : @"false";
+        }
+    }
+    v = [v respondsToSelector:@selector(stringValue)] ? [v stringValue] : v;
+    return [@[NSStringFromClass(self), @"indices", key, v] componentsJoinedByString:@":"];
+}
 + (NSArray*) toIndices:(NSString*)key value:(id)value {
     OOCModelProperty* property;
     if ([key hasSuffix:@"_id"]) {
@@ -244,12 +255,12 @@ static NSMutableDictionary* cache = nil;
     }
     if ([value conformsToProtocol:@protocol(NSFastEnumeration)]) {
         NSMutableArray* indices = [NSMutableArray array];
-        for (NSString* v in value) {
-            [indices addObject:[@[NSStringFromClass(self), @"indices", key, v] componentsJoinedByString:@":"]];
+        for (id v in value) {
+            [indices addObject:[self indexForKey:key value:v]];
         }
         return [indices copy];
     } else {
-        return @[[@[NSStringFromClass(self), @"indices", key, value] componentsJoinedByString:@":"]];
+        return @[[self indexForKey:key value:value]];
     }
 }
 
@@ -395,7 +406,7 @@ static NSMutableDictionary* cache = nil;
                 [properties addObject:[(OOCModel*)val id]];
             } else {
                 [properties addObject:key];
-                [properties addObject:val];
+                [properties addObject:[val respondsToSelector:@selector(stringValue)] ? [val stringValue] : val];
             }
         }
     }
