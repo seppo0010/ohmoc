@@ -7,11 +7,13 @@
 //
 
 #import "OOCModel.h"
+#import "Ohmoc.h"
 
 @protocol OOCPerson;
 @interface OOCEvent : OOCModel
 
 @property NSString* name;
+@property id<OOCIndex> nameMeta;
 @property NSString* location;
 @property NSString* slug;
 @property OOCSet<OOCPerson>* attendees;

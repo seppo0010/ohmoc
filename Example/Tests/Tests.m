@@ -797,6 +797,29 @@ describe(@"model", ^{
 
         XCTAssertEqual([OOCUser all].size, 0);
     });
+    it(@"no leftover keys", ^{
+        NSArray* keys = [Ohmoc command:@[@"KEYS", @"*"]];
+        XCTAssertEqualObjects(@[], keys);
+        OOCEvent* e = [OOCEvent create:@{@"name": @"Bar"}];
+
+        keys = [[Ohmoc command:@[@"KEYS", @"*"]] sortedArrayUsingSelector:@selector(compare:)];
+        NSArray* expected = @[@"OOCEvent:1:_indices", @"OOCEvent:1", @"OOCEvent:all", @"OOCEvent:id", @"OOCEvent:indices:name:Bar"];
+        XCTAssertEqualObjects([expected sortedArrayUsingSelector:@selector(compare:)], keys);
+
+        [e delete];
+        keys = [Ohmoc command:@[@"KEYS", @"*"]];
+        XCTAssertEqualObjects(@[@"OOCEvent:id"], keys);
+
+        e = [OOCEvent create:@{@"name": @"Baz"}];
+        [Ohmoc command:@[@"SET", @"OOCEvent:2:attendees", @"something"]];
+        keys = [[Ohmoc command:@[@"KEYS", @"*"]] sortedArrayUsingSelector:@selector(compare:)];
+        expected = @[@"OOCEvent:2:_indices", @"OOCEvent:2", @"OOCEvent:all", @"OOCEvent:id", @"OOCEvent:indices:name:Baz", @"OOCEvent:2:attendees"];
+        XCTAssertEqualObjects([expected sortedArrayUsingSelector:@selector(compare:)], keys);
+
+        [e delete];
+        keys = [Ohmoc command:@[@"KEYS", @"*"]];
+        XCTAssertEqualObjects(@[@"OOCEvent:id"], keys);
+    });
 });
 
 SpecEnd
