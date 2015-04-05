@@ -59,8 +59,11 @@ static NSString* path;
 + (id)command:(NSArray*)command {
     id retval = [[self rlite] command:command];
     if ([retval isKindOfClass:[NSException class]]) {
-        NSLog(@"%@", command);
-        [retval raise];
+        NSException* exc = retval;
+        if ([exc.reason containsString:@"UniqueIndexViolation"]) {
+            [[[OOCUniqueIndexViolationException alloc] initWithName:exc.name reason:exc.reason userInfo:exc.userInfo] raise];
+        }
+        [exc raise];
     }
     return retval;
 }

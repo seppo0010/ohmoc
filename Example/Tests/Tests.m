@@ -581,6 +581,10 @@ describe(@"uniques", ^{
     it(@"findability", ^{
         XCTAssertEqual([OOCUser2 with:@"email" is:@"a@a.com"], u);
     });
+
+    it(@"raises when it already exists during create", ^{
+        XCTAssertThrowsSpecific([OOCUser2 create:@{@"email": @"a@a.com"}], OOCUniqueIndexViolationException);
+    });
 });
 
 SpecEnd

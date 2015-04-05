@@ -460,10 +460,6 @@ static NSMutableDictionary* cache = nil;
     }
 
     id ret = [Ohmoc command:@[@"EVAL", lua_save, @"0", [features messagePack], [properties messagePack], [indices messagePack], [uniques messagePack]]];
-    if ([ret isKindOfClass:[NSException class]]) {
-        // ugh;
-        [ret raise];
-    }
     [self setValue:ret forKey:@"id"];
 
     if (!cache) {
