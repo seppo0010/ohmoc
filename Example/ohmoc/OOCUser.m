@@ -10,4 +10,15 @@
 
 @implementation OOCUser
 
+- (NSString<OOCIndex>*)emailProvider {
+    return [[self.email componentsSeparatedByString:@"@"] lastObject];
+}
+
+- (void) save {
+    if (!_activationCode) {
+        self.activationCode = [NSString stringWithFormat:@"user:%@", self.id];
+    }
+    [super save];
+}
+
 @end

@@ -322,4 +322,20 @@ describe(@"book author", ^{
     });
 });
 
+describe(@"indices", ^{
+    __block OOCUser* u1, *u2, *u3;
+    beforeEach(^{
+        u1 = u2 = u3 = nil;
+        [Ohmoc flush];
+        u1 = [OOCUser create:@{@"email": @"foo", @"activationCode": @"bar", @"update": @"baz"}];
+        u2 = [OOCUser create:@{@"email": @"bar"}];
+        u3 = [OOCUser create:@{@"email": @"baz qux"}];
+    });
+
+    it(@"be able to find by the given attribute", ^{
+        OOCUser* first = [[OOCUser find:@{@"email": @"foo"}] first];
+        XCTAssertEqual(first, u1);
+    });
+});
+
 SpecEnd

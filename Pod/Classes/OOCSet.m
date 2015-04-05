@@ -167,6 +167,10 @@
     return [self firstBy:by get:nil order:order];
 }
 
+- (id)first {
+    return [self firstBy:nil order:nil];
+}
+
 - (NSString*)keyForProperty:(NSString*)propertyName {
     return [self.model indexForProperty:self.propertyName];
 }

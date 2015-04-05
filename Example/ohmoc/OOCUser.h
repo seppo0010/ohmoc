@@ -15,6 +15,11 @@
 
 @property NSString<OOCIndex>* fname;
 @property NSString<OOCIndex>* lname;
+@property NSString<OOCIndex>* email;
+@property (readonly) NSString<OOCIndex>* emailProvider;
+@property NSString<OOCIndex>* update;
+@property NSString* activationCode;
+@property id<OOCIndex> activationCodeMeta;
 @property NSString* status;
 @property NSString<OOCIndex>* statusMeta;
 @property OOCSet<OOCPost>* posts;

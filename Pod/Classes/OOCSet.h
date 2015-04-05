@@ -17,6 +17,7 @@
 - (OOCSet*)except:(NSDictionary*)dict;
 - (OOCSet*)combine:(NSDictionary*)dict;
 - (OOCSet*)union:(NSDictionary*)dict;
+- (id)first;
 - (id)firstBy:(NSString*)by get:(NSString*)get order:(NSString*)order;
 - (id)firstBy:(NSString*)by order:(NSString*)order;
 
