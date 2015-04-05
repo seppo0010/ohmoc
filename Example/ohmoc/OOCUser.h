@@ -15,7 +15,8 @@
 
 @property NSString<OOCIndex>* fname;
 @property NSString<OOCIndex>* lname;
-@property NSString<OOCIndex>* email;
+@property NSString* email;
+@property id<OOCIndex> emailMeta;
 @property (readonly) NSString<OOCIndex>* emailProvider;
 @property NSString<OOCIndex>* update;
 @property NSString* activationCode;

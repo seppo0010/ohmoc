@@ -357,6 +357,16 @@ describe(@"indices", ^{
         XCTAssert([res isEmpty]);
         XCTAssertNil([res first]);
     });
+    it(@"update indices when changing attribute values", ^{
+        u1.email = @"baz";
+        [u1 save];
+
+        OOCSet* res = [OOCUser find:@{@"email": @"foo"}];
+        XCTAssertEqual(res.size, 0);
+        res = [OOCUser find:@{@"email": @"baz"}];
+        XCTAssertEqual(res.size, 1);
+        XCTAssertEqual(res.first, u1);
+    });
 });
 
 SpecEnd
