@@ -30,7 +30,7 @@
 }
 
 - (id)objectAtIndex:(NSInteger)index {
-    return [[self.modelClass alloc] initWithDictionary:[Ohmoc command:@[@"HGET", [self idAtIndex:index]]]];
+    return [[self modelClass] get:[self idAtIndex:index]];
 }
 
 - (OOCModel*)first {

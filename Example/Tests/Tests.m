@@ -456,6 +456,13 @@ describe(@"list", ^{
         contains = [p.comments contains:c3];
         XCTAssert(contains);
     });
+
+    it(@"first / last / size / empty?", ^{
+        XCTAssertEqual(3, p.comments.size);
+        XCTAssertEqual(c1, p.comments.first);
+        XCTAssertEqual(c3, p.comments.last);
+        XCTAssertFalse(p.comments.isEmpty);
+    });
 });
 
 SpecEnd
