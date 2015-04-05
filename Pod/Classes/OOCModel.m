@@ -19,8 +19,9 @@
 
 @interface OOCModelProperty : NSObject
 @property NSString* name;
-@property BOOL isUnique; // shortcut when OOCUnique protocol is used
-@property BOOL hasIndex; // shortcut when OOCIndex protocol is used
+@property BOOL readonly; // the property is (readonly)
+@property BOOL isUnique; // OOCUnique protocol is used
+@property BOOL hasIndex; // OOCIndex protocol is used
 @end
 @implementation OOCModelProperty
 @end
@@ -131,12 +132,15 @@ static NSString* lua_delete = nil;
         objc_property_t *props = class_copyPropertyList(kls, &count);
         for (i = 0; i < count; i++) {
             NSString* type;
+            BOOL readonly = FALSE;
             const char *propName = property_getName(props[i]);
             objc_property_attribute_t *attributeList = property_copyAttributeList(props[i], &attributeListCount);
             for (j = 0; j < attributeListCount; j++) {
                 if (strcmp(attributeList[j].name, "T") == 0) {
                     type = [NSString stringWithCString:attributeList[j].value encoding:NSUTF8StringEncoding];
-                    break;
+                }
+                if (strcmp(attributeList[j].name, "R") == 0) {
+                    readonly = TRUE;
                 }
             }
             if (!type) {
@@ -144,6 +148,7 @@ static NSString* lua_delete = nil;
             }
             NSString* propertyName = [NSString stringWithCString:propName encoding:NSUTF8StringEncoding];
             OOCModelProperty* property = [self parse:propertyName type:type];
+            property.readonly = readonly;
             if ([property isKindOfClass:[OOCModelObjectProperty class]]) {
                 OOCModelObjectProperty* objProperty = (OOCModelObjectProperty*)property;
                 if ([objProperty.klass isSubclassOfClass:[OOCCollection class]]) {
@@ -161,6 +166,7 @@ static NSString* lua_delete = nil;
             OOCModelProperty* property = [properties valueForKey:[propertyName substringToIndex:propertyName.length - 4]];
             property.isUnique = metaProperty.isUnique;
             property.hasIndex = metaProperty.hasIndex;
+            property.readonly = metaProperty.readonly;
             [properties removeObjectForKey:propertyName];
         }
         if ([property isKindOfClass:[OOCModelObjectProperty class]] && [[(OOCModelObjectProperty*)property protocols] containsObject:@"OOCCollection"]) {
@@ -409,6 +415,12 @@ static NSMutableDictionary* cache = nil;
         id value = [properties objectAtIndex:i + 1];
         if ([classProperties valueForKey:key]) {
             OOCModelProperty* property = [classProperties valueForKey:key];
+            if (!property) {
+                [NSException raise:@"UnknownKey" format:@"Unknown key %@", key];
+            }
+            if (property.readonly) {
+                continue;
+            }
             if ([property isKindOfClass:[OOCModelBasicProperty class]]) {
                 OOCModelBasicProperty* basicProperty = (OOCModelBasicProperty*)property;
                 // This is bullshit. BOOL is sometimes _C_CHR and sometimes _C_BOOL
@@ -426,6 +438,9 @@ static NSMutableDictionary* cache = nil;
             OOCModelProperty* property = [classProperties valueForKey:shortkey];
             if (!property) {
                 [NSException raise:@"UnknownKey" format:@"Unknown key %@", key];
+            }
+            if (property.readonly) {
+                continue;
             }
             if (![property isKindOfClass:[OOCModelObjectProperty class]]) {
                 [NSException raise:@"ExpectedObject" format:@"Property is not an object property for key '%@'", key];
