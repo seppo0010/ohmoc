@@ -97,11 +97,11 @@
         NSMutableArray* command = [NSMutableArray arrayWithCapacity:filters.count + 2];
         [self blockWithKey:^(NSString* mykey) {
             [command addObjectsFromArray:@[@"SINTERSTORE", key, mykey]];
+            [command addObjectsFromArray:filters];
+            [Ohmoc command:command];
+            localblock(key);
+            [Ohmoc command:@[@"DEL", key]];
         }];
-        [command addObjectsFromArray:filters];
-        [Ohmoc command:command];
-        localblock(key);
-        [Ohmoc command:@[@"DEL", key]];
     } namespace:self.ns modelClass:self.modelClass];
 }
 
@@ -115,10 +115,10 @@
         NSMutableArray* sdiffCommand = [NSMutableArray arrayWithCapacity:4];
         [self blockWithKey:^(NSString* mykey) {
             [sdiffCommand addObjectsFromArray:@[@"SDIFFSTORE", key2, mykey, key1]];
+            [Ohmoc command:sdiffCommand];
+            localblock(key2);
+            [Ohmoc command:@[@"DEL", key1, key2]];
         }];
-        [Ohmoc command:sdiffCommand];
-        localblock(key2);
-        [Ohmoc command:@[@"DEL", key1, key2]];
     } namespace:self.ns modelClass:self.modelClass];
 }
 
@@ -132,10 +132,10 @@
         NSMutableArray* sdiffCommand = [NSMutableArray arrayWithCapacity:4];
         [self blockWithKey:^(NSString* mykey) {
             [sdiffCommand addObjectsFromArray:@[@"SINTERSTORE", key2, mykey, key1]];
+            [Ohmoc command:sdiffCommand];
+            localblock(key2);
+            [Ohmoc command:@[@"DEL", key1, key2]];
         }];
-        [Ohmoc command:sdiffCommand];
-        localblock(key2);
-        [Ohmoc command:@[@"DEL", key1, key2]];
     } namespace:self.ns modelClass:self.modelClass];
 }
 

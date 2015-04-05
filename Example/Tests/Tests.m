@@ -255,9 +255,14 @@ describe(@"filtering", ^{
         XCTAssert(contains);
 
         res = [[[OOCUser find:@{@"status": @"active"}] union:@{@"status": @"inactive"}] find:@{@"lname": @"Doe"}];
+        BOOL hasInactive = false;
         for (OOCUser* user in res) {
-            XCTAssertFalse([user.status isEqualToString:@"inactive"]);
+            hasInactive = [user.status isEqualToString:@"inactive"];
+            if (hasInactive) {
+                break;
+            }
         }
+        XCTAssert(hasInactive);
     });
     it(@"combine", ^{
         OOCSet* res = [[OOCUser find:@{@"status": @"active"}] combine:@{@"fname": @[@"John", @"Jane"]}];
@@ -291,6 +296,24 @@ describe(@"book author", ^{
         XCTAssertEqual(1, res.size);
         res = [[b1.authors find:@{@"mood": @"happy"}] union:@{@"book_id": b1.id, @"mood": @"sad"}];
         XCTAssertEqual(2, res.size);
+    });
+
+    it(@"appending an empty set via union", ^{
+        OOCSet* res = [[[OOCAuthor find:@{@"book_id": b1.id, @"mood": @"happy"}]
+                        union:@{@"book_id": b2.id, @"mood": @"sad"}]
+                       union:@{@"book_id": b2.id, @"mood": @"happy"}];
+        XCTAssertEqual(2, res.size);
+    });
+
+    it(@"revert by applying the original intersection", ^{
+        OOCSet* res = [[[OOCAuthor find:@{@"book_id": b1.id, @"mood": @"happy"}]
+                        union:@{@"book_id": b2.id, @"mood": @"sad"}]
+                       except:@{@"book_id": b1.id, @"mood": @"happy"}];
+        XCTAssertEqual(1, res.size);
+        for (OOCAuthor* author in res) {
+            XCTAssertEqualObjects(author.mood, @"sad");
+            XCTAssertEqual(author.book, b2);
+        }
     });
 });
 
