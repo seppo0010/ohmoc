@@ -257,6 +257,14 @@ describe(@"filtering", ^{
             XCTAssertFalse([user.status isEqualToString:@"inactive"]);
         }
     });
+    it(@"combine", ^{
+        OOCSet* res = [[OOCUser find:@{@"status": @"active"}] combine:@{@"fname": @[@"John", @"Jane"]}];
+        XCTAssertEqual(res.size, 2);
+        BOOL contains = [res contains:john];
+        XCTAssert(contains);
+        contains = [res contains:jane];
+        XCTAssert(contains);
+    });
 });
 
 SpecEnd
