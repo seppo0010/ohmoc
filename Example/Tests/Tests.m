@@ -351,6 +351,12 @@ describe(@"indices", ^{
         NSUInteger size = [[[[OOCUser find:@{@"email": @"foo"}] find:@{@"activationCode": @"bar"}] find:@{@"update": @"baz"}] size];
         XCTAssertEqual(size, 1);
     });
+
+    it(@"return nil if no results are found", ^{
+        OOCSet* res = [OOCUser find:@{@"email": @"foobar"}];
+        XCTAssert([res isEmpty]);
+        XCTAssertNil([res first]);
+    });
 });
 
 SpecEnd
