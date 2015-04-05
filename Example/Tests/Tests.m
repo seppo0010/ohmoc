@@ -218,6 +218,20 @@ describe(@"filtering", ^{
         contains = [res contains:jane];
         XCTAssert(contains);
     });
+    it(@"except unions keys when passing an array", ^{
+        OOCUser* expected = [OOCUser create:@{@"fname": @"Jean", @"status": @"inactive"}];
+
+        OOCSet* res = [[OOCUser find:@{@"status": @"inactive"}] except:@{@"fname": @[john.fname, jane.fname]}];
+
+        XCTAssertEqual(res.size, 1);
+        BOOL contains = [res contains:expected];
+        XCTAssert(contains);
+
+        res = [[OOCUser all] except:@{@"fname": @[john.fname, jane.fname]}];
+        XCTAssertEqual(res.size, 1);
+        contains = [res contains:expected];
+        XCTAssert(contains);
+    });
 });
 
 SpecEnd
