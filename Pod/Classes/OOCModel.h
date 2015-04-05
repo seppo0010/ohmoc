@@ -24,5 +24,6 @@
 + (OOCSet*)all;
 + (BOOL)isCached:(NSString*)id;
 - (void) save;
+- (void) delete;
 
 @end

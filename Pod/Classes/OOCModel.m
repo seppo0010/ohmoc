@@ -13,6 +13,7 @@
 #import "OOCCollection.h"
 #import "OOCSet.h"
 #import "OOCsavelua.h"
+#import "OOCdeletelua.h"
 #import "MessagePack.h"
 #import <objc/runtime.h>
 
@@ -343,8 +344,12 @@ static NSMutableDictionary* cache = nil;
     return self;
 }
 
+- (NSString*)key {
+    return [@[NSStringFromClass([self class]), self.id] componentsJoinedByString:@":"];
+}
+
 - (void) load {
-    NSArray* properties = [Ohmoc command:@[@"HGETALL", [@[NSStringFromClass([self class]), self.id] componentsJoinedByString:@":"]]];
+    NSArray* properties = [Ohmoc command:@[@"HGETALL", self.key]];
     NSDictionary* classProperties = [[self class] spec].properties;
     for (NSUInteger i = 0; i < properties.count; i += 2) {
         NSString* key = [properties objectAtIndex:i];
@@ -438,6 +443,23 @@ static NSMutableDictionary* cache = nil;
 - (NSString*)listForProperty:(NSString *)propertyName {
     OOCModelObjectProperty* property = [[[[self class] spec] properties] valueForKey:propertyName];
     return [@[NSStringFromClass(property.subtype), self.id, propertyName] componentsJoinedByString:@":"];
+}
+
+- (void) delete {
+    OOCModelSpec* spec = [[self class] spec];
+    NSMutableDictionary* uniques = [NSMutableDictionary dictionaryWithCapacity:spec.uniques.count];
+    for (NSString* unique in spec.uniques) {
+        [uniques setValue:[self valueForKey:unique] forKey:unique];
+    }
+    if (!lua_delete) {
+        lua_delete = [NSString stringWithCString:deletelua encoding:NSUTF8StringEncoding];
+    }
+
+    id ret = [Ohmoc command:@[@"EVAL", lua_delete, @"0", [@{@"name": NSStringFromClass([self class]), @"id": self.id, @"key": self.key} messagePack], [uniques messagePack], [@[] messagePack]]];
+    if ([ret isKindOfClass:[NSException class]]) {
+        // ugh;
+        [ret raise];
+    }
 }
 
 @end

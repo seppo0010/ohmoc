@@ -357,6 +357,7 @@ describe(@"indices", ^{
         XCTAssert([res isEmpty]);
         XCTAssertNil([res first]);
     });
+
     it(@"update indices when changing attribute values", ^{
         u1.email = @"baz";
         [u1 save];
@@ -366,6 +367,14 @@ describe(@"indices", ^{
         res = [OOCUser find:@{@"email": @"baz"}];
         XCTAssertEqual(res.size, 1);
         XCTAssertEqual(res.first, u1);
+    });
+
+    it(@"remove from the index after deleting", ^{
+        OOCSet* res = [OOCUser find:@{@"email": @"bar"}];
+        XCTAssertEqual(res.size, 1);
+        [u2 delete];
+        res = [OOCUser find:@{@"email": @"bar"}];
+        XCTAssertEqual(res.size, 0);
     });
 });
 
