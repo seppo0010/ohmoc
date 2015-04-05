@@ -469,6 +469,17 @@ describe(@"list", ^{
         [p.comments replace:@[c4]];
         XCTAssertEqualObjects([p.comments ids], @[c4.id]);
     });
+
+    it(@"push / unshift", ^{
+        OOCComment* c4 = [OOCComment create];
+        OOCComment* c5 = [OOCComment create];
+
+        [p.comments unshift:c4];
+        [p.comments push:c5];
+
+        XCTAssertEqual(c4, p.comments.first);
+        XCTAssertEqual(c5, p.comments.last);
+    });
 });
 
 SpecEnd
