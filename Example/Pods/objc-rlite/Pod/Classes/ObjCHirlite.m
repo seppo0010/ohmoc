@@ -96,6 +96,7 @@
         data = [self dataFromObject:[command objectAtIndex:i]];
         argv[i] = (char *)[data bytes];
         argvlen[i] = [data length];
+        argv[i][argvlen[i]] = 0;
     }
 
     reply = rliteCommandArgv(context, argc, argv, argvlen);

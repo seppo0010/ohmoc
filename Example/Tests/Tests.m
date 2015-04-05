@@ -187,7 +187,7 @@ describe(@"filtering", ^{
         XCTAssertEqualObjects(firstName, jane.fname);
         firstName = [set firstBy:@"fname" get:@"fname" order:@"ALPHA DESC"];
         XCTAssertEqualObjects(firstName, john.fname);
-});
+    });
 });
 
 SpecEnd
