@@ -49,9 +49,23 @@
 @implementation OOCModelSpec
 @end
 
+@interface OOCModel (private)
+
+@property NSString<OOCUnique>* id;
+
+@end
+
+@implementation OOCModel (private)
+
+- (void) setId:(NSString<OOCUnique> *)id {
+    _id = id;
+}
+
+@end
+
 @implementation OOCModel
 
-@synthesize id;
+@synthesize id = _id;
 
 static NSMutableDictionary* specs = nil;
 static NSString* lua_save = nil;
@@ -221,7 +235,7 @@ static NSMutableDictionary* cache = nil;
     return model;
 }
 - (void) dealloc {
-    NSString* cacheKey = [@[NSStringFromClass([self class]), id] componentsJoinedByString:@":"];
+    NSString* cacheKey = [@[NSStringFromClass([self class]), _id] componentsJoinedByString:@":"];
     [cache removeObjectForKey:cacheKey];
 }
 
@@ -341,9 +355,9 @@ static NSMutableDictionary* cache = nil;
     return self;
 }
 
-- (OOCModel*)initWithId:(NSString*)_id {
+- (OOCModel*)initWithId:(NSString*)id {
     if (self = [self init]) {
-        self.id = (NSString<OOCUnique>*)_id;
+        self.id = (NSString<OOCUnique>*)id;
     }
     return self;
 }
@@ -478,7 +492,7 @@ static NSMutableDictionary* cache = nil;
     if (!cache) {
         cache = (NSMutableDictionary*)CFBridgingRelease(CFDictionaryCreateMutable(nil, 0, &kCFCopyStringDictionaryKeyCallBacks, NULL));
     }
-    NSString* cacheKey = [@[NSStringFromClass([self class]), id] componentsJoinedByString:@":"];
+    NSString* cacheKey = [@[NSStringFromClass([self class]), _id] componentsJoinedByString:@":"];
     [cache setValue:self forKey:cacheKey];
 }
 

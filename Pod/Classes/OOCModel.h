@@ -11,9 +11,11 @@
 
 @class OOCCollection;
 @class OOCSet;
-@interface OOCModel : NSObject
+@interface OOCModel : NSObject {
+    NSString<OOCUnique>* _id;
+}
 
-@property NSString<OOCUnique>* id;
+@property (readonly) NSString<OOCUnique>* id;
 
 - (void)applyDictionary:(NSDictionary*)properties;
 - (instancetype)initWithDictionary:(NSDictionary*)properties;
