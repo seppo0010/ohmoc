@@ -496,6 +496,16 @@ describe(@"list", ^{
 
         XCTAssert([p.comments isEmpty]);
     });
+
+    it(@"deleting main model cleans up the collection", ^{
+        NSString* listkey = [@[NSStringFromClass([OOCPost class]), p.id, @"comments"] componentsJoinedByString:@":"];
+
+        BOOL exists = [[Ohmoc command:@[@"EXISTS", listkey]] boolValue];
+        XCTAssert(exists);
+        [p delete];
+        exists = [[Ohmoc command:@[@"EXISTS", listkey]] boolValue];
+        XCTAssertFalse(exists); 
+    });
 });
 
 SpecEnd

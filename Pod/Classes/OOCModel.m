@@ -44,6 +44,7 @@
 @property NSDictionary* properties;
 @property NSSet* indices;
 @property NSSet* uniques;
+@property NSSet* tracked;
 @end
 @implementation OOCModelSpec
 @end
@@ -108,6 +109,7 @@ static NSString* lua_delete = nil;
 
 + (OOCModelSpec*)calculateSpec {
     NSMutableDictionary* properties = [NSMutableDictionary dictionary];
+    NSMutableSet* tracked = [NSMutableSet set];
 
     unsigned int i, j, count, attributeListCount;
     objc_property_t *props = class_copyPropertyList(self, &count);
@@ -126,6 +128,12 @@ static NSString* lua_delete = nil;
         }
         NSString* propertyName = [NSString stringWithCString:propName encoding:NSUTF8StringEncoding];
         OOCModelProperty* property = [self parse:propertyName type:type];
+        if ([property isKindOfClass:[OOCModelObjectProperty class]]) {
+            OOCModelObjectProperty* objProperty = (OOCModelObjectProperty*)property;
+            if ([objProperty.klass isSubclassOfClass:[OOCCollection class]]) {
+                [tracked addObject:propertyName];
+            }
+        }
         [properties setValue:property forKey:propertyName];
     }
 
@@ -165,6 +173,7 @@ static NSString* lua_delete = nil;
     spec.properties = [properties copy];
     spec.indices = [indices copy];
     spec.uniques = [uniques copy];
+    spec.tracked = [tracked copy];
     return spec;
 }
 
@@ -471,8 +480,7 @@ static NSMutableDictionary* cache = nil;
 }
 
 - (NSString*)listForProperty:(NSString *)propertyName {
-    OOCModelObjectProperty* property = [[[[self class] spec] properties] valueForKey:propertyName];
-    return [@[NSStringFromClass(property.subtype), self.id, propertyName] componentsJoinedByString:@":"];
+    return [@[NSStringFromClass([self class]), self.id, propertyName] componentsJoinedByString:@":"];
 }
 
 - (void) delete {
@@ -485,7 +493,7 @@ static NSMutableDictionary* cache = nil;
         lua_delete = [NSString stringWithCString:deletelua encoding:NSUTF8StringEncoding];
     }
 
-    id ret = [Ohmoc command:@[@"EVAL", lua_delete, @"0", [@{@"name": NSStringFromClass([self class]), @"id": self.id, @"key": self.key} messagePack], [uniques messagePack], [@[] messagePack]]];
+    id ret = [Ohmoc command:@[@"EVAL", lua_delete, @"0", [@{@"name": NSStringFromClass([self class]), @"id": self.id, @"key": self.key} messagePack], [uniques messagePack], [[spec.tracked allObjects] messagePack]]];
     if ([ret isKindOfClass:[NSException class]]) {
         // ugh;
         [ret raise];
