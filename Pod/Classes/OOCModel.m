@@ -469,13 +469,16 @@ static NSMutableDictionary* cache = nil;
     OOCModelSpec* spec = [[self class] spec];
     for (NSString* key in spec.properties) {
         id val = [self valueForKey:key];
-        if (val && ![val isKindOfClass:[OOCCollection class]]) {
+        if (val && ![val conformsToProtocol:@protocol(NSFastEnumeration)]) {
             if ([val isKindOfClass:[OOCModel class]]) {
                 [properties addObject:[NSString stringWithFormat:@"%@_id", key]];
                 [properties addObject:[(OOCModel*)val id]];
             } else {
                 [properties addObject:key];
-                [properties addObject:[val respondsToSelector:@selector(stringValue)] ? [val stringValue] : val];
+                if ([val respondsToSelector:@selector(stringValue)]) {
+                    val = [val stringValue];
+                }
+                [properties addObject:val];
             }
         }
     }
@@ -487,7 +490,21 @@ static NSMutableDictionary* cache = nil;
             if ([value isKindOfClass:[OOCModel class]]) {
                 [indices setValue:@[[value id]] forKey:[NSString stringWithFormat:@"%@_id", index]];
             } else {
-                [indices setValue:@[value] forKey:index];
+                if ([value isKindOfClass:[NSArray class]]) {
+                    [indices setValue:value forKey:index];
+                } else if ([value isKindOfClass:[NSSet class]]) {
+                    [indices setValue:[value allObjects] forKey:index];
+                } else if ([value respondsToSelector:@selector(arrayValue)]) {
+                    [indices setValue:[value arrayValue] forKey:index];
+                } else if ([value conformsToProtocol:@protocol(NSFastEnumeration)]) {
+                    NSMutableArray* arr = [NSMutableArray arrayWithCapacity:0];
+                    for (id obj in value) {
+                        [arr addObject:obj];
+                    }
+                    [indices setValue:arr forKey:index];
+                } else {
+                    [indices setValue:@[value] forKey:index];
+                }
             }
         }
     }

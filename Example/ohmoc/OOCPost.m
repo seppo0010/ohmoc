@@ -10,4 +10,8 @@
 
 @implementation OOCPost
 
+- (NSSet<OOCIndex>*) tag {
+    return (NSSet<OOCIndex>*)[NSSet setWithArray:[self.tags componentsSeparatedByString:@" "]];
+}
+
 @end

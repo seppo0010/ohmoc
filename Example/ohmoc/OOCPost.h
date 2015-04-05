@@ -21,6 +21,8 @@
 @property NSString* body;
 @property BOOL published;
 @property OOCSet<OOCPost>* related;
+@property NSString* tags;
+@property (readonly) NSSet<OOCIndex>* tag;
 
 @property OOCUser* user;
 @property id<OOCIndex> userMeta;

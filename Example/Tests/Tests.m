@@ -882,6 +882,12 @@ describe(@"model", ^{
         NSArray* expected = @[@"A", @"B", @"C"];
         XCTAssertEqualObjects(bodies, expected);
     });
+
+    it(@"finding by one entry in the enumerable", ^{
+        [OOCPost create:@{@"tags": @"foo bar baz"}];
+        NSUInteger size = [[OOCPost find:@{@"tag": @"foo"}] size];
+        XCTAssertEqual(size, 1);
+    });
 });
 
 SpecEnd
