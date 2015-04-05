@@ -336,6 +336,10 @@ describe(@"indices", ^{
         OOCUser* first = [[OOCUser find:@{@"email": @"foo"}] first];
         XCTAssertEqual(first, u1);
     });
+
+    it(@"raise if the index doesn't exist", ^{
+        XCTAssertThrowsSpecific([OOCUser find:@{@"address": @"foo"}], OOCIndexNotFoundException);
+    });
 });
 
 SpecEnd
