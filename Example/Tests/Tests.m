@@ -539,4 +539,23 @@ describe(@"list", ^{
     });
 });
 
+describe(@"set", ^{
+    beforeEach(^{
+        [Ohmoc flush];
+    });
+    it(@"exists returns false if the given id is not included in the set", ^{
+        OOCUser* user = [OOCUser create];
+        OOCPost* post = [OOCPost create];
+        XCTAssertFalse([user.posts contains:post]);
+    });
+
+    it(@"exists returns true if the given id is included in the set", ^{
+        OOCUser* user = [OOCUser create];
+        OOCPost* post = [OOCPost create];
+        post.user = user;
+        [post save];
+        XCTAssert([user.posts contains:post]);
+    });
+});
+
 SpecEnd

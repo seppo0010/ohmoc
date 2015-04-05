@@ -15,7 +15,8 @@
 
 @interface OOCPost : OOCModel
 
-@property OOCUser<OOCIndex>* user;
+@property OOCUser* user;
+@property id<OOCIndex> userMeta;
 @property OOCList<OOCComment>* comments;
 
 @end
