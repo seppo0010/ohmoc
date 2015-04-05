@@ -12,5 +12,6 @@
 
 - (void)add:(OOCModel*)model;
 - (void)remove:(OOCModel*)model;
+- (void)replace:(id<NSFastEnumeration>)models;
 
 @end
