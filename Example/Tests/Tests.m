@@ -905,6 +905,26 @@ describe(@"model", ^{
         XCTAssertFalse([res contains:p]);
         XCTAssertEqual([res size], 0);
     });
+    it(@"filter elements", ^{
+        OOCPerson* p1 = [OOCPerson create:@{@"name": @"Albert"}];
+        OOCPerson* p2 = [OOCPerson create:@{@"name": @"Bertrand"}];
+        [OOCPerson create:@{@"name": @"Charles"}];
+        OOCEvent* event = [OOCEvent create:@{@"name": @"Ruby Tuesday"}];
+        [event.attendees add:p1];
+        [event.attendees add:p2];
+
+        NSArray* attendeesA = [[event.attendees find:@{@"initial": @"A"}] arrayValue];
+        NSArray* expected = @[p1];
+        XCTAssertEqualObjects(attendeesA, expected);
+
+        NSArray* attendeesB = [[event.attendees find:@{@"initial": @"B"}] arrayValue];
+        expected = @[p2];
+        XCTAssertEqualObjects(attendeesB, expected);
+
+        NSArray* attendeesC = [[event.attendees find:@{@"initial": @"C"}] arrayValue];
+        expected = @[];
+        XCTAssertEqualObjects(attendeesC, expected);
+    });
 });
 
 SpecEnd

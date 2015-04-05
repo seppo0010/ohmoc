@@ -16,6 +16,6 @@
 @property id<OOCIndex> nameMeta;
 @property NSString* location;
 @property NSString* slug;
-@property OOCSet<OOCPerson>* attendees;
+@property OOCMutableSet<OOCPerson>* attendees;
 
 @end

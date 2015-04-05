@@ -10,4 +10,8 @@
 
 @implementation OOCPerson
 
+- (NSString<OOCIndex>*) initial {
+    return (NSString<OOCIndex>*)[[self.name substringToIndex:1] uppercaseString];
+}
+
 @end
