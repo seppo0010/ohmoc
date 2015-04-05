@@ -511,6 +511,32 @@ describe(@"list", ^{
         NSArray* idList = @[c1.id, c2.id, c3.id];
         XCTAssertEqualObjects(p.comments.ids, idList);
     });
+
+    it(@"range", ^{
+        NSRange range;
+        range.location = 0;
+        range.length = 100;
+        OOCCollection* sublist = [p.comments collectionWithRange:range];
+        XCTAssertEqual(sublist.size, 3);
+
+        range.location = 0;
+        range.length = 3;
+        sublist = [p.comments collectionWithRange:range];
+        NSArray* expected = @[c1.id, c2.id, c3.id];;
+        XCTAssertEqualObjects(sublist.ids, expected);
+        
+        range.location = 0;
+        range.length = 2;
+        sublist = [p.comments collectionWithRange:range];
+        expected = @[c1.id, c2.id];;
+        XCTAssertEqualObjects(sublist.ids, expected);
+        
+        range.location = 1;
+        range.length = 2;
+        sublist = [p.comments collectionWithRange:range];
+        expected = @[c2.id, c3.id];;
+        XCTAssertEqualObjects(sublist.ids, expected);
+    });
 });
 
 SpecEnd
