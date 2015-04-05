@@ -504,7 +504,12 @@ describe(@"list", ^{
         XCTAssert(exists);
         [p delete];
         exists = [[Ohmoc command:@[@"EXISTS", listkey]] boolValue];
-        XCTAssertFalse(exists); 
+        XCTAssertFalse(exists);
+    });
+
+    it(@"ids returns an array with the ids", ^{
+        NSArray* idList = @[c1.id, c2.id, c3.id];
+        XCTAssertEqualObjects(p.comments.ids, idList);
     });
 });
 
