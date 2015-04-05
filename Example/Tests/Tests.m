@@ -417,6 +417,17 @@ describe(@"indices3", ^{
         res = [OOCNode find:@{@"available": @FALSE}];
         XCTAssertEqual(res.size, 1);
     });
+
+    it(@"uniques bug", ^{
+        OOCNode* n = [OOCNode create:@{}];
+        n.capacity = 91;
+        [n save];
+
+        OOCNode* n2 = [OOCNode with:@"available" is:@TRUE];
+        XCTAssertNil(n2);
+        n2 = [OOCNode with:@"available" is:@FALSE];
+        XCTAssertEqual(n, n2);
+    });
 });
 
 SpecEnd

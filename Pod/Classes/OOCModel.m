@@ -181,10 +181,6 @@ static NSString* lua_delete = nil;
     return spec;
 }
 
-+ (NSSet*)uniques {
-    return [NSSet set];
-}
-
 + (BOOL)exists:(NSString*)id {
     return [[Ohmoc command:@[@"SISMEMBER", [@[NSStringFromClass(self), @"all"] componentsJoinedByString:@":"], id]] boolValue];
 }
@@ -222,7 +218,7 @@ static NSMutableDictionary* cache = nil;
     if (!property.hasIndex) {
         [OOCIndexNotFoundException raise:@"IndexNotFound" format:@"Index not found: '%@'", att];
     }
-    NSString* _id = [Ohmoc command:@[@"HGET", [@[NSStringFromClass(self), @"uniques", att] componentsJoinedByString:@":"]]];
+    NSString* _id = [Ohmoc command:@[@"HGET", [@[NSStringFromClass(self), @"uniques", att] componentsJoinedByString:@":"], [self stringForIndex:att value:value]]];
     if (_id) {
         OOCModel* model = [[OOCModel alloc] initWithId:_id];
         [model load];
@@ -231,7 +227,7 @@ static NSMutableDictionary* cache = nil;
     return nil;
 }
 
-+ (NSString*)indexForKey:(NSString*)key value:(id)v {
++ (NSString*)stringForIndex:(NSString*)key value:(id)v {
     OOCModelProperty* prop = [[self spec].properties valueForKey:key];
     if ([prop isKindOfClass:[OOCModelBasicProperty class]]) {
         OOCModelBasicProperty* basicProp = (OOCModelBasicProperty*)prop;
@@ -240,7 +236,11 @@ static NSMutableDictionary* cache = nil;
         }
     }
     v = [v respondsToSelector:@selector(stringValue)] ? [v stringValue] : v;
-    return [@[NSStringFromClass(self), @"indices", key, v] componentsJoinedByString:@":"];
+    return v;
+}
+
++ (NSString*)indexForKey:(NSString*)key value:(id)v {
+    return [@[NSStringFromClass(self), @"indices", key, [self stringForIndex:key value:v]] componentsJoinedByString:@":"];
 }
 + (NSArray*) toIndices:(NSString*)key value:(id)value {
     OOCModelProperty* property;
@@ -287,6 +287,18 @@ static NSMutableDictionary* cache = nil;
             [Ohmoc command:@[@"DEL", key]];
         } namespace:0 modelClass:self];
     }
+}
+
++ (OOCModel*) with:(NSString*)att is:(id)value {
+    if (![[self spec].uniques containsObject:att]) {
+        [OOCIndexNotFoundException raise:@"IndexNotFound" format:@"Index not found: '%@'", att];
+    }
+
+    NSString* id = [Ohmoc command:@[@"HGET", [@[NSStringFromClass(self), @"uniques", att] componentsJoinedByString:@":"], [self stringForIndex:att value:value]]];
+    if ([id isKindOfClass:[NSString class]]) {
+        return [self get:id];
+    }
+    return nil;
 }
 
 + (OOCSet*)all {
@@ -424,7 +436,8 @@ static NSMutableDictionary* cache = nil;
     }
     NSMutableDictionary* uniques = [NSMutableDictionary dictionary];
     for (NSString* unique in spec.uniques) {
-        [uniques setValue:[self valueForKey:unique] forKey:unique];
+        id val = [self valueForKey:unique];
+        [uniques setValue:[[self class] stringForIndex:unique value:val] forKey:unique];
     }
 
     if (!lua_save) {

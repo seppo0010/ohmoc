@@ -12,8 +12,7 @@
 @interface OOCNode : OOCModel
 
 @property (readonly) BOOL available;
-@property id<OOCIndex> availableMeta;
+@property id<OOCUnique, OOCIndex> availableMeta;
 @property int capacity;
-@property id<OOCUnique> capacityMeta;
 
 @end

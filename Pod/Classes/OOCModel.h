@@ -19,6 +19,7 @@
 - (NSString*)listForProperty:(NSString*)property;
 + (NSArray*) filters:(NSDictionary*)filters;
 + (OOCSet*) find:(NSDictionary*)dict;
++ (instancetype) with:(NSString*)property is:(id)value;
 + (instancetype)get:(NSString*)id;
 + (instancetype)create:(NSDictionary*)properties;
 + (OOCSet*)all;
