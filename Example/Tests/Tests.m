@@ -820,6 +820,19 @@ describe(@"model", ^{
         keys = [Ohmoc command:@[@"KEYS", @"*"]];
         XCTAssertEqualObjects(@[@"OOCEvent:id"], keys);
     });
+    it(@"find all", ^{
+        [OOCEvent create:@{@"name": @"Ruby Meetup"}];
+        [OOCEvent create:@{@"name": @"Ruby Tuesday"}];
+
+        OOCSet* res = [OOCEvent all];
+        NSMutableArray* names = [NSMutableArray arrayWithCapacity:2];
+        for (OOCEvent* event in res) {
+            [names addObject:event.name];
+        }
+        NSArray* objs = [names sortedArrayUsingSelector:@selector(compare:)];
+        NSArray* expected = @[@"Ruby Meetup", @"Ruby Tuesday"];
+        XCTAssertEqualObjects(expected, objs);
+    });
 });
 
 SpecEnd
