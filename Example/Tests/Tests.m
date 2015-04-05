@@ -833,6 +833,14 @@ describe(@"model", ^{
         NSArray* expected = @[@"Ruby Meetup", @"Ruby Tuesday"];
         XCTAssertEqualObjects(expected, objs);
     });
+    it(@"fetch ids", ^{
+        OOCEvent* e1 = [OOCEvent create:@{@"name": @"Ruby Meetup"}];
+        OOCEvent* e2 = [OOCEvent create:@{@"name": @"Ruby Tuesday"}];
+        NSArray* objs = [[OOCCollection collectionWithIds:@[e1.id, e2.id] namespace:0 modelClass:[OOCEvent class]] arrayValue];
+        NSArray* expected = @[e1, e2];
+        XCTAssertEqualObjects(expected, objs);
+
+    });
 });
 
 SpecEnd
