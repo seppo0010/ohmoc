@@ -15,6 +15,7 @@
 #import "OOCBook.h"
 #import "OOCAuthor.h"
 #import "OOCNode.h"
+#import "OOCPerson.h"
 #import "Ohmoc.h"
 #import "ObjCHirlite.h"
 #import "NSArray+arrayWithFastEnumeration.h"
@@ -840,6 +841,16 @@ describe(@"model", ^{
         NSArray* expected = @[e1, e2];
         XCTAssertEqualObjects(expected, objs);
 
+    });
+    it(@"sort all", ^{
+        [OOCPerson create:@{@"name": @"D"}];
+        [OOCPerson create:@{@"name": @"C"}];
+        [OOCPerson create:@{@"name": @"B"}];
+        [OOCPerson create:@{@"name": @"A"}];
+
+        id objects = [[OOCPerson all] sortBy:@"name" get:nil limit:0 offset:0 order:@"ALPHA" store:nil];
+        id expected = @[@"A", @"B", @"C", @"D"];
+        XCTAssertEqualObjects([[objects arrayValue] valueForKey:@"name"], expected);
     });
 });
 
