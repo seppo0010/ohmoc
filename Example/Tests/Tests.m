@@ -713,6 +713,11 @@ describe(@"model", ^{
         [e applyDictionary:@{@"location": [NSNull null]}];
         XCTAssertNil(e.location);
     });
+    it(@"allow arbitrary id", ^{
+        [OOCEvent create:@{@"id": @"abc123", @"name": @"Concert"}];
+        XCTAssertEqual([OOCEvent all].size, 1);
+        XCTAssertEqualObjects([OOCEvent get:@"abc123"].name, @"Concert");
+    });
 });
 
 SpecEnd

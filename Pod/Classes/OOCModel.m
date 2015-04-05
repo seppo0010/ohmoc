@@ -112,30 +112,33 @@ static NSString* lua_delete = nil;
     NSMutableSet* tracked = [NSMutableSet set];
 
     unsigned int i, j, count, attributeListCount;
-    objc_property_t *props = class_copyPropertyList(self, &count);
-    for (i = 0; i < count; i++) {
-        NSString* type;
-        const char *propName = property_getName(props[i]);
-        objc_property_attribute_t *attributeList = property_copyAttributeList(props[i], &attributeListCount);
-        for (j = 0; j < attributeListCount; j++) {
-            if (strcmp(attributeList[j].name, "T") == 0) {
-                type = [NSString stringWithCString:attributeList[j].value encoding:NSUTF8StringEncoding];
-                break;
+    Class kls = self;
+    do {
+        objc_property_t *props = class_copyPropertyList(kls, &count);
+        for (i = 0; i < count; i++) {
+            NSString* type;
+            const char *propName = property_getName(props[i]);
+            objc_property_attribute_t *attributeList = property_copyAttributeList(props[i], &attributeListCount);
+            for (j = 0; j < attributeListCount; j++) {
+                if (strcmp(attributeList[j].name, "T") == 0) {
+                    type = [NSString stringWithCString:attributeList[j].value encoding:NSUTF8StringEncoding];
+                    break;
+                }
             }
-        }
-        if (!type) {
-            continue;
-        }
-        NSString* propertyName = [NSString stringWithCString:propName encoding:NSUTF8StringEncoding];
-        OOCModelProperty* property = [self parse:propertyName type:type];
-        if ([property isKindOfClass:[OOCModelObjectProperty class]]) {
-            OOCModelObjectProperty* objProperty = (OOCModelObjectProperty*)property;
-            if ([objProperty.klass isSubclassOfClass:[OOCCollection class]]) {
-                [tracked addObject:propertyName];
+            if (!type) {
+                continue;
             }
+            NSString* propertyName = [NSString stringWithCString:propName encoding:NSUTF8StringEncoding];
+            OOCModelProperty* property = [self parse:propertyName type:type];
+            if ([property isKindOfClass:[OOCModelObjectProperty class]]) {
+                OOCModelObjectProperty* objProperty = (OOCModelObjectProperty*)property;
+                if ([objProperty.klass isSubclassOfClass:[OOCCollection class]]) {
+                    [tracked addObject:propertyName];
+                }
+            }
+            [properties setValue:property forKey:propertyName];
         }
-        [properties setValue:property forKey:propertyName];
-    }
+    } while ((kls = kls.superclass) != [NSObject class]);
 
     for (NSString* propertyName in [properties copy]) {
         OOCModelProperty* property = [properties valueForKey:propertyName];
