@@ -718,6 +718,23 @@ describe(@"model", ^{
         XCTAssertEqual([OOCEvent all].size, 1);
         XCTAssertEqualObjects([OOCEvent get:@"abc123"].name, @"Concert");
     });
+
+    it(@"return an instance of Event", ^{
+        [Ohmoc command:@[@"SADD", @"OOCEvent:all", @"1"]];
+        [Ohmoc command:@[@"HSET", @"OOCEvent:1", @"name", @"Concert"]];
+        OOCEvent* u = [OOCEvent get:@"1"];
+        XCTAssert([u isKindOfClass:[OOCEvent class]]);
+        XCTAssertEqualObjects(u.id, @"1");
+        XCTAssertEqualObjects(u.name, @"Concert");
+    });
+    it(@"return an instance of User", ^{
+        [Ohmoc command:@[@"SADD", @"OOCUser:all", @"1"]];
+        [Ohmoc command:@[@"HSET", @"OOCUser:1", @"email", @"albert@example.com"]];
+        OOCUser* u = [OOCUser get:@"1"];
+        XCTAssert([u isKindOfClass:[OOCUser class]]);
+        XCTAssertEqualObjects(u.id, @"1");
+        XCTAssertEqualObjects(u.email, @"albert@example.com");
+    });
 });
 
 SpecEnd
