@@ -15,7 +15,8 @@
 
 @property NSString<OOCIndex>* fname;
 @property NSString<OOCIndex>* lname;
-@property NSString<OOCIndex>* status;
+@property NSString* status;
+@property NSString<OOCIndex>* statusMeta;
 @property OOCSet<OOCPost>* posts;
 @property id<OOCCollection> posts__user;
 

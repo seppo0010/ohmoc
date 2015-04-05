@@ -23,5 +23,6 @@
 + (instancetype)create:(NSDictionary*)properties;
 + (OOCSet*)all;
 + (BOOL)isCached:(NSString*)id;
+- (void) save;
 
 @end

@@ -232,6 +232,13 @@ describe(@"filtering", ^{
         contains = [res contains:expected];
         XCTAssert(contains);
     });
+    it(@"indices bug related to a nil attribute", ^{
+        OOCUser* _out = [OOCUser create:@{@"lname": @"Doe"}];
+        _out.status = @"inactive";
+        [_out save];
+        long card = [[Ohmoc command:@[@"SCARD", @"OOCUser:indices:status:"]] integerValue];
+        XCTAssertEqual(0, card);
+    });
 });
 
 SpecEnd
