@@ -149,9 +149,9 @@
         NSMutableArray* sdiffCommand = [NSMutableArray arrayWithCapacity:4];
         [self blockWithKey:^(NSString* mykey) {
             [sdiffCommand addObjectsFromArray:@[@"SUNIONSTORE", key2, mykey, key1]];
+            [Ohmoc command:sdiffCommand];
+            localblock(key2);
         }];
-        [Ohmoc command:sdiffCommand];
-        localblock(key2);
         [Ohmoc command:@[@"DEL", key1, key2]];
     } namespace:self.ns modelClass:self.modelClass];
 }

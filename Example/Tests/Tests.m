@@ -285,7 +285,11 @@ describe(@"book author", ^{
     });
 
     it(@"straight up intersection + union", ^{
-        OOCSet* res = [[b1.authors find:@{@"mood": @"happy"}] union:@{@"book": b1, @"mood": @"sad"}];
+        OOCSet* res = [b1.authors find:@{@"mood": @"happy"}];
+        XCTAssertEqual(1, res.size);
+        res = [b1.authors find:@{@"book_id": b1.id, @"mood": @"sad"}];
+        XCTAssertEqual(1, res.size);
+        res = [[b1.authors find:@{@"mood": @"happy"}] union:@{@"book_id": b1.id, @"mood": @"sad"}];
         XCTAssertEqual(2, res.size);
     });
 });

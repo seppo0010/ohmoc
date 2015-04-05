@@ -9,8 +9,10 @@
 #import "OOCModel.h"
 
 @protocol OOCAuthor;
+@protocol OOCCollection;
 @interface OOCBook : OOCModel
 
 @property OOCSet<OOCAuthor>* authors;
+@property id<OOCCollection> authors__book;
 
 @end

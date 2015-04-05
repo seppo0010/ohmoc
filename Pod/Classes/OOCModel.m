@@ -231,7 +231,13 @@ static NSMutableDictionary* cache = nil;
 }
 
 + (NSArray*) toIndices:(NSString*)key value:(id)value {
-    OOCModelProperty* property = [[[[self class] spec] properties] valueForKey:key];
+    OOCModelProperty* property;
+    if ([key hasSuffix:@"_id"]) {
+        NSString* propertyKey = [key substringToIndex:key.length - 3];
+        property = [[[[self class] spec] properties] valueForKey:propertyKey];
+    } else {
+        property = [[[[self class] spec] properties] valueForKey:key];
+    }
     if (!property.hasIndex) {
         [OOCIndexNotFoundException raise:@"IndexNotFound" format:@"Index not found: '%@'", key];
     }
