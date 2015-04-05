@@ -556,6 +556,17 @@ describe(@"set", ^{
         [post save];
         XCTAssert([user.posts contains:post]);
     });
+
+    it(@"ids returns an array with the ids", ^{
+        NSArray* users = @[
+                             [OOCUser create:@{@"fname": @"John"}],
+                             [OOCUser create:@{@"fname": @"Jane"}],
+                             ];
+        XCTAssertEqualObjects([users valueForKey:@"id"], [[OOCUser all].ids sortedArrayUsingSelector:@selector(compare:)]);
+
+        OOCSet* res = [[OOCUser find:@{@"fname": @"John"}] union:@{@"fname": @"Jane"}];
+        XCTAssertEqualObjects([users valueForKey:@"id"], [res.ids sortedArrayUsingSelector:@selector(compare:)]);
+    });
 });
 
 SpecEnd
