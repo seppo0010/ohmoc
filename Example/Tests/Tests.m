@@ -376,6 +376,11 @@ describe(@"indices", ^{
         res = [OOCUser find:@{@"email": @"bar"}];
         XCTAssertEqual(res.size, 0);
     });
+    it(@"work with attributes that contain spaces", ^{
+        OOCSet* res = [OOCUser find:@{@"email": @"baz qux"}];
+        XCTAssertEqual(res.size, 1);
+        XCTAssertEqual(res.first, u3);
+    });
 });
 
 SpecEnd
