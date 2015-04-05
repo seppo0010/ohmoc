@@ -954,6 +954,24 @@ describe(@"model", ^{
         XCTAssert([event.attendees contains:p2]);
         XCTAssertFalse([event.attendees contains:p3]);
     });
+    it(@"return instances of the passed model", ^{
+        OOCPerson* p1 = [OOCPerson create:@{@"name": @"Albert"}];
+        OOCEvent* event = [OOCEvent create:@{@"name": @"Ruby Tuesday"}];
+        [event.attendees add:p1];
+
+        XCTAssertEqualObjects(@[p1], [event.attendees arrayValue]);
+        XCTAssertEqual(p1, [event.attendees get:p1.id]);
+    });
+    it(@"return the size of the set", ^{
+        OOCPerson* p1 = [OOCPerson create:@{@"name": @"Albert"}];
+        OOCPerson* p2 = [OOCPerson create:@{@"name": @"Bertrand"}];
+        OOCPerson* p3 = [OOCPerson create:@{@"name": @"Charles"}];
+        OOCEvent* event = [OOCEvent create:@{@"name": @"Ruby Tuesday"}];
+        [event.attendees add:p1];
+        [event.attendees add:p2];
+        [event.attendees add:p3];
+        XCTAssertEqual(3, [event.attendees size]);
+    });
 });
 
 SpecEnd
