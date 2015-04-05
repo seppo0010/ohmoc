@@ -430,4 +430,32 @@ describe(@"indices3", ^{
     });
 });
 
+describe(@"list", ^{
+    __block OOCPost* p;
+    __block OOCComment* c1;
+    __block OOCComment* c2;
+    __block OOCComment* c3;
+    beforeEach(^{
+        p = nil;
+        c1 = c2 = c3 = nil;
+        [Ohmoc flush];
+        p = [OOCPost create:@{}];
+        c1 = [OOCComment create:@{}];
+        c2 = [OOCComment create:@{}];
+        c3 = [OOCComment create:@{}];
+        [p.comments push:c1];
+        [p.comments push:c2];
+        [p.comments push:c3];
+    });
+
+    it(@"contains", ^{
+        BOOL contains = [p.comments contains:c1];
+        XCTAssert(contains);
+        contains = [p.comments contains:c2];
+        XCTAssert(contains);
+        contains = [p.comments contains:c3];
+        XCTAssert(contains);
+    });
+});
+
 SpecEnd

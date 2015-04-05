@@ -50,7 +50,7 @@
 }
 
 - (BOOL) contains:(OOCModel*)submodel {
-    return [[self arrayValue] containsObject:submodel.id];
+    return [[self arrayValue] containsObject:submodel];
 }
 
 - (void)replace:(id<NSFastEnumeration>)models {
