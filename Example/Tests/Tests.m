@@ -11,6 +11,8 @@
 #import "OOCEvent.h"
 #import "OOCContact.h"
 #import "OOCComment.h"
+#import "OOCBook.h"
+#import "OOCAuthor.h"
 #import "Ohmoc.h"
 #import "ObjCHirlite.h"
 
@@ -264,6 +266,27 @@ describe(@"filtering", ^{
         XCTAssert(contains);
         contains = [res contains:jane];
         XCTAssert(contains);
+    });
+});
+
+describe(@"book author", ^{
+    __block OOCBook* b1;
+    __block OOCBook* b2;
+    beforeEach(^{
+        b1 = nil;
+        b2 = nil;
+        [Ohmoc flush];
+        b1 = [OOCBook create:@{}];
+        b2 = [OOCBook create:@{}];
+
+        [OOCAuthor create:@{@"book": b1, @"mood": @"happy"}];
+        [OOCAuthor create:@{@"book": b1, @"mood": @"sad"}];
+        [OOCAuthor create:@{@"book": b2, @"mood": @"sad"}];
+    });
+
+    it(@"straight up intersection + union", ^{
+        OOCSet* res = [[b1.authors find:@{@"mood": @"happy"}] union:@{@"book": b1, @"mood": @"sad"}];
+        XCTAssertEqual(2, res.size);
     });
 });
 

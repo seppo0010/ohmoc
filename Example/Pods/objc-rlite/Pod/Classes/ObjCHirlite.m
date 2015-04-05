@@ -94,13 +94,17 @@
 
     for (i = 0; i < argc; i++) {
         data = [self dataFromObject:[command objectAtIndex:i]];
-        argv[i] = (char *)[data bytes];
         argvlen[i] = [data length];
+        argv[i] = malloc(sizeof(char) * (1 + argvlen[i]));
+        memcpy(argv[i], [data bytes], argvlen[i]);
         argv[i][argvlen[i]] = 0;
     }
 
     reply = rliteCommandArgv(context, argc, argv, argvlen);
 
+    for (i = 0; i < argc; i++) {
+        free(argv[i]);
+    }
     free(argv);
     free(argvlen);
     id obj = [self objectFromReply:reply binary:binary];

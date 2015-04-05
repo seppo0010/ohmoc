@@ -29,6 +29,8 @@
 		C9D03F961ACF3B7400D23778 /* OOCEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D03F951ACF3B7400D23778 /* OOCEvent.m */; };
 		C9D03F991ACF528B00D23778 /* OOCContact.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D03F981ACF528B00D23778 /* OOCContact.m */; };
 		C9D03F9C1ACF54C400D23778 /* OOCComment.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D03F9B1ACF54C400D23778 /* OOCComment.m */; };
+		C9F3393A1AD0E9CF00A43B19 /* OOCBook.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F339391AD0E9CF00A43B19 /* OOCBook.m */; };
+		C9F3393D1AD0E9E600A43B19 /* OOCAuthor.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F3393C1AD0E9E600A43B19 /* OOCAuthor.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +83,10 @@
 		C9D03F981ACF528B00D23778 /* OOCContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCContact.m; sourceTree = "<group>"; };
 		C9D03F9A1ACF54C400D23778 /* OOCComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCComment.h; sourceTree = "<group>"; };
 		C9D03F9B1ACF54C400D23778 /* OOCComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCComment.m; sourceTree = "<group>"; };
+		C9F339381AD0E9CF00A43B19 /* OOCBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCBook.h; sourceTree = "<group>"; };
+		C9F339391AD0E9CF00A43B19 /* OOCBook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCBook.m; sourceTree = "<group>"; };
+		C9F3393B1AD0E9E600A43B19 /* OOCAuthor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCAuthor.h; sourceTree = "<group>"; };
+		C9F3393C1AD0E9E600A43B19 /* OOCAuthor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCAuthor.m; sourceTree = "<group>"; };
 		FF124D2D1785CCA7F469E827 /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -176,6 +182,10 @@
 				C9D03F981ACF528B00D23778 /* OOCContact.m */,
 				C9D03F9A1ACF54C400D23778 /* OOCComment.h */,
 				C9D03F9B1ACF54C400D23778 /* OOCComment.m */,
+				C9F339381AD0E9CF00A43B19 /* OOCBook.h */,
+				C9F339391AD0E9CF00A43B19 /* OOCBook.m */,
+				C9F3393B1AD0E9E600A43B19 /* OOCAuthor.h */,
+				C9F3393C1AD0E9E600A43B19 /* OOCAuthor.m */,
 			);
 			path = ohmoc;
 			sourceTree = "<group>";
@@ -388,7 +398,9 @@
 			files = (
 				C9D03F961ACF3B7400D23778 /* OOCEvent.m in Sources */,
 				C928BC941ACDE8FE0003FE89 /* OOCUser.m in Sources */,
+				C9F3393D1AD0E9E600A43B19 /* OOCAuthor.m in Sources */,
 				C928BC971ACDE9080003FE89 /* OOCPost.m in Sources */,
+				C9F3393A1AD0E9CF00A43B19 /* OOCBook.m in Sources */,
 				C9D03F9C1ACF54C400D23778 /* OOCComment.m in Sources */,
 				6003F59E195388D20070C39A /* OOCAppDelegate.m in Sources */,
 				C9D03F991ACF528B00D23778 /* OOCContact.m in Sources */,

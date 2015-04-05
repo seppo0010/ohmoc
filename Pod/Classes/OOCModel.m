@@ -109,7 +109,7 @@ static NSString* lua_delete = nil;
     NSMutableDictionary* properties = [NSMutableDictionary dictionary];
 
     unsigned int i, j, count, attributeListCount;
-    objc_property_t *props = class_copyPropertyList([self class], &count);
+    objc_property_t *props = class_copyPropertyList(self, &count);
     for (i = 0; i < count; i++) {
         NSString* type;
         const char *propName = property_getName(props[i]);
@@ -169,6 +169,9 @@ static NSString* lua_delete = nil;
 
 + (OOCModelSpec*)spec {
     NSString* className = NSStringFromClass(self);
+    if (!specs) {
+        specs = [NSMutableDictionary dictionaryWithCapacity:32];
+    }
     OOCModelSpec* spec = [specs valueForKey:className];
     if (!spec) {
         spec = [self calculateSpec];
@@ -405,12 +408,14 @@ static NSMutableDictionary* cache = nil;
     if (!lua_save) {
         lua_save = [NSString stringWithCString:savelua encoding:NSUTF8StringEncoding];
     }
+
     id ret = [Ohmoc command:@[@"EVAL", lua_save, @"0", [features messagePack], [properties messagePack], [indices messagePack], [uniques messagePack]]];
     if ([ret isKindOfClass:[NSException class]]) {
         // ugh;
         [ret raise];
     }
     [self setValue:ret forKey:@"id"];
+
     if (!cache) {
         cache = (NSMutableDictionary*)CFBridgingRelease(CFDictionaryCreateMutable(nil, 0, &kCFCopyStringDictionaryKeyCallBacks, NULL));
     }

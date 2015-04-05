@@ -1,10 +1,10 @@
 PODS:
   - Expecta (0.3.2)
   - msgpack (0.1.3)
-  - objc-rlite (0.1.2)
+  - objc-rlite (0.1.3)
   - ohmoc (0.1.0):
     - msgpack (~> 0.1.3)
-    - objc-rlite (~> 0.1.2)
+    - objc-rlite (~> 0.1.3)
   - Specta (0.4.0)
 
 DEPENDENCIES:
@@ -19,8 +19,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Expecta: 8c507baf13211207b1e9d0a741480600e6b4ed15
   msgpack: 379200c227158b5823b79ac08ff00c2150b7d6d0
-  objc-rlite: 71b9afd53e347eff310c61dc16f8623ee0795821
-  ohmoc: f2717a99150fac30467d7260febb32e0ba6818f4
+  objc-rlite: 5ad41a944c702fbd716eb5ab0bd13be1a2fc1648
+  ohmoc: eaaebbc77edf07aee312bcc5c53548c73f085c82
   Specta: a353759f073ffcc0a365b782fe4aaeac064c03c6
 
 COCOAPODS: 0.36.3
