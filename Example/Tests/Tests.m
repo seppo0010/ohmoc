@@ -772,6 +772,31 @@ describe(@"model", ^{
         }
         XCTAssertEqualObjects([[[OOCEvent all] first] slug], @"foo");
     });
+    it(@"delete an existing model", ^{
+        OOCUser* u = [OOCUser create:@{@"fname": @"John"}];
+        [u.posts1 add:[OOCPost create]];
+        [u.posts2 add:[OOCPost create]];
+        NSString* id = u.id;
+
+        NSString* key = [NSString stringWithFormat:@"OOCUser:%@", id];
+        BOOL exists = [[Ohmoc command:@[@"EXISTS", key]] boolValue];
+        XCTAssert(exists);
+        exists = [[Ohmoc command:@[@"EXISTS", [NSString stringWithFormat:@"%@:posts1", key]]] boolValue];
+        XCTAssert(exists);
+        exists = [[Ohmoc command:@[@"EXISTS", [NSString stringWithFormat:@"%@:posts2", key]]] boolValue];
+        XCTAssert(exists);
+
+        [u delete];
+
+        exists = [[Ohmoc command:@[@"EXISTS", key]] boolValue];
+        XCTAssertFalse(exists);
+        exists = [[Ohmoc command:@[@"EXISTS", [NSString stringWithFormat:@"%@:posts1", key]]] boolValue];
+        XCTAssertFalse(exists);
+        exists = [[Ohmoc command:@[@"EXISTS", [NSString stringWithFormat:@"%@:posts2", key]]] boolValue];
+        XCTAssertFalse(exists);
+
+        XCTAssertEqual([OOCUser all].size, 0);
+    });
 });
 
 SpecEnd

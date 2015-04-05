@@ -24,6 +24,8 @@
 @property NSString* status;
 @property NSString<OOCIndex>* statusMeta;
 @property OOCSet<OOCPost>* posts;
+@property OOCMutableSet<OOCPost>* posts1;
+@property OOCMutableSet<OOCPost>* posts2;
 @property id<OOCCollection> posts__user;
 
 @end

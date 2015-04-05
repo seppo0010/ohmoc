@@ -14,20 +14,26 @@
 @implementation OOCMutableSet
 
 - (void)add:(OOCModel*)submodel {
-    [Ohmoc command:@[@"SADD", self.key, submodel.id]];
+    [self blockWithKey:^(NSString* mykey) {
+        [Ohmoc command:@[@"SADD", mykey, submodel.id]];
+    }];
 }
 
 - (void)remove:(OOCModel*)submodel {
-    [Ohmoc command:@[@"SREM", self.key, submodel.id]];
+    [self blockWithKey:^(NSString* mykey) {
+        [Ohmoc command:@[@"SREM", mykey, submodel.id]];
+    }];
 }
 
 - (void)replace:(id<NSFastEnumeration>)models {
-    [Ohmoc command:@[@"MULTI"]];
-    [Ohmoc command:@[@"DEL", self.key]];
-    for (OOCModel* submodel in models) {
-        [Ohmoc command:@[@"SADD", self.key, submodel.id]];
-    }
-    [Ohmoc command:@[@"EXEC"]];
+    [self blockWithKey:^(NSString* mykey) {
+        [Ohmoc command:@[@"MULTI"]];
+        [Ohmoc command:@[@"DEL", mykey]];
+        for (OOCModel* submodel in models) {
+            [Ohmoc command:@[@"SADD", mykey, submodel.id]];
+        }
+        [Ohmoc command:@[@"EXEC"]];
+    }];
 }
 
 @end

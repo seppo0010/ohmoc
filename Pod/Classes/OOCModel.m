@@ -514,6 +514,9 @@ static NSMutableDictionary* cache = nil;
 - (NSString*)indexForProperty:(NSString *)propertyName {
     OOCModelObjectProperty* property = [[[[self class] spec] properties] valueForKey:propertyName];
     NSString* referenceProperty = property.referenceProperty;
+    if (!referenceProperty) {
+        return [self listForProperty:propertyName];
+    }
     return [@[NSStringFromClass(property.subtype), @"indices", [NSString stringWithFormat:@"%@_id", referenceProperty], self.id] componentsJoinedByString:@":"];
 }
 
