@@ -735,6 +735,37 @@ describe(@"model", ^{
         XCTAssertEqualObjects(u.id, @"1");
         XCTAssertEqualObjects(u.email, @"albert@example.com");
     });
+    it(@"change its attributes", ^{
+        [Ohmoc command:@[@"SADD", @"OOCUser:all", @"1"]];
+        [Ohmoc command:@[@"HSET", @"OOCUser:1", @"email", @"albert@example.com"]];
+        OOCUser* u = [OOCUser get:@"1"];
+        u.email = @"maria@example.com";
+        XCTAssertEqualObjects(u.email, @"maria@example.com");
+    });
+    it(@"save the new values", ^{
+        [Ohmoc command:@[@"SADD", @"OOCUser:all", @"1"]];
+        [Ohmoc command:@[@"HSET", @"OOCUser:1", @"email", @"albert@example.com"]];
+        @autoreleasepool {
+            OOCUser* u = [OOCUser get:@"1"];
+            u.email = @"maria@example.com";
+            [u save];
+            u.email = @"maria@example.com";
+            [u save];
+            u = nil;
+        }
+        XCTAssertFalse([OOCUser isCached:@"1"]);
+        XCTAssertEqualObjects([OOCUser get:@"1"].email, @"maria@example.com");
+    });
+    it(@"create the model if it is new", ^{
+        NSString* eid;
+        @autoreleasepool {
+            OOCEvent* e = [[OOCEvent alloc] init];
+            [e applyDictionary:@{@"name": @"Foo"}];
+            [e save];
+            eid = e.id;
+        }
+        XCTAssertEqualObjects([OOCEvent get:eid].name, @"Foo");
+    });
 });
 
 SpecEnd
