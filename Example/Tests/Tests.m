@@ -239,6 +239,24 @@ describe(@"filtering", ^{
         long card = [[Ohmoc command:@[@"SCARD", @"OOCUser:indices:status:"]] integerValue];
         XCTAssertEqual(0, card);
     });
+    it(@"union", ^{
+        [OOCUser create:@{@"status": @"super", @"lname": @"Doe"}];
+        OOCUser* included = [OOCUser create:@{@"status": @"inactive", @"lname": @"Doe"}];
+        OOCSet* res = [[OOCUser find:@{@"status": @"active"}] union:@{@"status": @"inactive"}];
+
+        XCTAssertEqual(res.size, 3);
+        BOOL contains = [res contains:john];
+        XCTAssert(contains);
+        contains = [res contains:jane];
+        XCTAssert(contains);
+        contains = [res contains:included];
+        XCTAssert(contains);
+
+        res = [[[OOCUser find:@{@"status": @"active"}] union:@{@"status": @"inactive"}] find:@{@"lname": @"Doe"}];
+        for (OOCUser* user in res) {
+            XCTAssertFalse([user.status isEqualToString:@"inactive"]);
+        }
+    });
 });
 
 SpecEnd

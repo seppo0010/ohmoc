@@ -122,7 +122,7 @@
     } namespace:self.ns modelClass:self.modelClass];
 }
 
-- (OOCCollection*)combine:(NSDictionary*)dict {
+- (OOCSet*)combine:(NSDictionary*)dict {
     return [OOCSet collectionWithBlock:^(void(^localblock)(NSString*)) {
         NSString* key1 = [Ohmoc tmpKey];
         NSString* key2 = [Ohmoc tmpKey];
@@ -139,7 +139,7 @@
     } namespace:self.ns modelClass:self.modelClass];
 }
 
-- (OOCCollection*)union:(NSDictionary*)dict {
+- (OOCSet*)union:(NSDictionary*)dict {
     return [OOCSet collectionWithBlock:^(void(^localblock)(NSString*)) {
         NSString* key1 = [Ohmoc tmpKey];
         NSString* key2 = [Ohmoc tmpKey];
@@ -148,7 +148,7 @@
         [Ohmoc command:sunionCommand];
         NSMutableArray* sdiffCommand = [NSMutableArray arrayWithCapacity:4];
         [self blockWithKey:^(NSString* mykey) {
-            [sdiffCommand addObjectsFromArray:@[@"SINTERSTORE", key2, mykey, key1]];
+            [sdiffCommand addObjectsFromArray:@[@"SUNIONSTORE", key2, mykey, key1]];
         }];
         [Ohmoc command:sdiffCommand];
         localblock(key2);
