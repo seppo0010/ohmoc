@@ -7,6 +7,7 @@
 //
 
 #import "OOCUser.h"
+#import "OOCUser2.h"
 #import "OOCPost.h"
 #import "OOCEvent.h"
 #import "OOCContact.h"
@@ -566,6 +567,19 @@ describe(@"set", ^{
 
         OOCSet* res = [[OOCUser find:@{@"fname": @"John"}] union:@{@"fname": @"Jane"}];
         XCTAssertEqualObjects([users valueForKey:@"id"], [res.ids sortedArrayUsingSelector:@selector(compare:)]);
+    });
+});
+
+describe(@"uniques", ^{
+    __block OOCUser2* u;
+    beforeEach(^{
+        u = nil;
+        [Ohmoc flush];
+        u = [OOCUser2 create:@{@"email": @"a@a.com"}];
+    });
+
+    it(@"findability", ^{
+        XCTAssertEqual([OOCUser2 with:@"email" is:@"a@a.com"], u);
     });
 });
 
