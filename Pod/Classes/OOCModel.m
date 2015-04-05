@@ -529,6 +529,9 @@ static NSMutableDictionary* cache = nil;
 }
 
 - (NSString*)indexForProperty:(NSString *)propertyName {
+    if (!self.id) {
+        [OOCMissingIDException raise:@"MissingID" format:@"MissingID %@", self];
+    }
     OOCModelObjectProperty* property = [[[[self class] spec] properties] valueForKey:propertyName];
     NSString* referenceProperty = property.referenceProperty;
     if (!referenceProperty) {
@@ -538,6 +541,9 @@ static NSMutableDictionary* cache = nil;
 }
 
 - (NSString*)listForProperty:(NSString *)propertyName {
+    if (!self.id) {
+        [OOCMissingIDException raise:@"MissingID" format:@"MissingID %@", self];
+    }
     return [@[NSStringFromClass([self class]), self.id, propertyName] componentsJoinedByString:@":"];
 }
 

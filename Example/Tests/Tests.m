@@ -938,6 +938,10 @@ describe(@"model", ^{
         [event.attendees remove:p2];
         XCTAssertEqual(event.attendees.size, 1);
     });
+    it(@"not be available if the model is new", ^{
+        OOCEvent* event = [[OOCEvent alloc] initWithDictionary:@{@"name": @"Ruby Tuesday"}];
+        XCTAssertThrowsSpecific([event.attendees size], OOCMissingIDException);
+    });
 });
 
 SpecEnd
