@@ -8,9 +8,11 @@
 
 #import "OOCModel.h"
 
+@protocol OOCPerson;
 @interface OOCEvent : OOCModel
 
 @property NSString* name;
 @property NSString* location;
+@property OOCSet<OOCPerson>* attendees;
 
 @end

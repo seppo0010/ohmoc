@@ -365,13 +365,11 @@ static NSMutableDictionary* cache = nil;
             continue;
         }
         id value = [properties valueForKey:key];
-        [self setValue:value forKey:key];
-//        if ([propertySpec isKindOfClass:[OOCModelObjectProperty class]]) {
-//            OOCModelObjectProperty* objPropertySpec = (OOCModelObjectProperty*)propertySpec;
-//            if (objPropertySpec.referenceProperty) {
-//                [[value valueForKey:objPropertySpec.referenceProperty] add:self];
-//            }
-//        }
+        if ([value isKindOfClass:[NSNull class]]) {
+            [self setValue:nil forKey:key];
+        } else {
+            [self setValue:value forKey:key];
+        }
     }
 }
 
@@ -493,6 +491,22 @@ static NSMutableDictionary* cache = nil;
     if ([ret isKindOfClass:[NSException class]]) {
         // ugh;
         [ret raise];
+    }
+}
+
+- (id)get:(NSString*)att {
+    id property = [Ohmoc command:@[@"HGET", self.key, att]];
+    [self setValue:property forKey:att];
+    return property;
+}
+
+- (void)set:(NSString*)att value:(id)val {
+    if (val == nil || [val isKindOfClass:[NSNull class]]) {
+        [Ohmoc command:@[@"HDEL", self.key, att]];
+        [self setValue:nil forKey:att];
+    } else {
+        [Ohmoc command:@[@"HSET", self.key, att, val]];
+        [self setValue:val forKey:att];
     }
 }
 

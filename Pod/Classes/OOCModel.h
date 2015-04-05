@@ -15,6 +15,8 @@
 
 @property NSString<OOCUnique>* id;
 
+- (void)applyDictionary:(NSDictionary*)properties;
+- (instancetype)initWithDictionary:(NSDictionary*)properties;
 - (NSString*)indexForProperty:(NSString*)property;
 - (NSString*)listForProperty:(NSString*)property;
 + (NSArray*) filters:(NSDictionary*)filters;
@@ -23,6 +25,8 @@
 + (instancetype)get:(NSString*)id;
 + (instancetype)create;
 + (instancetype)create:(NSDictionary*)properties;
+- (id)get:(NSString*)prop;
+- (void)set:(NSString*)att value:(id)val;
 + (OOCSet*)all;
 + (BOOL)isCached:(NSString*)id;
 - (void) save;

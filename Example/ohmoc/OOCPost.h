@@ -13,13 +13,17 @@
 @class OOCComment;
 @class OOCUser;
 
+@protocol OOCPost <NSObject>
+@end
+
 @interface OOCPost : OOCModel
+
+@property NSString* body;
+@property BOOL published;
+@property OOCSet<OOCPost>* related;
 
 @property OOCUser* user;
 @property id<OOCIndex> userMeta;
 @property OOCList<OOCComment>* comments;
 
-@end
-
-@protocol OOCPost <NSObject>
 @end

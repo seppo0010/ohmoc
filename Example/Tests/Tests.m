@@ -634,4 +634,85 @@ describe(@"uniques", ^{
     });
 });
 
+describe(@"model", ^{
+    beforeEach(^{
+        [Ohmoc flush];
+    });
+    it(@"booleans", ^{
+        NSString* pid;
+        @autoreleasepool {
+            OOCPost* p = [OOCPost create:@{@"body": @"true", @"published": @FALSE}];
+            pid = p.id;
+            XCTAssertEqualObjects(p.body, @"true");
+            XCTAssertEqual(p.published, false);
+            p = nil; // flush cache
+        }
+        OOCPost* p = [OOCPost get:pid];
+        XCTAssertEqualObjects(p.body, @"true");
+        XCTAssertEqual(p.published, false);
+    });
+    it(@"empty model is ok", ^{
+        [OOCPost create];
+    });
+    it(@"get", ^{
+        OOCEvent* e = [OOCEvent create:@{@"name": @"Foo"}];
+        e.name = @"Bar";
+        XCTAssertEqualObjects([e get:@"name"], @"Foo");
+        XCTAssertEqualObjects(e.name, @"Foo");
+    });
+    it(@"set", ^{
+        OOCEvent* e;
+        @autoreleasepool {
+            e = [OOCEvent create:@{@"name": @"Foo"}];
+            [e set:@"name" value:@"Bar"];
+            XCTAssertEqualObjects([e get:@"name"], @"Bar");
+            e = nil;
+        }
+
+        @autoreleasepool {
+            e = [[OOCEvent all] first];
+            XCTAssertEqualObjects([e get:@"name"], @"Bar");
+            
+            [e set:@"name" value:nil];
+            XCTAssertNil(e.name);
+            e = nil;
+        }
+
+        e = [[OOCEvent all] first];
+        XCTAssertNil(e.name);
+        int exists = [[Ohmoc command:@[@"HEXISTS", @"OOCEvent:1", @"name"]] intValue];
+        XCTAssertEqual(exists, 0);
+    });
+    it(@"assign attributes from the hash", ^{
+        OOCEvent* e = [OOCEvent create:@{@"name": @"Ruby Tuesday"}];
+        XCTAssertEqualObjects(e.name, @"Ruby Tuesday");
+    });
+    it(@"assign an ID and save the object", ^{
+        OOCEvent* e1 = [OOCEvent create:@{@"name": @"Ruby Tuesday"}];
+        OOCEvent* e2 = [OOCEvent create:@{@"name": @"Ruby Meetup"}];
+        XCTAssertEqualObjects(e1.id, @"1");
+        XCTAssertEqualObjects(e2.id, @"2");
+    });
+    it(@"updates attributes", ^{
+        OOCEvent* e = [OOCEvent create:@{@"name": @"Ruby Tuesday"}];
+        [e applyDictionary:@{@"name": @"Ruby Meetup"}];
+        XCTAssertEqualObjects(e.name, @"Ruby Meetup");
+    });
+    it(@"save the attributes in UTF8", ^{
+        NSString* eid;
+        @autoreleasepool {
+            OOCEvent* event = [OOCEvent create:@{@"name": @"32° Kisei-sen"}];
+            eid = event.id;
+        }
+        XCTAssertFalse([OOCEvent isCached:eid]);
+        OOCEvent* event = [OOCEvent get:eid];
+        XCTAssertEqualObjects(event.name, @"32° Kisei-sen");
+    });
+    it(@"delete the attribute if set to nil", ^{
+        OOCEvent* e = [OOCEvent create:@{@"name": @"Ruby Tuesday", @"location": @"Los Angeles"}];
+        [e applyDictionary:@{@"location": [NSNull null]}];
+        XCTAssertNil(e.location);
+    });
+});
+
 SpecEnd
