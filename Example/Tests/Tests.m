@@ -340,6 +340,12 @@ describe(@"indices", ^{
     it(@"raise if the index doesn't exist", ^{
         XCTAssertThrowsSpecific([OOCUser find:@{@"address": @"foo"}], OOCIndexNotFoundException);
     });
+
+    it(@"avoid intersections with the all collection", ^{
+        [[OOCUser find:@{@"email": @"foo"}] blockWithKey:^(NSString* mykey) {
+            XCTAssertEqualObjects(mykey, @"OOCUser:indices:email:foo");
+        }];
+    });
 });
 
 SpecEnd
