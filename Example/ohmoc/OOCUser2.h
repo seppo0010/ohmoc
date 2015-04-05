@@ -10,7 +10,8 @@
 
 @interface OOCUser2 : OOCModel
 
-@property NSString<OOCUnique>* email;
+@property NSString* email;
+@property id<OOCUnique> emailMeta;
 @property (readonly) NSString<OOCUnique>* provider;
 
 @end
