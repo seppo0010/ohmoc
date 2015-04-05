@@ -766,6 +766,12 @@ describe(@"model", ^{
         }
         XCTAssertEqualObjects([OOCEvent get:eid].name, @"Foo");
     });
+    it(@"allow to hook into save", ^{
+        @autoreleasepool {
+            [OOCEvent create:@{@"name": @"Foo"}];
+        }
+        XCTAssertEqualObjects([[[OOCEvent all] first] slug], @"foo");
+    });
 });
 
 SpecEnd

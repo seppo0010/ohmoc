@@ -10,4 +10,9 @@
 
 @implementation OOCEvent
 
+- (void) save {
+    self.slug = [self.name lowercaseString];
+    [super save];
+}
+
 @end

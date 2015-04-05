@@ -13,6 +13,7 @@
 
 @property NSString* name;
 @property NSString* location;
+@property NSString* slug;
 @property OOCSet<OOCPerson>* attendees;
 
 @end
