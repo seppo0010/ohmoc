@@ -60,7 +60,7 @@ static NSString* path;
     id retval = [[self rlite] command:command];
     if ([retval isKindOfClass:[NSException class]]) {
         NSException* exc = retval;
-        if ([exc.reason containsString:@"UniqueIndexViolation"]) {
+        if ([exc.reason rangeOfString:@"UniqueIndexViolation"].length != 0) {
             [[[OOCUniqueIndexViolationException alloc] initWithName:exc.name reason:exc.reason userInfo:exc.userInfo] raise];
         }
         [exc raise];
