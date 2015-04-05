@@ -942,6 +942,18 @@ describe(@"model", ^{
         OOCEvent* event = [[OOCEvent alloc] initWithDictionary:@{@"name": @"Ruby Tuesday"}];
         XCTAssertThrowsSpecific([event.attendees size], OOCMissingIDException);
     });
+    it(@"return true if the set includes some member", ^{
+        OOCPerson* p1 = [OOCPerson create:@{@"name": @"Albert"}];
+        OOCPerson* p2 = [OOCPerson create:@{@"name": @"Bertrand"}];
+        OOCPerson* p3 = [OOCPerson create:@{@"name": @"Charles"}];
+        OOCEvent* event = [OOCEvent create:@{@"name": @"Ruby Tuesday"}];
+        [event.attendees add:p1];
+        [event.attendees add:p2];
+
+        XCTAssert([event.attendees contains:p1]);
+        XCTAssert([event.attendees contains:p2]);
+        XCTAssertFalse([event.attendees contains:p3]);
+    });
 });
 
 SpecEnd
