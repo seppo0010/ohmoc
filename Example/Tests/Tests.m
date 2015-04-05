@@ -884,9 +884,26 @@ describe(@"model", ^{
     });
 
     it(@"finding by one entry in the enumerable", ^{
-        [OOCPost create:@{@"tags": @"foo bar baz"}];
+        OOCPost* p = [OOCPost create:@{@"tags": @"foo bar baz"}];
         NSUInteger size = [[OOCPost find:@{@"tag": @"foo"}] size];
         XCTAssertEqual(size, 1);
+        XCTAssert([[OOCPost find:@{@"tag": @"foo"}] contains:p]);
+        XCTAssert([[OOCPost find:@{@"tag": @"bar"}] contains:p]);
+        XCTAssert([[OOCPost find:@{@"tag": @"baz"}] contains:p]);
+        XCTAssertFalse([[OOCPost find:@{@"tag": @"oof"}] contains:p]);
+    });
+    
+    it(@"finding by multiple entries in the enumerable", ^{
+        OOCPost* p = [OOCPost create:@{@"tags": @"foo bar baz"}];
+        BOOL contains = [[OOCPost find:@{@"tag": @[@"foo", @"bar"]}] contains:p];
+        XCTAssert(contains);
+        contains = [[OOCPost find:@{@"tag": @[@"foo", @"bar"]}] contains:p];
+        XCTAssert(contains);
+        contains = [[OOCPost find:@{@"tag": @[@"bar", @"baz"]}] contains:p];
+        XCTAssert(contains);
+        OOCSet* res = [OOCPost find:@{@"tag": @[@"baz", @"oof"]}];
+        XCTAssertFalse([res contains:p]);
+        XCTAssertEqual([res size], 0);
     });
 });
 
