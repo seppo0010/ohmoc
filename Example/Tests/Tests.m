@@ -346,6 +346,11 @@ describe(@"indices", ^{
             XCTAssertEqualObjects(mykey, @"OOCUser:indices:email:foo");
         }];
     });
+
+    it(@"allow multiple chained finds", ^{
+        NSUInteger size = [[[[OOCUser find:@{@"email": @"foo"}] find:@{@"activationCode": @"bar"}] find:@{@"update": @"baz"}] size];
+        XCTAssertEqual(size, 1);
+    });
 });
 
 SpecEnd
