@@ -90,6 +90,10 @@
     return [self _sortBy:[self toKey:by] get:get limit:limit offset:offset order:order store:store];
 }
 
+- (id<NSFastEnumeration>) sortBy:(NSString*)by {
+    return [self sortBy:by get:nil limit:0 offset:0 order:nil store:nil];
+}
+
 - (OOCSet*)find:(NSDictionary*)dict {
     NSArray* filters = [self.modelClass filters:dict];
     return [OOCSet collectionWithBlock:^(void(^localblock)(NSString*)) {

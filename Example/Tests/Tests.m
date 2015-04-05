@@ -15,6 +15,7 @@
 #import "OOCAuthor.h"
 #import "Ohmoc.h"
 #import "ObjCHirlite.h"
+#import "NSArray+arrayWithFastEnumeration.h"
 
 SpecBegin(ohmoc)
 
@@ -380,6 +381,24 @@ describe(@"indices", ^{
         OOCSet* res = [OOCUser find:@{@"email": @"baz qux"}];
         XCTAssertEqual(res.size, 1);
         XCTAssertEqual(res.first, u3);
+    });
+});
+
+describe(@"indices2", ^{
+    __block OOCUser* u1, *u2, *u3;
+    beforeEach(^{
+        u1 = u2 = u3 = nil;
+        [Ohmoc flush];
+        u1 = [OOCUser create:@{@"email": @"foo@gmail.com"}];
+        u2 = [OOCUser create:@{@"email": @"bar@gmail.com"}];
+        u3 = [OOCUser create:@{@"email": @"bazqux@yahoo.com"}];
+    });
+
+    it(@"allow indexing by an arbitrary attribute", ^{
+        OOCSet* res = [OOCUser find:@{@"emailProvider": @"gmail.com"}];
+        NSArray* arr = [NSArray arrayWithFastEnumeration:[res sortBy:@"id"]];
+        NSArray* arr2 = @[u1, u2];
+        XCTAssertEqualObjects(arr, arr2);
     });
 });
 

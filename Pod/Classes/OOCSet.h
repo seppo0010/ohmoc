@@ -12,7 +12,8 @@
 @interface OOCSet : OOCCollection
 
 - (id)get:(NSString*)id;
-- (NSArray*) sortBy:(NSString*)by get:(NSString*)get limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store;
+- (id<NSFastEnumeration>) sortBy:(NSString*)by get:(NSString*)get limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store;
+- (id<NSFastEnumeration>) sortBy:(NSString*)by;
 - (OOCSet*)find:(NSDictionary*)dict;
 - (OOCSet*)except:(NSDictionary*)dict;
 - (OOCSet*)combine:(NSDictionary*)dict;
