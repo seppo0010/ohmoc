@@ -202,6 +202,22 @@ describe(@"filtering", ^{
         contains = [set contains:john];
         XCTAssertFalse(contains);
     });
+    it(@"except", ^{
+        [OOCUser create:@{@"status": @"inactive", @"lname": @"Doe"}];
+        OOCSet* res = [[OOCUser find:@{@"lname": @"Doe"}] except:@{@"status": @"inactive"}];
+        XCTAssertEqual(res.size, 2);
+        BOOL contains = [res contains:john];
+        XCTAssert(contains);
+        contains = [res contains:jane];
+        XCTAssert(contains);
+
+        res = [[OOCUser all] except:@{@"status": @"inactive"}];
+        XCTAssertEqual(res.size, 2);
+        contains = [res contains:john];
+        XCTAssert(contains);
+        contains = [res contains:jane];
+        XCTAssert(contains);
+    });
 });
 
 SpecEnd
