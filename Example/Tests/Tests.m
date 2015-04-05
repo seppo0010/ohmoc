@@ -480,6 +480,22 @@ describe(@"list", ^{
         XCTAssertEqual(c4, p.comments.first);
         XCTAssertEqual(c5, p.comments.last);
     });
+
+    it(@"delete", ^{
+        [p.comments remove:c1];
+        XCTAssertEqual(2, p.comments.size);
+        XCTAssertFalse([p.comments contains:c1]);
+
+        [p.comments remove:c2];
+        XCTAssertEqual(1, p.comments.size);
+        XCTAssertFalse([p.comments contains:c2]);
+
+        [p.comments remove:c3];
+        XCTAssertEqual(0, p.comments.size);
+        XCTAssertFalse([p.comments contains:c3]);
+
+        XCTAssert([p.comments isEmpty]);
+    });
 });
 
 SpecEnd
