@@ -13,8 +13,6 @@
 @interface OOCSet : OOCCollection
 
 - (id)get:(NSString*)id;
-- (id<NSFastEnumeration>) sortBy:(NSString*)by get:(NSString*)get limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store;
-- (OOCList*) sortBy:(NSString*)by;
 - (OOCSet*)find:(NSDictionary*)dict;
 - (OOCSet*)except:(NSDictionary*)dict;
 - (OOCSet*)combine:(NSDictionary*)dict;

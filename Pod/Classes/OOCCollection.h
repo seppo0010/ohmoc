@@ -12,6 +12,7 @@
 @end
 
 @class OOCModel;
+@class OOCList;
 @interface OOCCollection : NSObject <NSFastEnumeration> {
     NSMutableArray* objects;
     NSString* _key;
@@ -44,5 +45,8 @@
 - (NSUInteger) size;
 - (BOOL) contains:(OOCModel*)model;
 - (void) blockWithKey:(void(^)(NSString*))localblock;
+- (id<NSFastEnumeration>) sortBy:(NSString*)by get:(NSString*)get limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store;
+- (OOCList*) sortBy:(NSString*)by limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store;
+- (OOCList*) sortBy:(NSString*)by;
 
 @end

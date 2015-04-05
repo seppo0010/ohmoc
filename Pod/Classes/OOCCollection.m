@@ -48,6 +48,10 @@
     return c;
 }
 
+- (NSString*)toKey:(NSString*)att {
+    return [NSString stringWithFormat:@"%@:*->%@", NSStringFromClass(self.modelClass), att];
+}
+
 - (NSString*)idAtIndex:(NSUInteger)index {
     return [self.ids objectAtIndex:index];
 }
@@ -125,6 +129,52 @@
     } else {
         localblock([self keyForProperty:self.propertyName]);
     }
+}
+
+- (id<NSFastEnumeration>) _sortBy:(NSString*)by get:(NSString*)get limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store {
+    if (get) {
+        get = [self toKey:get];
+        NSMutableArray*  command = [NSMutableArray array];
+        __block id<NSFastEnumeration> r;
+        [self blockWithKey:^(NSString* mykey) {
+            [command addObjectsFromArray:@[@"SORT", mykey]];
+            [command addObjectsFromArray:[Ohmoc sortBy:by get:get limit:limit offset:offset order:order store:store]];
+            r = [Ohmoc command:command];
+        }];
+        return r;
+    } else {
+        return [OOCList collectionWithBlock:^(void(^localblock)(NSString*)) {
+            NSString* key = store;
+            if (!store) {
+                key = [Ohmoc tmpKey];
+            }
+            [self blockWithKey:^(NSString* mykey) {
+                NSMutableArray* command = [NSMutableArray arrayWithObjects:@"SORT", mykey, nil];
+                [command addObjectsFromArray:[Ohmoc sortBy:by get:get limit:limit offset:offset order:order store:key]];
+                [Ohmoc command:command];
+                localblock(key);
+            }];
+            if (!store) {
+                [Ohmoc command:@[@"DEL", key]];
+            }
+        } namespace:self.ns modelClass:self.modelClass];
+    }
+}
+
+- (id<NSFastEnumeration>) sort:(NSString*)get limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store {
+    return [self _sortBy:nil get:get limit:limit offset:offset order:order store:store];
+}
+
+- (id<NSFastEnumeration>) sortBy:(NSString*)by get:(NSString*)get limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store {
+    return [self _sortBy:[self toKey:by] get:get limit:limit offset:offset order:order store:store];
+}
+
+- (OOCList*) sortBy:(NSString*)by limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store {
+    return (OOCList*)[self _sortBy:[self toKey:by] get:nil limit:limit offset:offset order:order store:store];
+}
+
+- (OOCList*) sortBy:(NSString*)by {
+    return [self sortBy:by limit:0 offset:0 order:nil store:nil];
 }
 
 @end

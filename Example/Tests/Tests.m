@@ -871,7 +871,17 @@ describe(@"model", ^{
         NSArray* expected = @[@"A", @"B"];
         XCTAssertEqualObjects([[OOCPerson all] sortBy:@"name" get:@"name" limit:0 offset:0 order:@"ALPHA" store:nil], expected);
     });
+    it(@"work on lists", ^{
+        OOCPost* post = [OOCPost create:@{@"body": @"Hello world!"}];
+        for (NSString* body in @[@"C", @"B", @"A"]) {
+            OOCPost* related = [OOCPost create:@{@"body": body}];
+            [Ohmoc command:@[@"RPUSH", [NSString stringWithFormat:@"OOCPost:%@:related", post.id], related.id]];
+        }
+        OOCList* res = [post.related sortBy:@"body" limit:0 offset:0 order:@"ALPHA ASC" store:nil];
+        NSArray* bodies = [[res arrayValue] valueForKey:@"body"];
+        NSArray* expected = @[@"A", @"B", @"C"];
+        XCTAssertEqualObjects(bodies, expected);
+    });
 });
-
 
 SpecEnd
