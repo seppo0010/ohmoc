@@ -1035,6 +1035,31 @@ describe(@"model", ^{
             XCTAssertEqualObjects(logins, expected);
         });
     });
+
+    describe(@"Collections initialized with a Model parameter", ^{
+        __block OOCUser* u;
+        beforeEach(^{
+            [Ohmoc flush];
+            u = [OOCUser create:@{@"email": @"albert@example.com"}];
+            [OOCPost create:@{@"body": @"D", @"user": u}];
+            [OOCPost create:@{@"body": @"C", @"user": u}];
+            [OOCPost create:@{@"body": @"B", @"user": u}];
+            [OOCPost create:@{@"body": @"A", @"user": u}];
+        });
+        afterEach(^{
+            u = nil;
+        });
+        it(@"return instances of the passed model", ^{
+            XCTAssertEqual([[u.posts first] class], [OOCPost class]);
+        });
+        it(@"remove an object from the set", ^{
+            OOCPost* p = [u.posts first];
+            XCTAssert([u.posts contains:p]);
+
+            [Ohmoc command:@[@"SREM", @"OOCPost:indices:user_id:1", p.id]];
+            XCTAssertFalse([u.posts contains:p]);
+        });
+    });
 });
 
 SpecEnd
