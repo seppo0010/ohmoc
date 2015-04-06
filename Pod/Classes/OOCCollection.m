@@ -15,35 +15,31 @@
 
 @implementation OOCCollection
 
-+ (instancetype)collectionWithBlock:(void(^)(void(^)(NSString*)))block namespace:(NSUInteger)ns modelClass:(Class)modelClass {
-    OOCCollection* set = [[self alloc] init];
++ (instancetype)collectionWithBlock:(void(^)(void(^)(NSString*)))block ohmoc:(Ohmoc*)ohmoc modelClass:(Class)modelClass {
+    OOCCollection* set = [[self alloc] initWithOhmoc:ohmoc];
     set.block = block;
-    set.ns = ns;
     set.modelClass = modelClass;
     return set;
 }
 
-+ (OOCCollection*)collectionWithIds:(NSArray*)ids namespace:(NSUInteger)ns modelClass:(Class)modelClass {
-    OOCCollection* c = [[self alloc] init];
++ (OOCCollection*)collectionWithIds:(NSArray*)ids ohmoc:(Ohmoc*)ohmoc modelClass:(Class)modelClass {
+    OOCCollection* c = [[self alloc] initWithOhmoc:ohmoc];
     c.ids = ids;
-    c.ns = ns;
     c.modelClass = modelClass;
     return c;
 }
 
-+ (OOCCollection*)collectionWithKey:(NSString*)key namespace:(NSUInteger)ns modelClass:(Class)modelClass {
-    OOCCollection* c = [[self alloc] init];
++ (OOCCollection*)collectionWithKey:(NSString*)key ohmoc:(Ohmoc*)ohmoc modelClass:(Class)modelClass {
+    OOCCollection* c = [[self alloc] initWithOhmoc:ohmoc];
     c.key = key;
-    c.ns = ns;
     c.modelClass = modelClass;
     return c;
 }
 
-+ (OOCCollection*)collectionWithModel:(OOCModel*)model property:(NSString*)propertyName namespace:(NSUInteger)ns modelClass:(Class)modelClass {
-    OOCCollection* c = [[self alloc] init];
++ (OOCCollection*)collectionWithModel:(OOCModel*)model property:(NSString*)propertyName ohmoc:(Ohmoc*)ohmoc modelClass:(Class)modelClass {
+    OOCCollection* c = [[self alloc] initWithOhmoc:ohmoc];
     c.model = model;
     c.propertyName = propertyName;
-    c.ns = ns;
     c.modelClass = modelClass;
     return c;
 }
@@ -69,7 +65,6 @@
     NSUInteger size = [self size];
     if (countOfItemsAlreadyEnumerated < size) {
         state->itemsPtr = stackbuf;
-        [[Ohmoc instance] command:@[@"SELECT", [NSString stringWithFormat:@"%lu", (long unsigned)self.ns]]];
         while((countOfItemsAlreadyEnumerated < size) && (count < stackbufLength)) {
             // TODO: pipeline
             // TODO: make model
@@ -137,7 +132,7 @@
         NSMutableArray*  command = [NSMutableArray array];
         __block id<NSFastEnumeration> r;
         [self blockWithKey:^(NSString* mykey) {
-            Ohmoc* ohmoc = [Ohmoc instance];
+            Ohmoc* ohmoc = self.ohmoc;
             [command addObjectsFromArray:@[@"SORT", mykey]];
             [command addObjectsFromArray:[ohmoc sortBy:by get:get limit:limit offset:offset order:order store:store]];
             r = [ohmoc command:command];
@@ -145,7 +140,7 @@
         return r;
     } else {
         return [OOCList collectionWithBlock:^(void(^localblock)(NSString*)) {
-            Ohmoc* ohmoc = [Ohmoc instance];
+            Ohmoc* ohmoc = self.ohmoc;
             NSString* key = store;
             if (!store) {
                 key = [ohmoc tmpKey];
@@ -159,7 +154,7 @@
             if (!store) {
                 [ohmoc command:@[@"DEL", key]];
             }
-        } namespace:self.ns modelClass:self.modelClass];
+        } ohmoc:self.ohmoc modelClass:self.modelClass];
     }
 }
 

@@ -761,7 +761,7 @@ describe(@"model", ^{
     it(@"create the model if it is new", ^{
         NSString* eid;
         @autoreleasepool {
-            OOCEvent* e = [[OOCEvent alloc] init];
+            OOCEvent* e = [[OOCEvent alloc] initWithOhmoc:[Ohmoc instance]];
             [e applyDictionary:@{@"name": @"Foo"}];
             [e save];
             eid = e.id;
@@ -838,7 +838,7 @@ describe(@"model", ^{
     it(@"fetch ids", ^{
         OOCEvent* e1 = [OOCEvent create:@{@"name": @"Ruby Meetup"}];
         OOCEvent* e2 = [OOCEvent create:@{@"name": @"Ruby Tuesday"}];
-        NSArray* objs = [[OOCCollection collectionWithIds:@[e1.id, e2.id] namespace:0 modelClass:[OOCEvent class]] arrayValue];
+        NSArray* objs = [[OOCCollection collectionWithIds:@[e1.id, e2.id] ohmoc:[Ohmoc instance] modelClass:[OOCEvent class]] arrayValue];
         NSArray* expected = @[e1, e2];
         XCTAssertEqualObjects(expected, objs);
 
@@ -940,7 +940,7 @@ describe(@"model", ^{
         XCTAssertEqual(event.attendees.size, 1);
     });
     it(@"not be available if the model is new", ^{
-        OOCEvent* event = [[OOCEvent alloc] initWithDictionary:@{@"name": @"Ruby Tuesday"}];
+        OOCEvent* event = [[OOCEvent alloc] initWithDictionary:@{@"name": @"Ruby Tuesday"} ohmoc:[Ohmoc instance]];
         XCTAssertThrowsSpecific([event.attendees size], OOCMissingIDException);
     });
     it(@"return true if the set includes some member", ^{

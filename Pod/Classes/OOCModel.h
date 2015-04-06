@@ -8,17 +8,19 @@
 
 #import <Foundation/Foundation.h>
 #import "OOCUnique.h"
+#import "OOCObject.h"
 
 @class OOCCollection;
 @class OOCSet;
-@interface OOCModel : NSObject {
+@interface OOCModel : OOCObject {
     NSString<OOCUnique>* _id;
 }
 
 @property (readonly) NSString<OOCUnique>* id;
 
 - (void)applyDictionary:(NSDictionary*)properties;
-- (instancetype)initWithDictionary:(NSDictionary*)properties;
+- (OOCModel*)initWithId:(NSString*)id ohmoc:(Ohmoc*)ohmoc;
+- (instancetype)initWithDictionary:(NSDictionary*)properties ohmoc:(Ohmoc*)ohmoc;
 - (NSString*)indexForProperty:(NSString*)property;
 - (NSString*)listForProperty:(NSString*)property;
 + (NSArray*) filters:(NSDictionary*)filters;

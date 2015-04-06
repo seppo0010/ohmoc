@@ -7,13 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OOCObject.h"
 
 @protocol OOCCollection <NSObject>
 @end
 
+@class Ohmoc;
 @class OOCModel;
 @class OOCList;
-@interface OOCCollection : NSObject <NSFastEnumeration> {
+@interface OOCCollection : OOCObject <NSFastEnumeration> {
     NSMutableArray* objects;
     NSString* _key;
     void(^_block)(void(^)(NSString*));
@@ -30,16 +32,15 @@
 @property (weak) OOCModel* model;
 @property NSString* propertyName;
 @property NSString* key;
-@property NSUInteger ns;
 @property (strong) Class modelClass;
 
 @property (strong) void(^block)(void(^)(NSString*));
 
 
-+ (instancetype)collectionWithBlock:(void(^)(void(^)(NSString*)))block namespace:(NSUInteger)ns modelClass:(Class)modelClass;
-+ (instancetype)collectionWithIds:(NSArray*)ids namespace:(NSUInteger)ns modelClass:(Class)model;
-+ (instancetype)collectionWithKey:(NSString*)key namespace:(NSUInteger)ns modelClass:(Class)model;
-+ (instancetype)collectionWithModel:(OOCModel*)model property:(NSString*)propertyName namespace:(NSUInteger)ns modelClass:(Class)modelClass;
++ (instancetype)collectionWithBlock:(void(^)(void(^)(NSString*)))block ohmoc:(Ohmoc*)ohmoc modelClass:(Class)modelClass;
++ (instancetype)collectionWithIds:(NSArray*)ids ohmoc:(Ohmoc*)ohmoc modelClass:(Class)model;
++ (instancetype)collectionWithKey:(NSString*)key ohmoc:(Ohmoc*)ohmoc modelClass:(Class)model;
++ (instancetype)collectionWithModel:(OOCModel*)model property:(NSString*)propertyName ohmoc:(Ohmoc*)ohmoc modelClass:(Class)modelClass;
 - (BOOL) isEmpty;
 - (NSArray*)arrayValue;
 - (NSUInteger) size;

@@ -16,7 +16,7 @@
 - (NSUInteger) size {
     __block NSUInteger size;
     [self blockWithKey:^(NSString* key) {
-        size = [[[Ohmoc instance] command:@[@"SCARD", key]] unsignedIntegerValue];
+        size = [[self.ohmoc command:@[@"SCARD", key]] unsignedIntegerValue];
     }];
     return size;
 }
@@ -24,7 +24,7 @@
 - (BOOL)containsId:(NSString*)id {
     __block BOOL contains;
     [self blockWithKey:^(NSString* key) {
-        contains = [[[Ohmoc instance] command:@[@"SISMEMBER", key, id]] boolValue];
+        contains = [[self.ohmoc command:@[@"SISMEMBER", key, id]] boolValue];
     }];
     return contains;
 }
@@ -43,7 +43,7 @@
 - (NSArray*)ids {
     __block NSArray* ids;
     [self blockWithKey:^(NSString* key) {
-        ids = [[Ohmoc instance] command:@[@"SMEMBERS", key]];
+        ids = [self.ohmoc command:@[@"SMEMBERS", key]];
     }];
     return ids;
 }
@@ -51,7 +51,7 @@
 - (OOCSet*)find:(NSDictionary*)dict {
     NSArray* filters = [self.modelClass filters:dict];
     return [OOCSet collectionWithBlock:^(void(^localblock)(NSString*)) {
-        Ohmoc* ohmoc = [Ohmoc instance];
+        Ohmoc* ohmoc = self.ohmoc;
         NSString* key = [ohmoc tmpKey];
         NSMutableArray* command = [NSMutableArray arrayWithCapacity:filters.count + 2];
         [self blockWithKey:^(NSString* mykey) {
@@ -61,12 +61,12 @@
             localblock(key);
             [ohmoc command:@[@"DEL", key]];
         }];
-    } namespace:self.ns modelClass:self.modelClass];
+    } ohmoc:self.ohmoc modelClass:self.modelClass];
 }
 
 - (OOCSet*)except:(NSDictionary*)dict {
     return [OOCSet collectionWithBlock:^(void(^localblock)(NSString*)) {
-        Ohmoc* ohmoc = [Ohmoc instance];
+        Ohmoc* ohmoc = self.ohmoc;
         NSString* key1 = [ohmoc tmpKey];
         NSString* key2 = [ohmoc tmpKey];
         NSMutableArray* sunionCommand = [@[@"SUNIONSTORE", key1] mutableCopy];
@@ -79,12 +79,12 @@
             localblock(key2);
             [ohmoc command:@[@"DEL", key1, key2]];
         }];
-    } namespace:self.ns modelClass:self.modelClass];
+    } ohmoc:self.ohmoc modelClass:self.modelClass];
 }
 
 - (OOCSet*)combine:(NSDictionary*)dict {
     return [OOCSet collectionWithBlock:^(void(^localblock)(NSString*)) {
-        Ohmoc* ohmoc = [Ohmoc instance];
+        Ohmoc* ohmoc = self.ohmoc;
         NSString* key1 = [ohmoc tmpKey];
         NSString* key2 = [ohmoc tmpKey];
         NSMutableArray* sunionCommand = [@[@"SUNIONSTORE", key1] mutableCopy];
@@ -97,12 +97,12 @@
             localblock(key2);
             [ohmoc command:@[@"DEL", key1, key2]];
         }];
-    } namespace:self.ns modelClass:self.modelClass];
+    } ohmoc:self.ohmoc modelClass:self.modelClass];
 }
 
 - (OOCSet*)union:(NSDictionary*)dict {
     return [OOCSet collectionWithBlock:^(void(^localblock)(NSString*)) {
-        Ohmoc* ohmoc = [Ohmoc instance];
+        Ohmoc* ohmoc = self.ohmoc;
         NSString* key1 = [ohmoc tmpKey];
         NSString* key2 = [ohmoc tmpKey];
         NSMutableArray* sunionCommand = [@[@"SINTERSTORE", key1] mutableCopy];
@@ -115,7 +115,7 @@
             localblock(key2);
         }];
         [ohmoc command:@[@"DEL", key1, key2]];
-    } namespace:self.ns modelClass:self.modelClass];
+    } ohmoc:self.ohmoc modelClass:self.modelClass];
 }
 
 - (id)firstBy:(NSString*)by get:(NSString*)get order:(NSString*)order {
