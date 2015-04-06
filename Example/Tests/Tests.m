@@ -1063,4 +1063,35 @@ describe(@"model", ^{
     });
 });
 
+describe(@"multi-ohmoc", ^{
+    __block Ohmoc* ohmoc1;
+    __block Ohmoc* ohmoc2;
+    beforeEach(^{
+        ohmoc1 = [[Ohmoc alloc] initAllowDuplicates:TRUE];
+        ohmoc2 = [[Ohmoc alloc] initAllowDuplicates:TRUE];
+    });
+    it(@"create two objects in two ohmoc creates no overlap", ^{
+        OOCComment* c1 = [ohmoc1 create:@{} model:[OOCComment class]];
+        OOCComment* c2 = [ohmoc2 create:@{} model:[OOCComment class]];
+        XCTAssertEqualObjects(c1.id, c2.id);
+    });
+    it(@"create two objects in two ohmoc and query", ^{
+        OOCComment* c1 = [ohmoc1 create:@{} model:[OOCComment class]];
+        OOCComment* c2 = [ohmoc2 create:@{} model:[OOCComment class]];
+        OOCComment* c = [ohmoc1 get:c1.id model:[OOCComment class]];
+        XCTAssertEqual(c, c1);
+        c = [ohmoc2 get:c2.id model:[OOCComment class]];
+        XCTAssertEqual(c, c2);
+    });
+    it(@"create objects in two ohmoc and count", ^{
+        [ohmoc1 create:@{} model:[OOCComment class]];
+        [ohmoc1 create:@{} model:[OOCComment class]];
+        [ohmoc2 create:@{} model:[OOCComment class]];
+        NSUInteger size = [[ohmoc1 allModels:[OOCComment class]] size];
+        XCTAssertEqual(size, 2);
+        size = [[ohmoc2 allModels:[OOCComment class]] size];
+        XCTAssertEqual(size, 1);
+    });
+});
+
 SpecEnd

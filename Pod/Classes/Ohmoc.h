@@ -32,13 +32,20 @@
 + (id) create;
 + (Ohmoc*) instance;
 
+- (id) initAllowDuplicates:(BOOL)allowDuplicates;
+- (id) initWithPath:(NSString*)_path allowDuplicates:(BOOL)allowDuplicates;
+- (id) initWithPath:(NSString*)_path;
+- (id) initWithDocumentFilename:(NSString*)filename allowDuplicates:(BOOL)allowDuplicates;
+- (id) initWithDocumentFilename:(NSString*)filename;
+
+
 - (OOCSet*) find:(NSDictionary*)dict model:(Class)modelClass;
-- (OOCModel*) with:(NSString*)property is:(id)value model:(Class)modelClass;
-- (OOCModel*)get:(NSString*)id model:(Class)modelClass;
-- (OOCModel*)createModel:(Class)modelClass;
-- (OOCModel*)create:(NSDictionary*)properties model:(Class)modelClass;
+- (id) with:(NSString*)property is:(id)value model:(Class)modelClass;
+- (id)get:(NSString*)id model:(Class)modelClass;
+- (id)createModel:(Class)modelClass;
+- (id)create:(NSDictionary*)properties model:(Class)modelClass;
 - (OOCSet*)allModels:(Class)modelClass;
-- (OOCModel*)getCached:(NSString*)id model:(Class)modelClass;
+- (id)getCached:(NSString*)id model:(Class)modelClass;
 - (BOOL)isCached:(NSString*)id model:(Class)modelClass;
 - (void)setCached:(OOCModel*)model;
 - (void)removeCached:(OOCModel*)model;

@@ -33,6 +33,19 @@ static NSMutableDictionary* threadToInstance = nil;
 }
 
 - (void) _init {
+    if (path) {
+        _rlite = [[ObjCHirlite alloc] initWithPath:path];
+    } else {
+        _rlite = [[ObjCHirlite alloc] init];
+    }
+}
+
+- (void) _initAllowDuplicates:(BOOL)allowDuplicates {
+    if (allowDuplicates) {
+        [self _init];
+        return;
+    }
+
     if (!threadToInstance) {
         threadToInstance = [NSMutableDictionary dictionaryWithCapacity:1];
     }
@@ -43,33 +56,42 @@ static NSMutableDictionary* threadToInstance = nil;
         [NSException raise:@"TooManyOhmoc" format:@"There is already an Ohmoc instance running in thread %@", threadId];
     }
 
-    if (path) {
-        _rlite = [[ObjCHirlite alloc] initWithPath:path];
-    } else {
-        _rlite = [[ObjCHirlite alloc] init];
-    }
+    [self _init];
 
     [threadToInstance setValue:self forKey:threadId];
 }
 
-- (id) init {
+- (id) initAllowDuplicates:(BOOL)allowDuplicates {
     if (self = [super init]) {
-        [self _init];
-    }
-    return self;
-}
-- (id) initWithPath:(NSString*)_path {
-    if (self = [super init]) {
-        path = _path;
-        [self _init];
+        [self _initAllowDuplicates:allowDuplicates];
     }
     return self;
 }
 
-- (id) initWithDocumentFilename:(NSString*)filename {
+- (id) init {
+    return [self initAllowDuplicates:FALSE];
+}
+
+- (id) initWithPath:(NSString*)_path allowDuplicates:(BOOL)allowDuplicates {
+    if (self = [super init]) {
+        path = _path;
+        [self _initAllowDuplicates:allowDuplicates];
+    }
+    return self;
+}
+
+- (id) initWithPath:(NSString*)_path {
+    return [self initWithPath:_path allowDuplicates:FALSE];
+}
+
+- (id) initWithDocumentFilename:(NSString*)filename allowDuplicates:(BOOL)allowDuplicates {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
-    return [self initWithPath:[basePath stringByAppendingPathComponent:filename]];
+    return [self initWithPath:[basePath stringByAppendingPathComponent:filename] allowDuplicates:allowDuplicates];
+}
+
+- (id) initWithDocumentFilename:(NSString*)filename {
+    return [self initWithDocumentFilename:filename allowDuplicates:FALSE];
 }
 
 - (NSString*)tmpKey {
@@ -120,7 +142,7 @@ static NSMutableDictionary* threadToInstance = nil;
     if (!id) {
         return nil;
     }
-    OOCModel* model = [modelClass getCached:id];
+    OOCModel* model = [self getCached:id model:modelClass];
     if (!model && id && [self exists:id model:modelClass]) {
         model = [[modelClass alloc] initWithId:id ohmoc:self];
         [model load];
@@ -159,7 +181,7 @@ static NSMutableDictionary* threadToInstance = nil;
     }
 }
 
-- (OOCModel*) with:(NSString*)att is:(id)value model:(Class)modelClass {
+- (id) with:(NSString*)att is:(id)value model:(Class)modelClass {
     if (![[modelClass spec].uniques containsObject:att]) {
         [OOCIndexNotFoundException raise:@"IndexNotFound" format:@"Index not found: '%@'", att];
     }
@@ -179,19 +201,19 @@ static NSMutableDictionary* threadToInstance = nil;
     return [OOCCollection collectionWithIds:ids ohmoc:self modelClass:modelClass];
 }
 
-- (OOCModel*)createModel:(Class)modelClass {
+- (id)createModel:(Class)modelClass {
     id instance = [[modelClass alloc] initWithOhmoc:self];
     [instance save];
     return instance;
 }
 
-- (OOCModel*)create:(NSDictionary*)properties model:(Class)modelClass {
+- (id)create:(NSDictionary*)properties model:(Class)modelClass {
     id instance = [[modelClass alloc] initWithDictionary:properties ohmoc:self];
     [instance save];
     return instance;
 }
 
-- (OOCModel*)getCached:(NSString*)id model:(Class)modelClass {
+- (id)getCached:(NSString*)id model:(Class)modelClass {
     NSString* cacheKey = [@[NSStringFromClass(modelClass), id] componentsJoinedByString:@":"];
     return [cache valueForKey:cacheKey];
 }
