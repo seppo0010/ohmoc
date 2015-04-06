@@ -318,6 +318,12 @@ static NSString* lua_delete = nil;
         id val = nil;
         if ([property isKindOfClass:[OOCModelObjectProperty class]]) {
             OOCModelObjectProperty* objectProperty = (OOCModelObjectProperty*)property;
+            if (![objectProperty.klass isSubclassOfClass:[NSString class]]
+                && [objectProperty.klass conformsToProtocol:@protocol(NSCoding)]
+                && ![objectProperty.klass isSubclassOfClass:[NSData class]]
+                && [value isKindOfClass:[NSData class]]) {
+                val = [NSKeyedUnarchiver unarchiveObjectWithData:value];
+            }
             if ([objectProperty.klass isSubclassOfClass:[NSData class]]) {
                 val = value;
             }
@@ -400,10 +406,14 @@ static NSString* lua_delete = nil;
                 [properties addObject:[NSString stringWithFormat:@"%@_id", key]];
                 [properties addObject:[(OOCModel*)val id]];
             } else {
-                [properties addObject:key];
                 if ([val respondsToSelector:@selector(stringValue)]) {
                     val = [val stringValue];
                 }
+                if (![val isKindOfClass:[NSString class]] && [val conformsToProtocol:@protocol(NSCoding)]) {
+                    [binaryProperties setValue:[NSKeyedArchiver archivedDataWithRootObject:val] forKey:key];
+                    continue;
+                }
+                [properties addObject:key];
                 [properties addObject:val];
             }
         }
