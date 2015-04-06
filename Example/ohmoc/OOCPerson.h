@@ -15,6 +15,7 @@
 @interface OOCPerson : OOCModel
 
 @property NSString* name;
+@property int logins;
 @property (readonly) NSString<OOCIndex>* initial;
 
 @end

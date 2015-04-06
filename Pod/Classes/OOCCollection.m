@@ -170,7 +170,15 @@
 }
 
 - (OOCList*) sortBy:(NSString*)by limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store {
-    return (OOCList*)[self _sortBy:[self toKey:by] get:nil limit:limit offset:offset order:order store:store];
+    return (OOCList*)[self sortBy:by get:nil limit:limit offset:offset order:order store:store];
+}
+
+- (OOCList*) sortBy:(NSString*)by limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order {
+    return [self sortBy:by limit:limit offset:offset order:order store:nil];
+}
+
+- (OOCList*) sortBy:(NSString*)by order:(NSString*)order {
+    return [self sortBy:by limit:0 offset:0 order:order];
 }
 
 - (OOCList*) sortBy:(NSString*)by {

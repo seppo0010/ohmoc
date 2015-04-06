@@ -992,6 +992,49 @@ describe(@"model", ^{
         NSSet* expected = [NSSet setWithObjects:p2, p3, nil];
         XCTAssertEqualObjects(expected, [NSSet setWithArray:[event.attendees arrayValue]]);
     });
+    describe(@"Sorting lists and sets by model attributes", ^{
+        __block OOCEvent* event;
+        beforeEach(^{
+            [Ohmoc flush];
+            event = [OOCEvent create:@{@"name": @"Ruby Tuesday"}];
+            char letter = 'D';
+            for (NSNumber *logins in @[@4, @2, @5, @3]) {
+                OOCPerson* p = [OOCPerson create:@{
+                                    @"name": [NSString stringWithFormat:@"%c", letter--],
+                                    @"logins": logins,
+                                    }];
+                [event.attendees add:p];
+            }
+        });
+        after(^{
+            event = nil;
+        });
+        it(@"sort the model instances by the values provided", ^{
+            NSArray* names = [[[event.attendees sortBy:@"name" order:@"ALPHA"] arrayValue] valueForKey:@"name"];
+            NSArray* expected = @[@"A", @"B", @"C", @"D"];
+            XCTAssertEqualObjects(names, expected);
+        });
+        it(@"accept a number in the limit parameter", ^{
+            NSArray* names = [[[event.attendees sortBy:@"name" limit:2 offset:0 order:@"ALPHA"] arrayValue] valueForKey:@"name"];
+            NSArray* expected = @[@"A", @"B"];
+            XCTAssertEqualObjects(names, expected);
+        });
+        it(@"use the start parameter as an offset if the limit is provided", ^{
+            NSArray* names = [[[event.attendees sortBy:@"name" limit:2 offset:1 order:@"ALPHA"] arrayValue] valueForKey:@"name"];
+            NSArray* expected = @[@"B", @"C"];
+            XCTAssertEqualObjects(names, expected);
+        });
+        it(@"use logins attribute for sorting", ^{
+            NSArray* names = [[[event.attendees sortBy:@"logins" limit:3 offset:0 order:@"ALPHA"] arrayValue] valueForKey:@"name"];
+            NSArray* expected = @[@"C", @"A", @"D"];
+            XCTAssertEqualObjects(names, expected);
+        });
+        it(@"use logins attribute for sorting with key option", ^{
+            NSArray* logins = (NSArray*)[event.attendees sortBy:@"logins" get:@"logins" limit:3 offset:0 order:@"ALPHA" store:nil];
+            NSArray* expected = @[@"2", @"3", @"4"];
+            XCTAssertEqualObjects(logins, expected);
+        });
+    });
 });
 
 SpecEnd

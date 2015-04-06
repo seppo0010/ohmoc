@@ -47,6 +47,8 @@
 - (void) blockWithKey:(void(^)(NSString*))localblock;
 - (id<NSFastEnumeration>) sortBy:(NSString*)by get:(NSString*)get limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store;
 - (OOCList*) sortBy:(NSString*)by limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store;
+- (OOCList*) sortBy:(NSString*)by limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order;
+- (OOCList*) sortBy:(NSString*)by order:(NSString*)order;
 - (OOCList*) sortBy:(NSString*)by;
 
 @end
