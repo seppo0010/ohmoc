@@ -49,7 +49,6 @@
 + (instancetype)create;
 + (instancetype)create:(NSDictionary*)properties;
 + (OOCSet*)all;
-+ (void)setCached:(OOCModel*)model forId:(NSString*)id;
 + (OOCModel*)getCached:(NSString*)id;
 + (BOOL)isCached:(NSString*)id;
 

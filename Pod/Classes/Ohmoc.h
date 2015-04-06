@@ -54,5 +54,6 @@
 - (void) flush;
 - (NSString*)tmpKey;
 - (id)command:(NSArray*)command;
+- (id)command:(NSArray*)command binary:(BOOL)binary;
 
 @end

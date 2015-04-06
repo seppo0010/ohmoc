@@ -123,8 +123,8 @@ static NSMutableDictionary* threadToInstance = nil;
     [cache removeAllObjects];
 }
 
-- (id)command:(NSArray*)command {
-    id retval = [_rlite command:command];
+- (id)command:(NSArray*)command binary:(BOOL)binary {
+    id retval = [_rlite command:command binary:binary];
     if ([retval isKindOfClass:[NSException class]]) {
         NSException* exc = retval;
         if ([exc.reason rangeOfString:@"UniqueIndexViolation"].length != 0) {
@@ -135,6 +135,9 @@ static NSMutableDictionary* threadToInstance = nil;
     return retval;
 }
 
+- (id)command:(NSArray*)command {
+    return [self command:command binary:FALSE];
+}
 - (BOOL)exists:(NSString*)id model:(Class)modelClass {
     return [[self command:@[@"SISMEMBER", [@[NSStringFromClass(modelClass), @"all"] componentsJoinedByString:@":"], id]] boolValue];
 }

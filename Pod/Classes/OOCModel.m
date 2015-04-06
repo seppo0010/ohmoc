@@ -126,6 +126,9 @@ static NSString* lua_delete = nil;
                 continue;
             }
             NSString* propertyName = [NSString stringWithCString:propName encoding:NSUTF8StringEncoding];
+            if ([propertyName isEqualToString:@"id"]) {
+                readonly = FALSE;
+            }
             OOCModelProperty* property = [self parse:propertyName type:type];
             property.readonly = readonly;
             if ([property isKindOfClass:[OOCModelObjectProperty class]]) {
@@ -302,49 +305,73 @@ static NSString* lua_delete = nil;
     return [@[NSStringFromClass([self class]), self.id] componentsJoinedByString:@":"];
 }
 
-- (void) load {
-    NSArray* properties = [self.ohmoc command:@[@"HGETALL", self.key]];
+- (void) setValue:(id)value forKey:(NSString *)key {
     NSDictionary* classProperties = [[self class] spec].properties;
-    for (NSUInteger i = 0; i < properties.count; i += 2) {
-        NSString* key = [properties objectAtIndex:i];
-        id value = [properties objectAtIndex:i + 1];
-        if ([classProperties valueForKey:key]) {
-            OOCModelProperty* property = [classProperties valueForKey:key];
-            if (!property) {
-                [NSException raise:@"UnknownKey" format:@"Unknown key %@", key];
-            }
-            if (property.readonly) {
-                continue;
-            }
-            if ([property isKindOfClass:[OOCModelBasicProperty class]]) {
-                OOCModelBasicProperty* basicProperty = (OOCModelBasicProperty*)property;
-                // This is bullshit. BOOL is sometimes _C_CHR and sometimes _C_BOOL
-                // depending on the context. Since booleans are more common, we
-                // have to assume all chars are booleans.
-                // But I wish we could support char as well.
-                if (basicProperty.identifier == _C_CHR) {
-                    [self setValue:[value boolValue] ? @TRUE : @FALSE forKey:key];
-                    continue;
-                }
-            }
-            [self setValue:value forKey:key];
-        } else if ([key hasSuffix:@"_id"]) {
-            NSString* shortkey = [key substringToIndex:key.length - 3];
-            OOCModelProperty* property = [classProperties valueForKey:shortkey];
-            if (!property) {
-                [NSException raise:@"UnknownKey" format:@"Unknown key %@", key];
-            }
-            if (property.readonly) {
-                continue;
-            }
-            if (![property isKindOfClass:[OOCModelObjectProperty class]]) {
-                [NSException raise:@"ExpectedObject" format:@"Property is not an object property for key '%@'", key];
-            }
-            OOCModelObjectProperty* objProperty = (OOCModelObjectProperty*)property;
-            [self setValue:[objProperty.klass get:value] forKey:shortkey];
-        } else {
-            [NSException raise:@"UnknownProperty" format:@"Uknown property %@", key];
+    if ([classProperties valueForKey:key]) {
+        OOCModelProperty* property = [classProperties valueForKey:key];
+        if (!property) {
+            [NSException raise:@"UnknownKey" format:@"Unknown key %@", key];
         }
+        if (property.readonly) {
+            return;
+        }
+        id val = nil;
+        if ([property isKindOfClass:[OOCModelObjectProperty class]]) {
+            OOCModelObjectProperty* objectProperty = (OOCModelObjectProperty*)property;
+            if ([objectProperty.klass isSubclassOfClass:[NSData class]]) {
+                val = value;
+            }
+        }
+
+        if (!val) {
+            if ([value isKindOfClass:[NSData class]]) {
+                val = [[NSString alloc] initWithData:value encoding:NSUTF8StringEncoding];
+            } else {
+                val = value;
+            }
+        }
+
+        if ([property isKindOfClass:[OOCModelBasicProperty class]]) {
+            OOCModelBasicProperty* basicProperty = (OOCModelBasicProperty*)property;
+            // This is bullshit. BOOL is sometimes _C_CHR and sometimes _C_BOOL
+            // depending on the context. Since booleans are more common, we
+            // have to assume all chars are booleans.
+            // But I wish we could support char as well.
+            if (basicProperty.identifier == _C_CHR) {
+                val = [val boolValue] ? @TRUE : @FALSE;
+            }
+            // This is bullshit II. For some reason NSString doesn't alwasy have a
+            // longValue method. Why? I don't know.
+            if (basicProperty.identifier == _C_LNG && ![val respondsToSelector:@selector(longValue)]) {
+                val = [NSNumber numberWithLongLong:[val longLongValue]];
+            }
+        }
+        [super setValue:val forKey:key];
+    } else if ([key hasSuffix:@"_id"]) {
+        NSString* shortkey = [key substringToIndex:key.length - 3];
+        OOCModelProperty* property = [classProperties valueForKey:shortkey];
+        if (!property) {
+            [NSException raise:@"UnknownKey" format:@"Unknown key %@", key];
+        }
+        if (property.readonly) {
+            return;
+        }
+        if (![property isKindOfClass:[OOCModelObjectProperty class]]) {
+            [NSException raise:@"ExpectedObject" format:@"Property is not an object property for key '%@'", key];
+        }
+        OOCModelObjectProperty* objProperty = (OOCModelObjectProperty*)property;
+        [self setValue:[objProperty.klass get:[[NSString alloc] initWithData:value encoding:NSUTF8StringEncoding]] forKey:shortkey];
+    } else {
+        [NSException raise:@"UnknownProperty" format:@"Uknown property %@", key];
+    }
+}
+
+- (void) load {
+    NSArray* properties = [self.ohmoc command:@[@"HGETALL", self.key] binary:TRUE];
+    for (NSUInteger i = 0; i < properties.count; i += 2) {
+        NSString* key = [[NSString alloc] initWithData:[properties objectAtIndex:i] encoding:NSUTF8StringEncoding];
+        id value = [properties objectAtIndex:i + 1];
+        [self setValue:value forKey:key];
     }
     [self.ohmoc setCached:self];
 }
@@ -361,12 +388,15 @@ static NSString* lua_delete = nil;
         features = @{@"name": name};
     }
 
+    NSMutableDictionary* binaryProperties = [NSMutableDictionary dictionaryWithCapacity:0];
     NSMutableArray* properties = [NSMutableArray array];
     OOCModelSpec* spec = [[self class] spec];
     for (NSString* key in spec.properties) {
         id val = [self valueForKey:key];
         if (val && ![val conformsToProtocol:@protocol(NSFastEnumeration)]) {
-            if ([val isKindOfClass:[OOCModel class]]) {
+            if ([val isKindOfClass:[NSData class]]) {
+                [binaryProperties setValue:val forKey:key];
+            } else if ([val isKindOfClass:[OOCModel class]]) {
                 [properties addObject:[NSString stringWithFormat:@"%@_id", key]];
                 [properties addObject:[(OOCModel*)val id]];
             } else {
@@ -415,7 +445,10 @@ static NSString* lua_delete = nil;
     }
 
     id ret = [self.ohmoc command:@[@"EVAL", lua_save, @"0", [features messagePack], [properties messagePack], [indices messagePack], [uniques messagePack]]];
-    [self setValue:ret forKey:@"id"];
+    [self setId:ret];
+    for (NSString* key in binaryProperties) {
+        [self set:key value:[binaryProperties valueForKey:key]];
+    }
     [self.ohmoc setCached:self];
 }
 
@@ -456,9 +489,9 @@ static NSString* lua_delete = nil;
 }
 
 - (id)get:(NSString*)att {
-    id property = [self.ohmoc command:@[@"HGET", self.key, att]];
+    id property = [self.ohmoc command:@[@"HGET", self.key, att] binary:TRUE];
     [self setValue:property forKey:att];
-    return property;
+    return [self valueForKey:att];
 }
 
 - (void)set:(NSString*)att value:(id)val {

@@ -6,6 +6,7 @@
 //
 
 #import "OhmocTests.h"
+#import "MessagePack.h"
 
 SpecBegin(types)
 
@@ -25,8 +26,8 @@ describe(@"types", ^{
 #define L1 123124
 #define LL1 12341251551
 #define S1 @"hello world!"
-//        char *_d2 = "A\x00B";
-//        NSData* d2 = [NSData dataWithBytes:_d2 length:3];
+        char *_d2 = "A\0C";
+        NSData* d2 = [NSData dataWithBytes:_d2 length:3];
 //        NSDate* d3 = [NSDate date];
         NSString* tid;
         @autoreleasepool {
@@ -34,7 +35,7 @@ describe(@"types", ^{
                                @"b1": @B1,
                                @"b2": @B2,
                                @"d1": @D1,
-//                               @"d2": d2,
+                               @"d2": d2,
 //                               @"d3": d3,
                                @"f1": @F1,
                                @"f2": @F2,
@@ -51,6 +52,7 @@ describe(@"types", ^{
         XCTAssertEqual(t.b1, B1);
         XCTAssertEqual(t.b2, B2);
         XCTAssertEqual(t.d1, D1);
+        XCTAssertEqualObjects(t.d2, d2);
         XCTAssertEqual(t.f1, F1);
         XCTAssertEqual(t.f2, F2);
         XCTAssertEqual(t.i1, I1);
