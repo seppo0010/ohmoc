@@ -15,24 +15,25 @@
 
 - (void)add:(OOCModel*)submodel {
     [self blockWithKey:^(NSString* mykey) {
-        [Ohmoc command:@[@"SADD", mykey, submodel.id]];
+        [[Ohmoc instance] command:@[@"SADD", mykey, submodel.id]];
     }];
 }
 
 - (void)remove:(OOCModel*)submodel {
     [self blockWithKey:^(NSString* mykey) {
-        [Ohmoc command:@[@"SREM", mykey, submodel.id]];
+        [[Ohmoc instance] command:@[@"SREM", mykey, submodel.id]];
     }];
 }
 
 - (void)replace:(id<NSFastEnumeration>)models {
     [self blockWithKey:^(NSString* mykey) {
-        [Ohmoc command:@[@"MULTI"]];
-        [Ohmoc command:@[@"DEL", mykey]];
+        Ohmoc* ohmoc = [Ohmoc instance];
+        [ohmoc command:@[@"MULTI"]];
+        [ohmoc command:@[@"DEL", mykey]];
         for (OOCModel* submodel in models) {
-            [Ohmoc command:@[@"SADD", mykey, submodel.id]];
+            [ohmoc command:@[@"SADD", mykey, submodel.id]];
         }
-        [Ohmoc command:@[@"EXEC"]];
+        [ohmoc command:@[@"EXEC"]];
     }];
 }
 

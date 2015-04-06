@@ -214,7 +214,7 @@ static NSString* lua_delete = nil;
 }
 
 + (BOOL)exists:(NSString*)id {
-    return [[Ohmoc command:@[@"SISMEMBER", [@[NSStringFromClass(self), @"all"] componentsJoinedByString:@":"], id]] boolValue];
+    return [[[Ohmoc instance] command:@[@"SISMEMBER", [@[NSStringFromClass(self), @"all"] componentsJoinedByString:@":"], id]] boolValue];
 }
 
 static NSMutableDictionary* cache = nil;
@@ -250,7 +250,7 @@ static NSMutableDictionary* cache = nil;
     if (!property.hasIndex) {
         [OOCIndexNotFoundException raise:@"IndexNotFound" format:@"Index not found: '%@'", att];
     }
-    NSString* _id = [Ohmoc command:@[@"HGET", [@[NSStringFromClass(self), @"uniques", att] componentsJoinedByString:@":"], [self stringForIndex:att value:value]]];
+    NSString* _id = [[Ohmoc instance] command:@[@"HGET", [@[NSStringFromClass(self), @"uniques", att] componentsJoinedByString:@":"], [self stringForIndex:att value:value]]];
     if (_id) {
         OOCModel* model = [[OOCModel alloc] initWithId:_id];
         [model load];
@@ -311,12 +311,13 @@ static NSMutableDictionary* cache = nil;
         return [OOCSet collectionWithKey:[filters objectAtIndex:0] namespace:0 modelClass:self];
     } else {
         return [OOCSet collectionWithBlock:^(void(^block)(NSString*)) {
-            NSString* key = [Ohmoc tmpKey];
+            Ohmoc* ohmoc = [Ohmoc instance];
+            NSString* key = [ohmoc tmpKey];
             NSMutableArray* sunionCommand = [@[@"SINTERSTORE", key] mutableCopy];
             [sunionCommand addObjectsFromArray:filters];
-            [Ohmoc command:sunionCommand];
+            [ohmoc command:sunionCommand];
             block(key);
-            [Ohmoc command:@[@"DEL", key]];
+            [ohmoc command:@[@"DEL", key]];
         } namespace:0 modelClass:self];
     }
 }
@@ -326,7 +327,7 @@ static NSMutableDictionary* cache = nil;
         [OOCIndexNotFoundException raise:@"IndexNotFound" format:@"Index not found: '%@'", att];
     }
 
-    NSString* id = [Ohmoc command:@[@"HGET", [@[NSStringFromClass(self), @"uniques", att] componentsJoinedByString:@":"], [self stringForIndex:att value:value]]];
+    NSString* id = [[Ohmoc instance] command:@[@"HGET", [@[NSStringFromClass(self), @"uniques", att] componentsJoinedByString:@":"], [self stringForIndex:att value:value]]];
     if ([id isKindOfClass:[NSString class]]) {
         return [self get:id];
     }
@@ -408,7 +409,7 @@ static NSMutableDictionary* cache = nil;
 }
 
 - (void) load {
-    NSArray* properties = [Ohmoc command:@[@"HGETALL", self.key]];
+    NSArray* properties = [[Ohmoc instance] command:@[@"HGETALL", self.key]];
     NSDictionary* classProperties = [[self class] spec].properties;
     for (NSUInteger i = 0; i < properties.count; i += 2) {
         NSString* key = [properties objectAtIndex:i];
@@ -518,7 +519,7 @@ static NSMutableDictionary* cache = nil;
         lua_save = [NSString stringWithCString:savelua encoding:NSUTF8StringEncoding];
     }
 
-    id ret = [Ohmoc command:@[@"EVAL", lua_save, @"0", [features messagePack], [properties messagePack], [indices messagePack], [uniques messagePack]]];
+    id ret = [[Ohmoc instance] command:@[@"EVAL", lua_save, @"0", [features messagePack], [properties messagePack], [indices messagePack], [uniques messagePack]]];
     [self setValue:ret forKey:@"id"];
 
     if (!cache) {
@@ -557,7 +558,7 @@ static NSMutableDictionary* cache = nil;
         lua_delete = [NSString stringWithCString:deletelua encoding:NSUTF8StringEncoding];
     }
 
-    id ret = [Ohmoc command:@[@"EVAL", lua_delete, @"0", [@{@"name": NSStringFromClass([self class]), @"id": self.id, @"key": self.key} messagePack], [uniques messagePack], [[spec.tracked allObjects] messagePack]]];
+    id ret = [[Ohmoc instance] command:@[@"EVAL", lua_delete, @"0", [@{@"name": NSStringFromClass([self class]), @"id": self.id, @"key": self.key} messagePack], [uniques messagePack], [[spec.tracked allObjects] messagePack]]];
     if ([ret isKindOfClass:[NSException class]]) {
         // ugh;
         [ret raise];
@@ -565,17 +566,17 @@ static NSMutableDictionary* cache = nil;
 }
 
 - (id)get:(NSString*)att {
-    id property = [Ohmoc command:@[@"HGET", self.key, att]];
+    id property = [[Ohmoc instance] command:@[@"HGET", self.key, att]];
     [self setValue:property forKey:att];
     return property;
 }
 
 - (void)set:(NSString*)att value:(id)val {
     if (val == nil || [val isKindOfClass:[NSNull class]]) {
-        [Ohmoc command:@[@"HDEL", self.key, att]];
+        [[Ohmoc instance] command:@[@"HDEL", self.key, att]];
         [self setValue:nil forKey:att];
     } else {
-        [Ohmoc command:@[@"HSET", self.key, att, val]];
+        [[Ohmoc instance] command:@[@"HSET", self.key, att, val]];
         [self setValue:val forKey:att];
     }
 }

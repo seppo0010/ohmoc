@@ -19,12 +19,19 @@
 #import "OOCIndex.h"
 
 @class ObjCHirlite;
-@interface Ohmoc : NSObject
+@interface Ohmoc : NSObject {
+    NSString* path;
+    ObjCHirlite* _rlite;
+    long tmpkey;
+}
 
-+ (ObjCHirlite*) rlite;
-+ (NSArray*) sortBy:(NSString*)by get:(NSString*)get limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store;
-+ (void) flush;
-+ (NSString*)tmpKey;
-+ (id)command:(NSArray*)command;
+@property (readonly) ObjCHirlite* rlite;
+
++ (id) create;
+- (NSArray*) sortBy:(NSString*)by get:(NSString*)get limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store;
+- (void) flush;
+- (NSString*)tmpKey;
+- (id)command:(NSArray*)command;
++ (Ohmoc*) instance;
 
 @end

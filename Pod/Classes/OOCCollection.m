@@ -69,7 +69,7 @@
     NSUInteger size = [self size];
     if (countOfItemsAlreadyEnumerated < size) {
         state->itemsPtr = stackbuf;
-        [Ohmoc command:@[@"SELECT", [NSString stringWithFormat:@"%lu", (long unsigned)self.ns]]];
+        [[Ohmoc instance] command:@[@"SELECT", [NSString stringWithFormat:@"%lu", (long unsigned)self.ns]]];
         while((countOfItemsAlreadyEnumerated < size) && (count < stackbufLength)) {
             // TODO: pipeline
             // TODO: make model
@@ -137,25 +137,27 @@
         NSMutableArray*  command = [NSMutableArray array];
         __block id<NSFastEnumeration> r;
         [self blockWithKey:^(NSString* mykey) {
+            Ohmoc* ohmoc = [Ohmoc instance];
             [command addObjectsFromArray:@[@"SORT", mykey]];
-            [command addObjectsFromArray:[Ohmoc sortBy:by get:get limit:limit offset:offset order:order store:store]];
-            r = [Ohmoc command:command];
+            [command addObjectsFromArray:[ohmoc sortBy:by get:get limit:limit offset:offset order:order store:store]];
+            r = [ohmoc command:command];
         }];
         return r;
     } else {
         return [OOCList collectionWithBlock:^(void(^localblock)(NSString*)) {
+            Ohmoc* ohmoc = [Ohmoc instance];
             NSString* key = store;
             if (!store) {
-                key = [Ohmoc tmpKey];
+                key = [ohmoc tmpKey];
             }
             [self blockWithKey:^(NSString* mykey) {
                 NSMutableArray* command = [NSMutableArray arrayWithObjects:@"SORT", mykey, nil];
-                [command addObjectsFromArray:[Ohmoc sortBy:by get:get limit:limit offset:offset order:order store:key]];
-                [Ohmoc command:command];
+                [command addObjectsFromArray:[ohmoc sortBy:by get:get limit:limit offset:offset order:order store:key]];
+                [ohmoc command:command];
                 localblock(key);
             }];
             if (!store) {
-                [Ohmoc command:@[@"DEL", key]];
+                [ohmoc command:@[@"DEL", key]];
             }
         } namespace:self.ns modelClass:self.modelClass];
     }

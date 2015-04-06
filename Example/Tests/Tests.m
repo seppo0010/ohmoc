@@ -23,8 +23,9 @@
 SpecBegin(ohmoc)
 
 describe(@"association", ^{
+    [Ohmoc create];
     beforeEach(^{
-        [Ohmoc flush];
+        [[Ohmoc instance] flush];
     });
     it(@"basic shake and bake", ^{
         OOCUser* u = [OOCUser create:@{}];
@@ -64,7 +65,7 @@ describe(@"connection", ^{
 
 describe(@"core", ^{
     beforeEach(^{
-        [Ohmoc flush];
+        [[Ohmoc instance] flush];
     });
     it(@"assign attributes from the hash", ^{
         OOCEvent* event = [OOCEvent create:@{@"name": @"Ruby Tuesday"}];
@@ -96,7 +97,7 @@ describe(@"enumerable", ^{
         __block OOCContact* jane;
         
         beforeEach(^{
-            [Ohmoc flush];
+            [[Ohmoc instance] flush];
             john = [OOCContact create:@{@"name": @"John Doe"}];
             jane = [OOCContact create:@{@"name": @"John Doe"}];
         });
@@ -128,7 +129,7 @@ describe(@"enumerable", ^{
             c1 = nil;
             c2 = nil;
             p = nil;
-            [Ohmoc flush];
+            [[Ohmoc instance] flush];
             c1 = [OOCComment create:@{}];
             c2 = [OOCComment create:@{}];
             p = [OOCPost create:@{}];
@@ -158,7 +159,7 @@ describe(@"filtering", ^{
     beforeEach(^{
         john = nil;
         jane = nil;
-        [Ohmoc flush];
+        [[Ohmoc instance] flush];
         john = [OOCUser create:@{@"fname": @"John", @"lname": @"Doe", @"status": @"active"}];
         jane = [OOCUser create:@{@"fname": @"Jane", @"lname": @"Doe", @"status": @"active"}];
     });
@@ -242,7 +243,7 @@ describe(@"filtering", ^{
         OOCUser* _out = [OOCUser create:@{@"lname": @"Doe"}];
         _out.status = @"inactive";
         [_out save];
-        long card = [[Ohmoc command:@[@"SCARD", @"OOCUser:indices:status:"]] integerValue];
+        long card = [[[Ohmoc instance] command:@[@"SCARD", @"OOCUser:indices:status:"]] integerValue];
         XCTAssertEqual(0, card);
     });
     it(@"union", ^{
@@ -284,7 +285,7 @@ describe(@"book author", ^{
     beforeEach(^{
         b1 = nil;
         b2 = nil;
-        [Ohmoc flush];
+        [[Ohmoc instance] flush];
         b1 = [OOCBook create:@{}];
         b2 = [OOCBook create:@{}];
 
@@ -330,7 +331,7 @@ describe(@"indices", ^{
     __block OOCUser* u1, *u2, *u3;
     beforeEach(^{
         u1 = u2 = u3 = nil;
-        [Ohmoc flush];
+        [[Ohmoc instance] flush];
         u1 = [OOCUser create:@{@"email": @"foo", @"activationCode": @"bar", @"update": @"baz"}];
         u2 = [OOCUser create:@{@"email": @"bar"}];
         u3 = [OOCUser create:@{@"email": @"baz qux"}];
@@ -391,7 +392,7 @@ describe(@"indices2", ^{
     __block OOCUser* u1, *u2, *u3;
     beforeEach(^{
         u1 = u2 = u3 = nil;
-        [Ohmoc flush];
+        [[Ohmoc instance] flush];
         u1 = [OOCUser create:@{@"email": @"foo@gmail.com"}];
         u2 = [OOCUser create:@{@"email": @"bar@gmail.com"}];
         u3 = [OOCUser create:@{@"email": @"bazqux@yahoo.com"}];
@@ -407,7 +408,7 @@ describe(@"indices2", ^{
 
 describe(@"indices3", ^{
     beforeEach(^{
-        [Ohmoc flush];
+        [[Ohmoc instance] flush];
     });
     it(@"index bug", ^{
         OOCNode* n = [OOCNode create:@{}];
@@ -440,7 +441,7 @@ describe(@"list", ^{
     beforeEach(^{
         p = nil;
         c1 = c2 = c3 = nil;
-        [Ohmoc flush];
+        [[Ohmoc instance] flush];
         p = [OOCPost create:@{}];
         c1 = [OOCComment create:@{}];
         c2 = [OOCComment create:@{}];
@@ -502,10 +503,10 @@ describe(@"list", ^{
     it(@"deleting main model cleans up the collection", ^{
         NSString* listkey = [@[NSStringFromClass([OOCPost class]), p.id, @"comments"] componentsJoinedByString:@":"];
 
-        BOOL exists = [[Ohmoc command:@[@"EXISTS", listkey]] boolValue];
+        BOOL exists = [[[Ohmoc instance] command:@[@"EXISTS", listkey]] boolValue];
         XCTAssert(exists);
         [p delete];
-        exists = [[Ohmoc command:@[@"EXISTS", listkey]] boolValue];
+        exists = [[[Ohmoc instance] command:@[@"EXISTS", listkey]] boolValue];
         XCTAssertFalse(exists);
     });
 
@@ -543,7 +544,7 @@ describe(@"list", ^{
 
 describe(@"set", ^{
     beforeEach(^{
-        [Ohmoc flush];
+        [[Ohmoc instance] flush];
     });
     it(@"exists returns false if the given id is not included in the set", ^{
         OOCUser* user = [OOCUser create];
@@ -575,7 +576,7 @@ describe(@"uniques", ^{
     __block OOCUser2* u;
     beforeEach(^{
         u = nil;
-        [Ohmoc flush];
+        [[Ohmoc instance] flush];
         u = [OOCUser2 create:@{@"email": @"a@a.com"}];
     });
 
@@ -599,14 +600,14 @@ describe(@"uniques", ^{
         [u save];
     });
     it(@"removes the previous index when changing", ^{
-        id exists = [Ohmoc command:@[@"HGET", @"OOCUser2:uniques:email", @"a@a.com"]];
+        id exists = [[Ohmoc instance] command:@[@"HGET", @"OOCUser2:uniques:email", @"a@a.com"]];
         XCTAssertFalse([exists isKindOfClass:[NSNull class]]);
 
         u.email = @"b@b.com";
         [u save];
 
         XCTAssertNil([OOCUser2 with:@"email" is:@"a@a.com"]);
-        exists = [Ohmoc command:@[@"HGET", @"OOCUser2:uniques:email", @"a@a.com"]];
+        exists = [[Ohmoc instance] command:@[@"HGET", @"OOCUser2:uniques:email", @"a@a.com"]];
         XCTAssert([exists isKindOfClass:[NSNull class]]);
         XCTAssertEqual(u, [OOCUser2 with:@"email" is:@"b@b.com"]);
 
@@ -614,13 +615,13 @@ describe(@"uniques", ^{
         [u save];
 
         XCTAssertNil([OOCUser2 with:@"email" is:@"b@b.com"]);
-        exists = [Ohmoc command:@[@"HGET", @"OOCUser2:uniques:email", @"b@b.com"]];
+        exists = [[Ohmoc instance] command:@[@"HGET", @"OOCUser2:uniques:email", @"b@b.com"]];
         XCTAssert([exists isKindOfClass:[NSNull class]]);
     });
     it(@"removes the previous index when deleting", ^{
         [u delete];
         XCTAssertNil([OOCUser2 with:@"email" is:@"a@a.com"]);
-        id exists = [Ohmoc command:@[@"HGET", @"OOCUser2:uniques:email", @"a@a.com"]];
+        id exists = [[Ohmoc instance] command:@[@"HGET", @"OOCUser2:uniques:email", @"a@a.com"]];
         XCTAssert([exists isKindOfClass:[NSNull class]]);
 
     });
@@ -637,7 +638,7 @@ describe(@"uniques", ^{
 
 describe(@"model", ^{
     beforeEach(^{
-        [Ohmoc flush];
+        [[Ohmoc instance] flush];
     });
     it(@"booleans", ^{
         NSString* pid;
@@ -681,7 +682,7 @@ describe(@"model", ^{
 
         e = [[OOCEvent all] first];
         XCTAssertNil(e.name);
-        int exists = [[Ohmoc command:@[@"HEXISTS", @"OOCEvent:1", @"name"]] intValue];
+        int exists = [[[Ohmoc instance] command:@[@"HEXISTS", @"OOCEvent:1", @"name"]] intValue];
         XCTAssertEqual(exists, 0);
     });
     it(@"assign attributes from the hash", ^{
@@ -721,31 +722,31 @@ describe(@"model", ^{
     });
 
     it(@"return an instance of Event", ^{
-        [Ohmoc command:@[@"SADD", @"OOCEvent:all", @"1"]];
-        [Ohmoc command:@[@"HSET", @"OOCEvent:1", @"name", @"Concert"]];
+        [[Ohmoc instance] command:@[@"SADD", @"OOCEvent:all", @"1"]];
+        [[Ohmoc instance] command:@[@"HSET", @"OOCEvent:1", @"name", @"Concert"]];
         OOCEvent* u = [OOCEvent get:@"1"];
         XCTAssert([u isKindOfClass:[OOCEvent class]]);
         XCTAssertEqualObjects(u.id, @"1");
         XCTAssertEqualObjects(u.name, @"Concert");
     });
     it(@"return an instance of User", ^{
-        [Ohmoc command:@[@"SADD", @"OOCUser:all", @"1"]];
-        [Ohmoc command:@[@"HSET", @"OOCUser:1", @"email", @"albert@example.com"]];
+        [[Ohmoc instance] command:@[@"SADD", @"OOCUser:all", @"1"]];
+        [[Ohmoc instance] command:@[@"HSET", @"OOCUser:1", @"email", @"albert@example.com"]];
         OOCUser* u = [OOCUser get:@"1"];
         XCTAssert([u isKindOfClass:[OOCUser class]]);
         XCTAssertEqualObjects(u.id, @"1");
         XCTAssertEqualObjects(u.email, @"albert@example.com");
     });
     it(@"change its attributes", ^{
-        [Ohmoc command:@[@"SADD", @"OOCUser:all", @"1"]];
-        [Ohmoc command:@[@"HSET", @"OOCUser:1", @"email", @"albert@example.com"]];
+        [[Ohmoc instance] command:@[@"SADD", @"OOCUser:all", @"1"]];
+        [[Ohmoc instance] command:@[@"HSET", @"OOCUser:1", @"email", @"albert@example.com"]];
         OOCUser* u = [OOCUser get:@"1"];
         u.email = @"maria@example.com";
         XCTAssertEqualObjects(u.email, @"maria@example.com");
     });
     it(@"save the new values", ^{
-        [Ohmoc command:@[@"SADD", @"OOCUser:all", @"1"]];
-        [Ohmoc command:@[@"HSET", @"OOCUser:1", @"email", @"albert@example.com"]];
+        [[Ohmoc instance] command:@[@"SADD", @"OOCUser:all", @"1"]];
+        [[Ohmoc instance] command:@[@"HSET", @"OOCUser:1", @"email", @"albert@example.com"]];
         @autoreleasepool {
             OOCUser* u = [OOCUser get:@"1"];
             u.email = @"maria@example.com";
@@ -780,45 +781,45 @@ describe(@"model", ^{
         NSString* id = u.id;
 
         NSString* key = [NSString stringWithFormat:@"OOCUser:%@", id];
-        BOOL exists = [[Ohmoc command:@[@"EXISTS", key]] boolValue];
+        BOOL exists = [[[Ohmoc instance] command:@[@"EXISTS", key]] boolValue];
         XCTAssert(exists);
-        exists = [[Ohmoc command:@[@"EXISTS", [NSString stringWithFormat:@"%@:posts1", key]]] boolValue];
+        exists = [[[Ohmoc instance] command:@[@"EXISTS", [NSString stringWithFormat:@"%@:posts1", key]]] boolValue];
         XCTAssert(exists);
-        exists = [[Ohmoc command:@[@"EXISTS", [NSString stringWithFormat:@"%@:posts2", key]]] boolValue];
+        exists = [[[Ohmoc instance] command:@[@"EXISTS", [NSString stringWithFormat:@"%@:posts2", key]]] boolValue];
         XCTAssert(exists);
 
         [u delete];
 
-        exists = [[Ohmoc command:@[@"EXISTS", key]] boolValue];
+        exists = [[[Ohmoc instance] command:@[@"EXISTS", key]] boolValue];
         XCTAssertFalse(exists);
-        exists = [[Ohmoc command:@[@"EXISTS", [NSString stringWithFormat:@"%@:posts1", key]]] boolValue];
+        exists = [[[Ohmoc instance] command:@[@"EXISTS", [NSString stringWithFormat:@"%@:posts1", key]]] boolValue];
         XCTAssertFalse(exists);
-        exists = [[Ohmoc command:@[@"EXISTS", [NSString stringWithFormat:@"%@:posts2", key]]] boolValue];
+        exists = [[[Ohmoc instance] command:@[@"EXISTS", [NSString stringWithFormat:@"%@:posts2", key]]] boolValue];
         XCTAssertFalse(exists);
 
         XCTAssertEqual([OOCUser all].size, 0);
     });
     it(@"no leftover keys", ^{
-        NSArray* keys = [Ohmoc command:@[@"KEYS", @"*"]];
+        NSArray* keys = [[Ohmoc instance] command:@[@"KEYS", @"*"]];
         XCTAssertEqualObjects(@[], keys);
         OOCEvent* e = [OOCEvent create:@{@"name": @"Bar"}];
 
-        keys = [[Ohmoc command:@[@"KEYS", @"*"]] sortedArrayUsingSelector:@selector(compare:)];
+        keys = [[[Ohmoc instance] command:@[@"KEYS", @"*"]] sortedArrayUsingSelector:@selector(compare:)];
         NSArray* expected = @[@"OOCEvent:1:_indices", @"OOCEvent:1", @"OOCEvent:all", @"OOCEvent:id", @"OOCEvent:indices:name:Bar"];
         XCTAssertEqualObjects([expected sortedArrayUsingSelector:@selector(compare:)], keys);
 
         [e delete];
-        keys = [Ohmoc command:@[@"KEYS", @"*"]];
+        keys = [[Ohmoc instance] command:@[@"KEYS", @"*"]];
         XCTAssertEqualObjects(@[@"OOCEvent:id"], keys);
 
         e = [OOCEvent create:@{@"name": @"Baz"}];
-        [Ohmoc command:@[@"SET", @"OOCEvent:2:attendees", @"something"]];
-        keys = [[Ohmoc command:@[@"KEYS", @"*"]] sortedArrayUsingSelector:@selector(compare:)];
+        [[Ohmoc instance] command:@[@"SET", @"OOCEvent:2:attendees", @"something"]];
+        keys = [[[Ohmoc instance] command:@[@"KEYS", @"*"]] sortedArrayUsingSelector:@selector(compare:)];
         expected = @[@"OOCEvent:2:_indices", @"OOCEvent:2", @"OOCEvent:all", @"OOCEvent:id", @"OOCEvent:indices:name:Baz", @"OOCEvent:2:attendees"];
         XCTAssertEqualObjects([expected sortedArrayUsingSelector:@selector(compare:)], keys);
 
         [e delete];
-        keys = [Ohmoc command:@[@"KEYS", @"*"]];
+        keys = [[Ohmoc instance] command:@[@"KEYS", @"*"]];
         XCTAssertEqualObjects(@[@"OOCEvent:id"], keys);
     });
     it(@"find all", ^{
@@ -875,7 +876,7 @@ describe(@"model", ^{
         OOCPost* post = [OOCPost create:@{@"body": @"Hello world!"}];
         for (NSString* body in @[@"C", @"B", @"A"]) {
             OOCPost* related = [OOCPost create:@{@"body": body}];
-            [Ohmoc command:@[@"RPUSH", [NSString stringWithFormat:@"OOCPost:%@:related", post.id], related.id]];
+            [[Ohmoc instance] command:@[@"RPUSH", [NSString stringWithFormat:@"OOCPost:%@:related", post.id], related.id]];
         }
         OOCList* res = [post.related sortBy:@"body" limit:0 offset:0 order:@"ALPHA ASC" store:nil];
         NSArray* bodies = [[res arrayValue] valueForKey:@"body"];
@@ -977,7 +978,7 @@ describe(@"model", ^{
         OOCEvent* event = [OOCEvent create:@{@"name": @"Ruby Tuesday"}];
         [event.attendees add:p1];
 
-        [Ohmoc command:@[@"DEL", @"OOCEvent:1:attendees"]];
+        [[Ohmoc instance] command:@[@"DEL", @"OOCEvent:1:attendees"]];
         XCTAssertEqual([event.attendees size], 0);
     });
     it(@"replace the values in the set", ^{
@@ -995,7 +996,7 @@ describe(@"model", ^{
     describe(@"Sorting lists and sets by model attributes", ^{
         __block OOCEvent* event;
         beforeEach(^{
-            [Ohmoc flush];
+            [[Ohmoc instance] flush];
             event = [OOCEvent create:@{@"name": @"Ruby Tuesday"}];
             char letter = 'D';
             for (NSNumber *logins in @[@4, @2, @5, @3]) {
@@ -1039,7 +1040,7 @@ describe(@"model", ^{
     describe(@"Collections initialized with a Model parameter", ^{
         __block OOCUser* u;
         beforeEach(^{
-            [Ohmoc flush];
+            [[Ohmoc instance] flush];
             u = [OOCUser create:@{@"email": @"albert@example.com"}];
             [OOCPost create:@{@"body": @"D", @"user": u}];
             [OOCPost create:@{@"body": @"C", @"user": u}];
@@ -1056,7 +1057,7 @@ describe(@"model", ^{
             OOCPost* p = [u.posts first];
             XCTAssert([u.posts contains:p]);
 
-            [Ohmoc command:@[@"SREM", @"OOCPost:indices:user_id:1", p.id]];
+            [[Ohmoc instance] command:@[@"SREM", @"OOCPost:indices:user_id:1", p.id]];
             XCTAssertFalse([u.posts contains:p]);
         });
     });

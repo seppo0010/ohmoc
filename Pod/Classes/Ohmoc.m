@@ -11,14 +11,72 @@
 
 @implementation Ohmoc
 
-static ObjCHirlite* r = NULL;
+@synthesize rlite = _rlite;
 
-static long tmpkey = 0;
-+ (NSString*)tmpKey {
+static NSMutableDictionary* threadToInstance = nil;
+
++ (id) create {
+    return [[self alloc] init];
+}
+
++ (Ohmoc*) instance {
+    NSThread* thread = [NSThread currentThread];
+    NSString* threadId = [NSString stringWithFormat:@"%p", thread];
+    Ohmoc* instance = [threadToInstance valueForKey:threadId];
+    if (!instance) {
+        [NSException raise:@"NoOhmoc" format:@"Ohmoc not started on thread %@", threadId];
+    }
+    if (!instance.rlite) {
+        [NSException raise:@"rliteMissing" format:@"rlite not started on thread %@", threadId];
+    }
+    return instance;
+}
+
+- (void) _init {
+    if (!threadToInstance) {
+        threadToInstance = [NSMutableDictionary dictionaryWithCapacity:1];
+    }
+
+    NSThread* thread = [NSThread currentThread];
+    NSString* threadId = [NSString stringWithFormat:@"%p", thread];
+    if ([threadToInstance valueForKey:threadId]) {
+        [NSException raise:@"TooManyOhmoc" format:@"There is already an Ohmoc instance running in thread %@", threadId];
+    }
+
+    if (path) {
+        _rlite = [[ObjCHirlite alloc] initWithPath:path];
+    } else {
+        _rlite = [[ObjCHirlite alloc] init];
+    }
+
+    [threadToInstance setValue:self forKey:threadId];
+}
+
+- (id) init {
+    if (self = [super init]) {
+        [self _init];
+    }
+    return self;
+}
+- (id) initWithPath:(NSString*)_path {
+    if (self = [super init]) {
+        path = _path;
+        [self _init];
+    }
+    return self;
+}
+
+- (id) initWithDocumentFilename:(NSString*)filename {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+    return [self initWithPath:[basePath stringByAppendingPathComponent:filename]];
+}
+
+- (NSString*)tmpKey {
     return [NSString stringWithFormat:@"tmp%ld", tmpkey++];
 }
 
-+ (NSArray*) sortBy:(NSString*)by get:(NSString*)get limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store {
+- (NSArray*) sortBy:(NSString*)by get:(NSString*)get limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store {
     NSMutableArray* args = [NSMutableArray array];
     if (by) {
         [args addObjectsFromArray:@[@"BY", by]];
@@ -38,26 +96,12 @@ static long tmpkey = 0;
     return [args copy];
 }
 
-static NSString* path;
-
-+ (ObjCHirlite*) rlite {
-    if (!r) {
-//        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//        NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
-//        path = [basePath stringByAppendingPathComponent:@"db.rld"]
-//        r = [[ObjCHirlite alloc] initWithPath:path];
-        r = [[ObjCHirlite alloc] init];
-    }
-    return r;
-}
-
-+ (void) flush {
+- (void) flush {
     [self command:@[@"FLUSHDB"]];
-    r = nil;
 }
 
-+ (id)command:(NSArray*)command {
-    id retval = [[self rlite] command:command];
+- (id)command:(NSArray*)command {
+    id retval = [_rlite command:command];
     if ([retval isKindOfClass:[NSException class]]) {
         NSException* exc = retval;
         if ([exc.reason rangeOfString:@"UniqueIndexViolation"].length != 0) {
