@@ -112,4 +112,83 @@ static NSMutableDictionary* threadToInstance = nil;
     return retval;
 }
 
+- (BOOL)exists:(NSString*)id model:(Class)modelClass {
+    return [[self command:@[@"SISMEMBER", [@[NSStringFromClass(modelClass), @"all"] componentsJoinedByString:@":"], id]] boolValue];
+}
+
+- (OOCModel*)get:(NSString*)id model:(Class)modelClass {
+    if (!id) {
+        return nil;
+    }
+    OOCModel* model = [modelClass getCached:id];
+    if (!model && id && [self exists:id model:modelClass]) {
+        model = [[modelClass alloc] initWithId:id ohmoc:self];
+        [model load];
+    }
+    return model;
+}
+
+- (OOCModel*) with:(NSString*)att value:(NSString*)value model:(Class)modelClass {
+    OOCModelProperty* property = [[[modelClass spec] properties] valueForKey:att];
+    if (!property.hasIndex) {
+        [OOCIndexNotFoundException raise:@"IndexNotFound" format:@"Index not found: '%@'", att];
+    }
+    NSString* _id = [self command:@[@"HGET", [@[NSStringFromClass(modelClass), @"uniques", att] componentsJoinedByString:@":"], [modelClass stringForIndex:att value:value]]];
+    if (_id) {
+        OOCModel* model = [[OOCModel alloc] initWithId:_id ohmoc:self];
+        [model load];
+        return model;
+    }
+    return nil;
+}
+
+- (OOCSet*) find:(NSDictionary*)dict model:(Class)modelClass {
+    NSArray* filters = [modelClass filters:dict];
+    if (filters.count == 1) {
+        return [OOCSet collectionWithKey:[filters objectAtIndex:0] ohmoc:self modelClass:modelClass];
+    } else {
+        return [OOCSet collectionWithBlock:^(void(^block)(NSString*)) {
+            Ohmoc* ohmoc = self;
+            NSString* key = [ohmoc tmpKey];
+            NSMutableArray* sunionCommand = [@[@"SINTERSTORE", key] mutableCopy];
+            [sunionCommand addObjectsFromArray:filters];
+            [ohmoc command:sunionCommand];
+            block(key);
+            [ohmoc command:@[@"DEL", key]];
+        } ohmoc:self modelClass:modelClass];
+    }
+}
+
+- (OOCModel*) with:(NSString*)att is:(id)value model:(Class)modelClass {
+    if (![[modelClass spec].uniques containsObject:att]) {
+        [OOCIndexNotFoundException raise:@"IndexNotFound" format:@"Index not found: '%@'", att];
+    }
+
+    NSString* id = [self command:@[@"HGET", [@[NSStringFromClass(modelClass), @"uniques", att] componentsJoinedByString:@":"], [modelClass stringForIndex:att value:value]]];
+    if ([id isKindOfClass:[NSString class]]) {
+        return [self get:id model:modelClass];
+    }
+    return nil;
+}
+
+- (OOCSet*)allModels:(Class)modelClass {
+    return [OOCSet collectionWithKey:[@[NSStringFromClass(modelClass), @"all"] componentsJoinedByString:@":"] ohmoc:self modelClass:modelClass];
+}
+
+- (OOCCollection*)fetch:(NSArray*)ids model:(Class)modelClass {
+    return [OOCCollection collectionWithIds:ids ohmoc:self modelClass:modelClass];
+}
+
+- (OOCModel*)createModel:(Class)modelClass {
+    id instance = [[modelClass alloc] initWithOhmoc:self];
+    [instance save];
+    return instance;
+}
+
+- (OOCModel*)create:(NSDictionary*)properties model:(Class)modelClass {
+    id instance = [[modelClass alloc] initWithDictionary:properties ohmoc:self];
+    [instance save];
+    return instance;
+}
+
 @end

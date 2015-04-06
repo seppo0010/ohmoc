@@ -28,10 +28,18 @@
 @property (readonly) ObjCHirlite* rlite;
 
 + (id) create;
++ (Ohmoc*) instance;
+
+- (OOCSet*) find:(NSDictionary*)dict model:(Class)modelClass;
+- (OOCModel*) with:(NSString*)property is:(id)value model:(Class)modelClass;
+- (OOCModel*)get:(NSString*)id model:(Class)modelClass;
+- (OOCModel*)createModel:(Class)modelClass;
+- (OOCModel*)create:(NSDictionary*)properties model:(Class)modelClass;
+- (OOCSet*)allModels:(Class)modelClass;
+
 - (NSArray*) sortBy:(NSString*)by get:(NSString*)get limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store;
 - (void) flush;
 - (NSString*)tmpKey;
 - (id)command:(NSArray*)command;
-+ (Ohmoc*) instance;
 
 @end

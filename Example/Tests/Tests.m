@@ -54,7 +54,7 @@ describe(@"association", ^{
         XCTAssertFalse([OOCPost isCached:pid]);
         p = [OOCPost get:pid];
         XCTAssert([OOCPost isCached:pid]);
-        XCTAssert([OOCPost isCached:uid]);
+        XCTAssert([OOCUser isCached:uid]);
         XCTAssertNotNil(p.user.id);
     });
 });

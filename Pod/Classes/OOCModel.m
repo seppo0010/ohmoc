@@ -17,36 +17,15 @@
 #import "MessagePack.h"
 #import <objc/runtime.h>
 
-@interface OOCModelProperty : NSObject
-@property NSString* name;
-@property BOOL readonly; // the property is (readonly)
-@property BOOL isUnique; // OOCUnique protocol is used
-@property BOOL hasIndex; // OOCIndex protocol is used
-@end
 @implementation OOCModelProperty
 @end
 
-@interface OOCModelBasicProperty : OOCModelProperty
-@property char identifier;
-@end
 @implementation OOCModelBasicProperty
 @end
 
-@interface OOCModelObjectProperty : OOCModelProperty
-@property Class klass;
-@property NSSet* protocols;
-@property Class subtype; // shortcut when OOCSet/OOCList define a protocol that matches a subclass of OOCModel
-@property NSString* referenceProperty; // is the object referenced from a property collection
-@end
 @implementation OOCModelObjectProperty
 @end
 
-@interface OOCModelSpec : NSObject
-@property NSDictionary* properties;
-@property NSSet* indices;
-@property NSSet* uniques;
-@property NSSet* tracked;
-@end
 @implementation OOCModelSpec
 @end
 
@@ -213,50 +192,28 @@ static NSString* lua_delete = nil;
     return spec;
 }
 
-+ (BOOL)exists:(NSString*)id {
-    return [[[Ohmoc instance] command:@[@"SISMEMBER", [@[NSStringFromClass(self), @"all"] componentsJoinedByString:@":"], id]] boolValue];
-}
-
 static NSMutableDictionary* cache = nil;
 
-+ (BOOL)isCached:(NSString*)id {
++ (OOCModel*)getCached:(NSString*)id {
     NSString* cacheKey = [@[NSStringFromClass(self), id] componentsJoinedByString:@":"];
-    return !![cache valueForKey:cacheKey];
+    return [cache valueForKey:cacheKey];
 }
 
-+ (OOCModel*)get:(NSString*)id {
-    if (!id) {
-        return nil;
++ (void)setCached:(OOCModel*)model forId:(NSString*)id {
+    if (!cache) {
+        cache = (NSMutableDictionary*)CFBridgingRelease(CFDictionaryCreateMutable(nil, 0, &kCFCopyStringDictionaryKeyCallBacks, NULL));
     }
     NSString* cacheKey = [@[NSStringFromClass(self), id] componentsJoinedByString:@":"];
-    OOCModel* model = [cache valueForKey:cacheKey];
-    if (!model && id && [self exists:id]) {
-        model = [[self alloc] initWithId:id ohmoc:[Ohmoc instance]];
-        [model load];
-        if (!cache) {
-            cache = (NSMutableDictionary*)CFBridgingRelease(CFDictionaryCreateMutable(nil, 0, &kCFCopyStringDictionaryKeyCallBacks, NULL));
-        }
-        [cache setValue:model forKey:cacheKey];
-    }
-    return model;
+    [cache setValue:model forKey:cacheKey];
 }
+
++ (BOOL)isCached:(NSString*)id {
+    return !![self getCached:id];
+}
+
 - (void) dealloc {
     NSString* cacheKey = [@[NSStringFromClass([self class]), _id] componentsJoinedByString:@":"];
     [cache removeObjectForKey:cacheKey];
-}
-
-+ (OOCModel*) with:(NSString*)att value:(NSString*)value {
-    OOCModelProperty* property = [[[[self class] spec] properties] valueForKey:att];
-    if (!property.hasIndex) {
-        [OOCIndexNotFoundException raise:@"IndexNotFound" format:@"Index not found: '%@'", att];
-    }
-    NSString* _id = [[Ohmoc instance] command:@[@"HGET", [@[NSStringFromClass(self), @"uniques", att] componentsJoinedByString:@":"], [self stringForIndex:att value:value]]];
-    if (_id) {
-        OOCModel* model = [[OOCModel alloc] initWithId:_id ohmoc:[Ohmoc instance]];
-        [model load];
-        return model;
-    }
-    return nil;
 }
 
 + (NSString*)stringForIndex:(NSString*)key value:(id)v {
@@ -304,43 +261,6 @@ static NSMutableDictionary* cache = nil;
     return [filters copy];
 }
 
-+ (OOCSet*) find:(NSDictionary*)dict {
-    NSArray* filters = [self filters:dict];
-    if (filters.count == 1) {
-        return [OOCSet collectionWithKey:[filters objectAtIndex:0] ohmoc:[Ohmoc instance] modelClass:self];
-    } else {
-        return [OOCSet collectionWithBlock:^(void(^block)(NSString*)) {
-            Ohmoc* ohmoc = [Ohmoc instance];
-            NSString* key = [ohmoc tmpKey];
-            NSMutableArray* sunionCommand = [@[@"SINTERSTORE", key] mutableCopy];
-            [sunionCommand addObjectsFromArray:filters];
-            [ohmoc command:sunionCommand];
-            block(key);
-            [ohmoc command:@[@"DEL", key]];
-        } ohmoc:[Ohmoc instance] modelClass:self];
-    }
-}
-
-+ (OOCModel*) with:(NSString*)att is:(id)value {
-    if (![[self spec].uniques containsObject:att]) {
-        [OOCIndexNotFoundException raise:@"IndexNotFound" format:@"Index not found: '%@'", att];
-    }
-
-    NSString* id = [[Ohmoc instance] command:@[@"HGET", [@[NSStringFromClass(self), @"uniques", att] componentsJoinedByString:@":"], [self stringForIndex:att value:value]]];
-    if ([id isKindOfClass:[NSString class]]) {
-        return [self get:id];
-    }
-    return nil;
-}
-
-+ (OOCSet*)all {
-    return [OOCSet collectionWithKey:[@[NSStringFromClass(self), @"all"] componentsJoinedByString:@":"] ohmoc:[Ohmoc instance] modelClass:self];
-}
-
-+ (OOCCollection*)fetch:(NSArray*)ids {
-    return [OOCCollection collectionWithIds:ids ohmoc:[Ohmoc instance] modelClass:self];
-}
-
 - (OOCModel*)initWithOhmoc:(Ohmoc*)ohmoc {
     if (self = [super initWithOhmoc:ohmoc]) {
         OOCModelSpec* spec = [[self class] spec];
@@ -365,18 +285,6 @@ static NSMutableDictionary* cache = nil;
         self.id = (NSString<OOCUnique>*)id;
     }
     return self;
-}
-
-+ (instancetype)create {
-    id instance = [[self alloc] initWithOhmoc:[Ohmoc instance]];
-    [instance save];
-    return instance;
-}
-
-+ (instancetype)create:(NSDictionary*)properties {
-    id instance = [[self alloc] initWithDictionary:properties ohmoc:[Ohmoc instance]];
-    [instance save];
-    return instance;
 }
 
 - (void)applyDictionary:(NSDictionary*)properties {
@@ -450,6 +358,8 @@ static NSMutableDictionary* cache = nil;
             [NSException raise:@"UnknownProperty" format:@"Uknown property %@", key];
         }
     }
+    NSString* cacheKey = [@[NSStringFromClass([self class]), _id] componentsJoinedByString:@":"];
+    [cache setValue:self forKey:cacheKey];
 }
 
 - (void) save {
@@ -577,6 +487,30 @@ static NSMutableDictionary* cache = nil;
         [self.ohmoc command:@[@"HSET", self.key, att, val]];
         [self setValue:val forKey:att];
     }
+}
+
++ (OOCSet*) find:(NSDictionary*)dict {
+    return [[Ohmoc instance] find:dict model:self];
+}
+
++ (instancetype) with:(NSString*)property is:(id)value {
+    return [[Ohmoc instance] with:property is:value model:self];
+}
+
++ (instancetype)get:(NSString*)id {
+    return [[Ohmoc instance] get:id model:self];
+}
+
++ (instancetype)create {
+    return [[Ohmoc instance] createModel:self];
+}
+
++ (instancetype)create:(NSDictionary*)properties {
+    return [[Ohmoc instance] create:properties model:self];
+}
+
++ (OOCSet*)all {
+    return [[Ohmoc instance] allModels:self];
 }
 
 @end
