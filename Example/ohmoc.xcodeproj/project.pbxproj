@@ -21,9 +21,18 @@
 		6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
-		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
+		6003F5BC195388D20070C39A /* Model.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Model.m */; };
 		6B67D38F30E8FEA532B51790 /* libPods-ohmoc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9266BC6051C2C32202898C73 /* libPods-ohmoc.a */; };
 		AC9C5AAA2183ACF867159510 /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF124D2D1785CCA7F469E827 /* libPods-Tests.a */; };
+		C922FEE91AD325FF00B73538 /* Association.m in Sources */ = {isa = PBXBuildFile; fileRef = C922FEE81AD325FF00B73538 /* Association.m */; };
+		C922FEEC1AD326CD00B73538 /* Core.m in Sources */ = {isa = PBXBuildFile; fileRef = C922FEEB1AD326CD00B73538 /* Core.m */; };
+		C922FEEE1AD3271E00B73538 /* Enumerable.m in Sources */ = {isa = PBXBuildFile; fileRef = C922FEED1AD3271E00B73538 /* Enumerable.m */; };
+		C922FEF01AD3275000B73538 /* Filtering.m in Sources */ = {isa = PBXBuildFile; fileRef = C922FEEF1AD3275000B73538 /* Filtering.m */; };
+		C922FEF21AD3277400B73538 /* FilteringBookAuthor.m in Sources */ = {isa = PBXBuildFile; fileRef = C922FEF11AD3277400B73538 /* FilteringBookAuthor.m */; };
+		C922FEF41AD3279100B73538 /* Indices.m in Sources */ = {isa = PBXBuildFile; fileRef = C922FEF31AD3279100B73538 /* Indices.m */; };
+		C922FEF61AD327B600B73538 /* List.m in Sources */ = {isa = PBXBuildFile; fileRef = C922FEF51AD327B600B73538 /* List.m */; };
+		C922FEF81AD327D000B73538 /* Set.m in Sources */ = {isa = PBXBuildFile; fileRef = C922FEF71AD327D000B73538 /* Set.m */; };
+		C922FEFA1AD327F000B73538 /* Uniques.m in Sources */ = {isa = PBXBuildFile; fileRef = C922FEF91AD327F000B73538 /* Uniques.m */; };
 		C928BC941ACDE8FE0003FE89 /* OOCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = C928BC931ACDE8FE0003FE89 /* OOCUser.m */; };
 		C928BC971ACDE9080003FE89 /* OOCPost.m in Sources */ = {isa = PBXBuildFile; fileRef = C928BC961ACDE9080003FE89 /* OOCPost.m */; };
 		C9597E0B1AD1850F00CA99A3 /* OOCNode.m in Sources */ = {isa = PBXBuildFile; fileRef = C9597E0A1AD1850F00CA99A3 /* OOCNode.m */; };
@@ -72,10 +81,20 @@
 		6003F5AF195388D20070C39A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		6003F5B7195388D20070C39A /* Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Tests-Info.plist"; sourceTree = "<group>"; };
 		6003F5B9195388D20070C39A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		6003F5BB195388D20070C39A /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
+		6003F5BB195388D20070C39A /* Model.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Model.m; sourceTree = "<group>"; };
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
 		70B55BD5F2FC5A260AB20C38 /* Pods-ohmoc.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ohmoc.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ohmoc/Pods-ohmoc.debug.xcconfig"; sourceTree = "<group>"; };
 		9266BC6051C2C32202898C73 /* libPods-ohmoc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ohmoc.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C922FEE81AD325FF00B73538 /* Association.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Association.m; sourceTree = "<group>"; };
+		C922FEEA1AD3269600B73538 /* OhmocTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OhmocTests.h; sourceTree = "<group>"; };
+		C922FEEB1AD326CD00B73538 /* Core.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Core.m; sourceTree = "<group>"; };
+		C922FEED1AD3271E00B73538 /* Enumerable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Enumerable.m; sourceTree = "<group>"; };
+		C922FEEF1AD3275000B73538 /* Filtering.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Filtering.m; sourceTree = "<group>"; };
+		C922FEF11AD3277400B73538 /* FilteringBookAuthor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilteringBookAuthor.m; sourceTree = "<group>"; };
+		C922FEF31AD3279100B73538 /* Indices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Indices.m; sourceTree = "<group>"; };
+		C922FEF51AD327B600B73538 /* List.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = List.m; sourceTree = "<group>"; };
+		C922FEF71AD327D000B73538 /* Set.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Set.m; sourceTree = "<group>"; };
+		C922FEF91AD327F000B73538 /* Uniques.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Uniques.m; sourceTree = "<group>"; };
 		C928BC921ACDE8FE0003FE89 /* OOCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCUser.h; sourceTree = "<group>"; };
 		C928BC931ACDE8FE0003FE89 /* OOCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCUser.m; sourceTree = "<group>"; };
 		C928BC951ACDE9080003FE89 /* OOCPost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCPost.h; sourceTree = "<group>"; };
@@ -219,7 +238,17 @@
 		6003F5B5195388D20070C39A /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				6003F5BB195388D20070C39A /* Tests.m */,
+				C922FEEA1AD3269600B73538 /* OhmocTests.h */,
+				C922FEE81AD325FF00B73538 /* Association.m */,
+				C922FEEB1AD326CD00B73538 /* Core.m */,
+				C922FEED1AD3271E00B73538 /* Enumerable.m */,
+				C922FEEF1AD3275000B73538 /* Filtering.m */,
+				C922FEF11AD3277400B73538 /* FilteringBookAuthor.m */,
+				C922FEF31AD3279100B73538 /* Indices.m */,
+				C922FEF51AD327B600B73538 /* List.m */,
+				6003F5BB195388D20070C39A /* Model.m */,
+				C922FEF71AD327D000B73538 /* Set.m */,
+				C922FEF91AD327F000B73538 /* Uniques.m */,
 				6003F5B6195388D20070C39A /* Supporting Files */,
 			);
 			path = Tests;
@@ -431,7 +460,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6003F5BC195388D20070C39A /* Tests.m in Sources */,
+				6003F5BC195388D20070C39A /* Model.m in Sources */,
+				C922FEE91AD325FF00B73538 /* Association.m in Sources */,
+				C922FEEC1AD326CD00B73538 /* Core.m in Sources */,
+				C922FEF81AD327D000B73538 /* Set.m in Sources */,
+				C922FEEE1AD3271E00B73538 /* Enumerable.m in Sources */,
+				C922FEF21AD3277400B73538 /* FilteringBookAuthor.m in Sources */,
+				C922FEFA1AD327F000B73538 /* Uniques.m in Sources */,
+				C922FEF61AD327B600B73538 /* List.m in Sources */,
+				C922FEF01AD3275000B73538 /* Filtering.m in Sources */,
+				C922FEF41AD3279100B73538 /* Indices.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

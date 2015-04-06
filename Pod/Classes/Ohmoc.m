@@ -120,6 +120,7 @@ static NSMutableDictionary* threadToInstance = nil;
 
 - (void) flush {
     [self command:@[@"FLUSHDB"]];
+    [cache removeAllObjects];
 }
 
 - (id)command:(NSArray*)command {
