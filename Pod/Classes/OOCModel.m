@@ -192,28 +192,16 @@ static NSString* lua_delete = nil;
     return spec;
 }
 
-static NSMutableDictionary* cache = nil;
-
 + (OOCModel*)getCached:(NSString*)id {
-    NSString* cacheKey = [@[NSStringFromClass(self), id] componentsJoinedByString:@":"];
-    return [cache valueForKey:cacheKey];
-}
-
-+ (void)setCached:(OOCModel*)model forId:(NSString*)id {
-    if (!cache) {
-        cache = (NSMutableDictionary*)CFBridgingRelease(CFDictionaryCreateMutable(nil, 0, &kCFCopyStringDictionaryKeyCallBacks, NULL));
-    }
-    NSString* cacheKey = [@[NSStringFromClass(self), id] componentsJoinedByString:@":"];
-    [cache setValue:model forKey:cacheKey];
+    return [[Ohmoc instance] getCached:id model:self];
 }
 
 + (BOOL)isCached:(NSString*)id {
-    return !![self getCached:id];
+    return [[Ohmoc instance] isCached:id model:self];
 }
 
 - (void) dealloc {
-    NSString* cacheKey = [@[NSStringFromClass([self class]), _id] componentsJoinedByString:@":"];
-    [cache removeObjectForKey:cacheKey];
+    [self.ohmoc removeCached:self];
 }
 
 + (NSString*)stringForIndex:(NSString*)key value:(id)v {
@@ -358,8 +346,7 @@ static NSMutableDictionary* cache = nil;
             [NSException raise:@"UnknownProperty" format:@"Uknown property %@", key];
         }
     }
-    NSString* cacheKey = [@[NSStringFromClass([self class]), _id] componentsJoinedByString:@":"];
-    [cache setValue:self forKey:cacheKey];
+    [self.ohmoc setCached:self];
 }
 
 - (void) save {
@@ -429,12 +416,7 @@ static NSMutableDictionary* cache = nil;
 
     id ret = [self.ohmoc command:@[@"EVAL", lua_save, @"0", [features messagePack], [properties messagePack], [indices messagePack], [uniques messagePack]]];
     [self setValue:ret forKey:@"id"];
-
-    if (!cache) {
-        cache = (NSMutableDictionary*)CFBridgingRelease(CFDictionaryCreateMutable(nil, 0, &kCFCopyStringDictionaryKeyCallBacks, NULL));
-    }
-    NSString* cacheKey = [@[NSStringFromClass([self class]), _id] componentsJoinedByString:@":"];
-    [cache setValue:self forKey:cacheKey];
+    [self.ohmoc setCached:self];
 }
 
 - (NSString*)indexForProperty:(NSString *)propertyName {

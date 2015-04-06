@@ -23,6 +23,8 @@
     NSString* path;
     ObjCHirlite* _rlite;
     long tmpkey;
+
+    NSMutableDictionary* cache;
 }
 
 @property (readonly) ObjCHirlite* rlite;
@@ -36,6 +38,10 @@
 - (OOCModel*)createModel:(Class)modelClass;
 - (OOCModel*)create:(NSDictionary*)properties model:(Class)modelClass;
 - (OOCSet*)allModels:(Class)modelClass;
+- (OOCModel*)getCached:(NSString*)id model:(Class)modelClass;
+- (BOOL)isCached:(NSString*)id model:(Class)modelClass;
+- (void)setCached:(OOCModel*)model;
+- (void)removeCached:(OOCModel*)model;
 
 - (NSArray*) sortBy:(NSString*)by get:(NSString*)get limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order store:(NSString*)store;
 - (void) flush;

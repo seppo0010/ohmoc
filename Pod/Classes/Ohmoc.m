@@ -191,4 +191,26 @@ static NSMutableDictionary* threadToInstance = nil;
     return instance;
 }
 
+- (OOCModel*)getCached:(NSString*)id model:(Class)modelClass {
+    NSString* cacheKey = [@[NSStringFromClass(modelClass), id] componentsJoinedByString:@":"];
+    return [cache valueForKey:cacheKey];
+}
+
+- (BOOL)isCached:(NSString*)id model:(Class)modelClass {
+    return !![self getCached:id model:modelClass];
+}
+
+- (void)setCached:(OOCModel*)model {
+    if (!cache) {
+        cache = (NSMutableDictionary*)CFBridgingRelease(CFDictionaryCreateMutable(nil, 0, &kCFCopyStringDictionaryKeyCallBacks, NULL));
+    }
+    NSString* cacheKey = [@[NSStringFromClass(model.class), model.id] componentsJoinedByString:@":"];
+    [cache setValue:model forKey:cacheKey];
+}
+
+- (void)removeCached:(OOCModel*)model {
+    NSString* cacheKey = [@[NSStringFromClass(model.class), model.id] componentsJoinedByString:@":"];
+    [cache removeObjectForKey:cacheKey];
+}
+
 @end
