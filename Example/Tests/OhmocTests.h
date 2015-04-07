@@ -20,6 +20,7 @@
 #import "OOCNode.h"
 #import "OOCPerson.h"
 #import "Ohmoc.h"
+#import "OhmocAsync.h"
 #import "OOCTypes.h"
 #import "ObjCHirlite.h"
 #import "NSArray+arrayWithFastEnumeration.h"

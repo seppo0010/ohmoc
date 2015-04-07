@@ -21,5 +21,4 @@
 - (id)firstBy:(NSString*)by get:(NSString*)get order:(NSString*)order;
 - (id)firstBy:(NSString*)by order:(NSString*)order;
 
-
 @end

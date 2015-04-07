@@ -51,5 +51,6 @@
 - (OOCList*) sortBy:(NSString*)by limit:(NSUInteger)limit offset:(NSUInteger)offset order:(NSString*)order;
 - (OOCList*) sortBy:(NSString*)by order:(NSString*)order;
 - (OOCList*) sortBy:(NSString*)by;
+- (void)each:(void(^)(NSUInteger size, id obj))block;
 
 @end

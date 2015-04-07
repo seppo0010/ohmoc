@@ -12,6 +12,7 @@
 #import "Ohmoc.h"
 #import "ObjCHirlite.h"
 #import "OOCModel.h"
+#import "OhmocAsync.h"
 
 @implementation OOCCollection
 
@@ -69,7 +70,7 @@
             // TODO: pipeline
             // TODO: make model
             NSString* _id = [self idAtIndex:countOfItemsAlreadyEnumerated];
-            id obj = [self.modelClass get:_id];
+            id obj = [self.ohmoc get:_id model:self.modelClass];
             [objects addObject:obj]; // need to retain while the collection is alive
             stackbuf[count] = obj;
             countOfItemsAlreadyEnumerated++;
@@ -180,6 +181,26 @@
 
 - (OOCList*) sortBy:(NSString*)by {
     return [self sortBy:by limit:0 offset:0 order:nil store:nil];
+}
+
+- (void)each:(void(^)(NSUInteger size, id obj))block {
+    if ([self.ohmoc isKindOfClass:[OhmocAsync class]]) {
+        OhmocAsync* ohmoc = (OhmocAsync*)self.ohmoc;
+        [ohmoc.queue addOperationWithBlock:^{
+            NSUInteger size = [self size];
+            for (id r in self) {
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    block(size, r);
+                }];
+            }
+        }];
+
+    } else {
+        NSUInteger size = [self size];
+        for (id obj in self) {
+            block(size, obj);
+        }
+    }
 }
 
 @end

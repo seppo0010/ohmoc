@@ -32,6 +32,7 @@
 + (id) create;
 + (Ohmoc*) instance;
 
+- (void) _init;
 - (id) initAllowDuplicates:(BOOL)allowDuplicates;
 - (id) initWithPath:(NSString*)_path allowDuplicates:(BOOL)allowDuplicates;
 - (id) initWithPath:(NSString*)_path;
