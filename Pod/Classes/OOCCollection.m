@@ -199,13 +199,26 @@
                 }];
             }
         }];
-
     } else {
         NSUInteger size = [self size];
         NSUInteger i = 0;
         for (id obj in self) {
             block(obj, i++, size);
         }
+    }
+}
+
+- (void)arrayValueCallback:(void(^)(NSArray* arr))block {
+    if ([self.ohmoc isKindOfClass:[OhmocAsync class]]) {
+        OhmocAsync* ohmoc = (OhmocAsync*)self.ohmoc;
+        [ohmoc.queue addOperationWithBlock:^{
+            NSArray* arr = [self arrayValue];
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                block(arr);
+            }];
+        }];
+    } else {
+        block([self arrayValue]);
     }
 }
 

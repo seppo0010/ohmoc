@@ -52,5 +52,6 @@
 - (OOCList*) sortBy:(NSString*)by order:(NSString*)order;
 - (OOCList*) sortBy:(NSString*)by;
 - (void)each:(void(^)(id obj, NSUInteger pos, NSUInteger size))block;
+- (void)arrayValueCallback:(void(^)(NSArray* arr))block;
 
 @end

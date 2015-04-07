@@ -106,6 +106,20 @@ describe(@"async", ^{
             }];
         });
     });
+    it(@"array value", ^{
+        waitUntil(^(DoneCallback done) {
+            [ohmoc create:@{@"body": @"A"} model:[OOCPost class] callback:nil];
+            [ohmoc create:@{@"body": @"C"} model:[OOCPost class] callback:nil];
+            [ohmoc create:@{@"body": @"B"} model:[OOCPost class] callback:nil];
+            OOCSet* set = [ohmoc allModels:[OOCPost class]];
+            [set arrayValueCallback:^(NSArray* arr){
+                NSArray* bodies = [[arr valueForKey:@"body"] sortedArrayUsingSelector:@selector(compare:)];
+                NSArray* expected = @[@"A", @"B", @"C"];
+                XCTAssertEqualObjects(bodies, expected);
+                done();
+            }];
+        });
+    });
 });
 
 SpecEnd
