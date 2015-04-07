@@ -30,6 +30,8 @@
 @property (readonly) ObjCHirlite* rlite;
 
 + (id) create;
++ (id) createWithDocumentFilename:(NSString*)filename;
++ (id) createWithPath:(NSString*)path;
 + (Ohmoc*) instance;
 
 - (void) _init;

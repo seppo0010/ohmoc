@@ -19,6 +19,14 @@ static NSMutableDictionary* threadToInstance = nil;
     return [[self alloc] init];
 }
 
++ (id) createWithDocumentFilename:(NSString*)filename {
+    return [[self alloc] initWithDocumentFilename:filename];
+}
+
++ (id) createWithPath:(NSString*)path {
+    return [[self alloc] initWithPath:path];
+}
+
 + (Ohmoc*) instance {
     NSThread* thread = [NSThread currentThread];
     NSString* threadId = [NSString stringWithFormat:@"%p", thread];

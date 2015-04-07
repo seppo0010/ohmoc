@@ -14,16 +14,35 @@
 
 @implementation OOCViewController
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+- (void) awakeFromNib {
+    [super awakeFromNib];
+    formatter = [[NSDateFormatter alloc] init];
+    formatter.dateStyle = NSDateFormatterLongStyle;
+    formatter.timeStyle = NSDateFormatterLongStyle;
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewDidLoad {
+    _tableView.dataSource = self;
+    appInfo = [[AppInfo all] first];
+    [[NSNotificationCenter defaultCenter] addObserver:_tableView selector:@selector(reloadData) name:UIApplicationDidBecomeActiveNotification object:nil];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *CellIdentifier = @"Cell";
+
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+    }
+
+    AppEvent* event = [appInfo.events objectAtIndex:indexPath.row];
+    cell.textLabel.text = event.name;
+    cell.detailTextLabel.text = [formatter stringFromDate:event.date];
+    return cell;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return appInfo.events.size;
 }
 
 @end

@@ -7,7 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AppInfo.h"
 
-@interface OOCViewController : UIViewController
+@interface OOCViewController : UIViewController <UITableViewDataSource> {
+    IBOutlet UITableView *_tableView;
+    AppInfo* appInfo;
+    NSDateFormatter* formatter;
+}
 
 @end

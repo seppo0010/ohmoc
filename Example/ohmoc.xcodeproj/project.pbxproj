@@ -33,19 +33,21 @@
 		C922FEF61AD327B600B73538 /* List.m in Sources */ = {isa = PBXBuildFile; fileRef = C922FEF51AD327B600B73538 /* List.m */; };
 		C922FEF81AD327D000B73538 /* Set.m in Sources */ = {isa = PBXBuildFile; fileRef = C922FEF71AD327D000B73538 /* Set.m */; };
 		C922FEFA1AD327F000B73538 /* Uniques.m in Sources */ = {isa = PBXBuildFile; fileRef = C922FEF91AD327F000B73538 /* Uniques.m */; };
-		C922FEFD1AD32DAC00B73538 /* OOCTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = C922FEFC1AD32DAC00B73538 /* OOCTypes.m */; };
 		C922FEFF1AD32E7600B73538 /* Types.m in Sources */ = {isa = PBXBuildFile; fileRef = C922FEFE1AD32E7600B73538 /* Types.m */; };
-		C928BC941ACDE8FE0003FE89 /* OOCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = C928BC931ACDE8FE0003FE89 /* OOCUser.m */; };
-		C928BC971ACDE9080003FE89 /* OOCPost.m in Sources */ = {isa = PBXBuildFile; fileRef = C928BC961ACDE9080003FE89 /* OOCPost.m */; };
-		C9597E0B1AD1850F00CA99A3 /* OOCNode.m in Sources */ = {isa = PBXBuildFile; fileRef = C9597E0A1AD1850F00CA99A3 /* OOCNode.m */; };
-		C9597E0E1AD1A89900CA99A3 /* OOCUser2.m in Sources */ = {isa = PBXBuildFile; fileRef = C9597E0D1AD1A89900CA99A3 /* OOCUser2.m */; };
-		C9597E111AD1B11700CA99A3 /* OOCPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = C9597E101AD1B11700CA99A3 /* OOCPerson.m */; };
+		C9766BAF1AD4598800CA9CCB /* AppInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = C9766BAE1AD4598800CA9CCB /* AppInfo.m */; };
+		C9766BB01AD459A200CA9CCB /* OOCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = C928BC931ACDE8FE0003FE89 /* OOCUser.m */; };
+		C9766BB11AD459A200CA9CCB /* OOCPost.m in Sources */ = {isa = PBXBuildFile; fileRef = C928BC961ACDE9080003FE89 /* OOCPost.m */; };
+		C9766BB21AD459A200CA9CCB /* OOCEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D03F951ACF3B7400D23778 /* OOCEvent.m */; };
+		C9766BB31AD459A200CA9CCB /* OOCContact.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D03F981ACF528B00D23778 /* OOCContact.m */; };
+		C9766BB41AD459A200CA9CCB /* OOCComment.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D03F9B1ACF54C400D23778 /* OOCComment.m */; };
+		C9766BB51AD459A200CA9CCB /* OOCBook.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F339391AD0E9CF00A43B19 /* OOCBook.m */; };
+		C9766BB61AD459A200CA9CCB /* OOCAuthor.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F3393C1AD0E9E600A43B19 /* OOCAuthor.m */; };
+		C9766BB71AD459A200CA9CCB /* OOCNode.m in Sources */ = {isa = PBXBuildFile; fileRef = C9597E0A1AD1850F00CA99A3 /* OOCNode.m */; };
+		C9766BB81AD459A200CA9CCB /* OOCUser2.m in Sources */ = {isa = PBXBuildFile; fileRef = C9597E0D1AD1A89900CA99A3 /* OOCUser2.m */; };
+		C9766BB91AD459A200CA9CCB /* OOCPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = C9597E101AD1B11700CA99A3 /* OOCPerson.m */; };
+		C9766BBA1AD459A200CA9CCB /* OOCTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = C922FEFC1AD32DAC00B73538 /* OOCTypes.m */; };
+		C9766BBD1AD459E400CA9CCB /* AppEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = C9766BBC1AD459E400CA9CCB /* AppEvent.m */; };
 		C9C9087B1AD354850096DE98 /* Async.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C9087A1AD354850096DE98 /* Async.m */; };
-		C9D03F961ACF3B7400D23778 /* OOCEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D03F951ACF3B7400D23778 /* OOCEvent.m */; };
-		C9D03F991ACF528B00D23778 /* OOCContact.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D03F981ACF528B00D23778 /* OOCContact.m */; };
-		C9D03F9C1ACF54C400D23778 /* OOCComment.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D03F9B1ACF54C400D23778 /* OOCComment.m */; };
-		C9F3393A1AD0E9CF00A43B19 /* OOCBook.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F339391AD0E9CF00A43B19 /* OOCBook.m */; };
-		C9F3393D1AD0E9E600A43B19 /* OOCAuthor.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F3393C1AD0E9E600A43B19 /* OOCAuthor.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,30 +100,34 @@
 		C922FEF51AD327B600B73538 /* List.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = List.m; sourceTree = "<group>"; };
 		C922FEF71AD327D000B73538 /* Set.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Set.m; sourceTree = "<group>"; };
 		C922FEF91AD327F000B73538 /* Uniques.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Uniques.m; sourceTree = "<group>"; };
-		C922FEFB1AD32DAC00B73538 /* OOCTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCTypes.h; sourceTree = "<group>"; };
-		C922FEFC1AD32DAC00B73538 /* OOCTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCTypes.m; sourceTree = "<group>"; };
+		C922FEFB1AD32DAC00B73538 /* OOCTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOCTypes.h; path = ../ohmoc/OOCTypes.h; sourceTree = "<group>"; };
+		C922FEFC1AD32DAC00B73538 /* OOCTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOCTypes.m; path = ../ohmoc/OOCTypes.m; sourceTree = "<group>"; };
 		C922FEFE1AD32E7600B73538 /* Types.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Types.m; sourceTree = "<group>"; };
-		C928BC921ACDE8FE0003FE89 /* OOCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCUser.h; sourceTree = "<group>"; };
-		C928BC931ACDE8FE0003FE89 /* OOCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCUser.m; sourceTree = "<group>"; };
-		C928BC951ACDE9080003FE89 /* OOCPost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCPost.h; sourceTree = "<group>"; };
-		C928BC961ACDE9080003FE89 /* OOCPost.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCPost.m; sourceTree = "<group>"; };
-		C9597E091AD1850F00CA99A3 /* OOCNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCNode.h; sourceTree = "<group>"; };
-		C9597E0A1AD1850F00CA99A3 /* OOCNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCNode.m; sourceTree = "<group>"; };
-		C9597E0C1AD1A89900CA99A3 /* OOCUser2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCUser2.h; sourceTree = "<group>"; };
-		C9597E0D1AD1A89900CA99A3 /* OOCUser2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCUser2.m; sourceTree = "<group>"; };
-		C9597E0F1AD1B11700CA99A3 /* OOCPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCPerson.h; sourceTree = "<group>"; };
-		C9597E101AD1B11700CA99A3 /* OOCPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCPerson.m; sourceTree = "<group>"; };
+		C928BC921ACDE8FE0003FE89 /* OOCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOCUser.h; path = ../ohmoc/OOCUser.h; sourceTree = "<group>"; };
+		C928BC931ACDE8FE0003FE89 /* OOCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOCUser.m; path = ../ohmoc/OOCUser.m; sourceTree = "<group>"; };
+		C928BC951ACDE9080003FE89 /* OOCPost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOCPost.h; path = ../ohmoc/OOCPost.h; sourceTree = "<group>"; };
+		C928BC961ACDE9080003FE89 /* OOCPost.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOCPost.m; path = ../ohmoc/OOCPost.m; sourceTree = "<group>"; };
+		C9597E091AD1850F00CA99A3 /* OOCNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOCNode.h; path = ../ohmoc/OOCNode.h; sourceTree = "<group>"; };
+		C9597E0A1AD1850F00CA99A3 /* OOCNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOCNode.m; path = ../ohmoc/OOCNode.m; sourceTree = "<group>"; };
+		C9597E0C1AD1A89900CA99A3 /* OOCUser2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOCUser2.h; path = ../ohmoc/OOCUser2.h; sourceTree = "<group>"; };
+		C9597E0D1AD1A89900CA99A3 /* OOCUser2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOCUser2.m; path = ../ohmoc/OOCUser2.m; sourceTree = "<group>"; };
+		C9597E0F1AD1B11700CA99A3 /* OOCPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOCPerson.h; path = ../ohmoc/OOCPerson.h; sourceTree = "<group>"; };
+		C9597E101AD1B11700CA99A3 /* OOCPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOCPerson.m; path = ../ohmoc/OOCPerson.m; sourceTree = "<group>"; };
+		C9766BAD1AD4598800CA9CCB /* AppInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppInfo.h; sourceTree = "<group>"; };
+		C9766BAE1AD4598800CA9CCB /* AppInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppInfo.m; sourceTree = "<group>"; };
+		C9766BBB1AD459E400CA9CCB /* AppEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppEvent.h; sourceTree = "<group>"; };
+		C9766BBC1AD459E400CA9CCB /* AppEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppEvent.m; sourceTree = "<group>"; };
 		C9C9087A1AD354850096DE98 /* Async.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Async.m; sourceTree = "<group>"; };
-		C9D03F941ACF3B7400D23778 /* OOCEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCEvent.h; sourceTree = "<group>"; };
-		C9D03F951ACF3B7400D23778 /* OOCEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCEvent.m; sourceTree = "<group>"; };
-		C9D03F971ACF528B00D23778 /* OOCContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCContact.h; sourceTree = "<group>"; };
-		C9D03F981ACF528B00D23778 /* OOCContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCContact.m; sourceTree = "<group>"; };
-		C9D03F9A1ACF54C400D23778 /* OOCComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCComment.h; sourceTree = "<group>"; };
-		C9D03F9B1ACF54C400D23778 /* OOCComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCComment.m; sourceTree = "<group>"; };
-		C9F339381AD0E9CF00A43B19 /* OOCBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCBook.h; sourceTree = "<group>"; };
-		C9F339391AD0E9CF00A43B19 /* OOCBook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCBook.m; sourceTree = "<group>"; };
-		C9F3393B1AD0E9E600A43B19 /* OOCAuthor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCAuthor.h; sourceTree = "<group>"; };
-		C9F3393C1AD0E9E600A43B19 /* OOCAuthor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCAuthor.m; sourceTree = "<group>"; };
+		C9D03F941ACF3B7400D23778 /* OOCEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOCEvent.h; path = ../ohmoc/OOCEvent.h; sourceTree = "<group>"; };
+		C9D03F951ACF3B7400D23778 /* OOCEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOCEvent.m; path = ../ohmoc/OOCEvent.m; sourceTree = "<group>"; };
+		C9D03F971ACF528B00D23778 /* OOCContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOCContact.h; path = ../ohmoc/OOCContact.h; sourceTree = "<group>"; };
+		C9D03F981ACF528B00D23778 /* OOCContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOCContact.m; path = ../ohmoc/OOCContact.m; sourceTree = "<group>"; };
+		C9D03F9A1ACF54C400D23778 /* OOCComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOCComment.h; path = ../ohmoc/OOCComment.h; sourceTree = "<group>"; };
+		C9D03F9B1ACF54C400D23778 /* OOCComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOCComment.m; path = ../ohmoc/OOCComment.m; sourceTree = "<group>"; };
+		C9F339381AD0E9CF00A43B19 /* OOCBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOCBook.h; path = ../ohmoc/OOCBook.h; sourceTree = "<group>"; };
+		C9F339391AD0E9CF00A43B19 /* OOCBook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOCBook.m; path = ../ohmoc/OOCBook.m; sourceTree = "<group>"; };
+		C9F3393B1AD0E9E600A43B19 /* OOCAuthor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOCAuthor.h; path = ../ohmoc/OOCAuthor.h; sourceTree = "<group>"; };
+		C9F3393C1AD0E9E600A43B19 /* OOCAuthor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOCAuthor.m; path = ../ohmoc/OOCAuthor.m; sourceTree = "<group>"; };
 		FF124D2D1785CCA7F469E827 /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -205,30 +211,12 @@
 				6003F5A2195388D20070C39A /* Main_iPad.storyboard */,
 				6003F5A5195388D20070C39A /* OOCViewController.h */,
 				6003F5A6195388D20070C39A /* OOCViewController.m */,
+				C9766BAD1AD4598800CA9CCB /* AppInfo.h */,
+				C9766BAE1AD4598800CA9CCB /* AppInfo.m */,
+				C9766BBB1AD459E400CA9CCB /* AppEvent.h */,
+				C9766BBC1AD459E400CA9CCB /* AppEvent.m */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				6003F594195388D20070C39A /* Supporting Files */,
-				C928BC921ACDE8FE0003FE89 /* OOCUser.h */,
-				C928BC931ACDE8FE0003FE89 /* OOCUser.m */,
-				C928BC951ACDE9080003FE89 /* OOCPost.h */,
-				C928BC961ACDE9080003FE89 /* OOCPost.m */,
-				C9D03F941ACF3B7400D23778 /* OOCEvent.h */,
-				C9D03F951ACF3B7400D23778 /* OOCEvent.m */,
-				C9D03F971ACF528B00D23778 /* OOCContact.h */,
-				C9D03F981ACF528B00D23778 /* OOCContact.m */,
-				C9D03F9A1ACF54C400D23778 /* OOCComment.h */,
-				C9D03F9B1ACF54C400D23778 /* OOCComment.m */,
-				C9F339381AD0E9CF00A43B19 /* OOCBook.h */,
-				C9F339391AD0E9CF00A43B19 /* OOCBook.m */,
-				C9F3393B1AD0E9E600A43B19 /* OOCAuthor.h */,
-				C9F3393C1AD0E9E600A43B19 /* OOCAuthor.m */,
-				C9597E091AD1850F00CA99A3 /* OOCNode.h */,
-				C9597E0A1AD1850F00CA99A3 /* OOCNode.m */,
-				C9597E0C1AD1A89900CA99A3 /* OOCUser2.h */,
-				C9597E0D1AD1A89900CA99A3 /* OOCUser2.m */,
-				C9597E0F1AD1B11700CA99A3 /* OOCPerson.h */,
-				C9597E101AD1B11700CA99A3 /* OOCPerson.m */,
-				C922FEFB1AD32DAC00B73538 /* OOCTypes.h */,
-				C922FEFC1AD32DAC00B73538 /* OOCTypes.m */,
 			);
 			path = ohmoc;
 			sourceTree = "<group>";
@@ -260,6 +248,28 @@
 				C922FEF71AD327D000B73538 /* Set.m */,
 				C922FEFE1AD32E7600B73538 /* Types.m */,
 				C922FEF91AD327F000B73538 /* Uniques.m */,
+				C928BC921ACDE8FE0003FE89 /* OOCUser.h */,
+				C928BC931ACDE8FE0003FE89 /* OOCUser.m */,
+				C928BC951ACDE9080003FE89 /* OOCPost.h */,
+				C928BC961ACDE9080003FE89 /* OOCPost.m */,
+				C9D03F941ACF3B7400D23778 /* OOCEvent.h */,
+				C9D03F951ACF3B7400D23778 /* OOCEvent.m */,
+				C9D03F971ACF528B00D23778 /* OOCContact.h */,
+				C9D03F981ACF528B00D23778 /* OOCContact.m */,
+				C9D03F9A1ACF54C400D23778 /* OOCComment.h */,
+				C9D03F9B1ACF54C400D23778 /* OOCComment.m */,
+				C9F339381AD0E9CF00A43B19 /* OOCBook.h */,
+				C9F339391AD0E9CF00A43B19 /* OOCBook.m */,
+				C9F3393B1AD0E9E600A43B19 /* OOCAuthor.h */,
+				C9F3393C1AD0E9E600A43B19 /* OOCAuthor.m */,
+				C9597E091AD1850F00CA99A3 /* OOCNode.h */,
+				C9597E0A1AD1850F00CA99A3 /* OOCNode.m */,
+				C9597E0C1AD1A89900CA99A3 /* OOCUser2.h */,
+				C9597E0D1AD1A89900CA99A3 /* OOCUser2.m */,
+				C9597E0F1AD1B11700CA99A3 /* OOCPerson.h */,
+				C9597E101AD1B11700CA99A3 /* OOCPerson.m */,
+				C922FEFB1AD32DAC00B73538 /* OOCTypes.h */,
+				C922FEFC1AD32DAC00B73538 /* OOCTypes.m */,
 				6003F5B6195388D20070C39A /* Supporting Files */,
 			);
 			path = Tests;
@@ -451,18 +461,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9D03F961ACF3B7400D23778 /* OOCEvent.m in Sources */,
-				C928BC941ACDE8FE0003FE89 /* OOCUser.m in Sources */,
-				C9597E0B1AD1850F00CA99A3 /* OOCNode.m in Sources */,
-				C922FEFD1AD32DAC00B73538 /* OOCTypes.m in Sources */,
-				C9F3393D1AD0E9E600A43B19 /* OOCAuthor.m in Sources */,
-				C928BC971ACDE9080003FE89 /* OOCPost.m in Sources */,
-				C9F3393A1AD0E9CF00A43B19 /* OOCBook.m in Sources */,
-				C9D03F9C1ACF54C400D23778 /* OOCComment.m in Sources */,
-				C9597E111AD1B11700CA99A3 /* OOCPerson.m in Sources */,
-				C9597E0E1AD1A89900CA99A3 /* OOCUser2.m in Sources */,
+				C9766BAF1AD4598800CA9CCB /* AppInfo.m in Sources */,
 				6003F59E195388D20070C39A /* OOCAppDelegate.m in Sources */,
-				C9D03F991ACF528B00D23778 /* OOCContact.m in Sources */,
+				C9766BBD1AD459E400CA9CCB /* AppEvent.m in Sources */,
 				6003F5A7195388D20070C39A /* OOCViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 			);
@@ -475,10 +476,21 @@
 				C9C9087B1AD354850096DE98 /* Async.m in Sources */,
 				6003F5BC195388D20070C39A /* Model.m in Sources */,
 				C922FEE91AD325FF00B73538 /* Association.m in Sources */,
+				C9766BB11AD459A200CA9CCB /* OOCPost.m in Sources */,
+				C9766BB31AD459A200CA9CCB /* OOCContact.m in Sources */,
 				C922FEEC1AD326CD00B73538 /* Core.m in Sources */,
 				C922FEFF1AD32E7600B73538 /* Types.m in Sources */,
+				C9766BB21AD459A200CA9CCB /* OOCEvent.m in Sources */,
+				C9766BBA1AD459A200CA9CCB /* OOCTypes.m in Sources */,
 				C922FEF81AD327D000B73538 /* Set.m in Sources */,
 				C922FEEE1AD3271E00B73538 /* Enumerable.m in Sources */,
+				C9766BB41AD459A200CA9CCB /* OOCComment.m in Sources */,
+				C9766BB71AD459A200CA9CCB /* OOCNode.m in Sources */,
+				C9766BB01AD459A200CA9CCB /* OOCUser.m in Sources */,
+				C9766BB81AD459A200CA9CCB /* OOCUser2.m in Sources */,
+				C9766BB61AD459A200CA9CCB /* OOCAuthor.m in Sources */,
+				C9766BB51AD459A200CA9CCB /* OOCBook.m in Sources */,
+				C9766BB91AD459A200CA9CCB /* OOCPerson.m in Sources */,
 				C922FEF21AD3277400B73538 /* FilteringBookAuthor.m in Sources */,
 				C922FEFA1AD327F000B73538 /* Uniques.m in Sources */,
 				C922FEF61AD327B600B73538 /* List.m in Sources */,
