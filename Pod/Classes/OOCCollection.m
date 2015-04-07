@@ -183,26 +183,28 @@
     return [self sortBy:by limit:0 offset:0 order:nil store:nil];
 }
 
-- (void)each:(void(^)(NSUInteger size, id obj))block {
+- (void)each:(void(^)(id obj, NSUInteger pos, NSUInteger size))block {
     if ([self.ohmoc isKindOfClass:[OhmocAsync class]]) {
         OhmocAsync* ohmoc = (OhmocAsync*)self.ohmoc;
         [ohmoc.queue addOperationWithBlock:^{
             NSUInteger size = [self size];
             if (size == 0) {
-                block(0, nil);
+                block(nil, 0, 0);
                 return;
             }
-            for (id r in self) {
+            __block NSUInteger i = 0;
+            for (id obj in self) {
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    block(size, r);
+                    block(obj, i++, size);
                 }];
             }
         }];
 
     } else {
         NSUInteger size = [self size];
+        NSUInteger i = 0;
         for (id obj in self) {
-            block(size, obj);
+            block(obj, i++, size);
         }
     }
 }

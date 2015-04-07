@@ -22,7 +22,10 @@ describe(@"async", ^{
             [ohmoc createModel:[OOCPost class] callback:nil];
             OOCSet* set = [ohmoc allModels:[OOCPost class]];
             NSMutableArray* posts = [NSMutableArray arrayWithCapacity:3];
-            [set each:^(NSUInteger size, OOCPost*post) {
+            __block NSUInteger i = 0;;
+            [set each:^(OOCPost*post, NSUInteger pos, NSUInteger size) {
+                XCTAssertEqual(pos, i);
+                i++;
                 XCTAssertEqual(size, 3);
                 XCTAssertFalse([posts containsObject:post.id]);
                 [posts addObject:post.id];
@@ -35,8 +38,16 @@ describe(@"async", ^{
     it(@"empty query", ^{
         waitUntil(^(DoneCallback done) {
             OOCSet* set = [ohmoc allModels:[OOCPost class]];
-            [set each:^(NSUInteger size, OOCPost*post) {
+            [set each:^(OOCPost*post, NSUInteger pos, NSUInteger size) {
                 XCTAssertEqual(size, 0);
+                done();
+            }];
+        });
+    });
+    it(@"create", ^{
+        waitUntil(^(DoneCallback done) {
+            [ohmoc create:@{} model:[OOCPost class] callback:^(OOCPost* post){
+                XCTAssert(post.id);
                 done();
             }];
         });
