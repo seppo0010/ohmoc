@@ -188,6 +188,10 @@
         OhmocAsync* ohmoc = (OhmocAsync*)self.ohmoc;
         [ohmoc.queue addOperationWithBlock:^{
             NSUInteger size = [self size];
+            if (size == 0) {
+                block(0, nil);
+                return;
+            }
             for (id r in self) {
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                     block(size, r);

@@ -16,6 +16,7 @@ describe(@"async", ^{
     });
     it(@"query", ^{
         waitUntil(^(DoneCallback done) {
+            // no need to wait for callback since calls are enqueued in order
             [ohmoc createModel:[OOCPost class] callback:nil];
             [ohmoc createModel:[OOCPost class] callback:nil];
             [ohmoc createModel:[OOCPost class] callback:nil];
@@ -28,6 +29,15 @@ describe(@"async", ^{
                 if (posts.count == size) {
                     done();
                 }
+            }];
+        });
+    });
+    it(@"empty query", ^{
+        waitUntil(^(DoneCallback done) {
+            OOCSet* set = [ohmoc allModels:[OOCPost class]];
+            [set each:^(NSUInteger size, OOCPost*post) {
+                XCTAssertEqual(size, 0);
+                done();
             }];
         });
     });
