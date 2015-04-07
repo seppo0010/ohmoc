@@ -33,6 +33,7 @@
 + (id) createWithDocumentFilename:(NSString*)filename;
 + (id) createWithPath:(NSString*)path;
 + (Ohmoc*) instance;
++ (void) dropInstance;
 
 - (void) _init;
 - (id) initAllowDuplicates:(BOOL)allowDuplicates;

@@ -40,6 +40,12 @@ static NSMutableDictionary* threadToInstance = nil;
     return instance;
 }
 
++ (void) dropInstance {
+    NSThread* thread = [NSThread currentThread];
+    NSString* threadId = [NSString stringWithFormat:@"%p", thread];
+    [threadToInstance removeObjectForKey:threadId];
+}
+
 - (void) _init {
     if (path) {
         _rlite = [[ObjCHirlite alloc] initWithPath:path];

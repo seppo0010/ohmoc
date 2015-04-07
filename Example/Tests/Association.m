@@ -10,6 +10,10 @@
 SpecBegin(association)
 
 describe(@"association", ^{
+    beforeAll(^{
+        [Ohmoc dropInstance];
+        [Ohmoc create];
+    });
     beforeEach(^{
         [[Ohmoc instance] flush];
     });
