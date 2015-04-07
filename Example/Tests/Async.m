@@ -76,6 +76,36 @@ describe(@"async", ^{
             }];
         });
     });
+    it(@"with", ^{
+        waitUntil(^(DoneCallback done) {
+            __block OOCUser2* john;
+            __block OOCUser2* jane;
+            [ohmoc create:@{@"email": @"john@doe.com"} model:[OOCUser2 class] callback:^(OOCUser2* u) { john = u; }];
+            [ohmoc create:@{@"email": @"jane@doe.org"} model:[OOCUser2 class] callback:^(OOCUser2* u) { jane = u; }];
+            XCTAssertNil(john);
+            XCTAssertNil(jane);
+            [ohmoc with:@"email" is:@"john@doe.com" model:[OOCUser2 class] callback:^(OOCUser2* u){
+                XCTAssertNotNil(john);
+                XCTAssertEqual(u, john);
+                done();
+            }];
+        });
+    });
+    it(@"with not found", ^{
+        waitUntil(^(DoneCallback done) {
+            __block OOCUser2* john;
+            __block OOCUser2* jane;
+            [ohmoc create:@{@"email": @"john@doe.com"} model:[OOCUser2 class] callback:^(OOCUser2* u) { john = u; }];
+            [ohmoc create:@{@"email": @"jane@doe.org"} model:[OOCUser2 class] callback:^(OOCUser2* u) { jane = u; }];
+            XCTAssertNil(john);
+            XCTAssertNil(jane);
+            [ohmoc with:@"email" is:@"example@example" model:[OOCUser2 class] callback:^(OOCUser2* u){
+                XCTAssertNotNil(john);
+                XCTAssertNil(u);
+                done();
+            }];
+        });
+    });
 });
 
 SpecEnd
