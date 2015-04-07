@@ -24,10 +24,10 @@ static NSMutableDictionary* threadToInstance = nil;
     NSString* threadId = [NSString stringWithFormat:@"%p", thread];
     Ohmoc* instance = [threadToInstance valueForKey:threadId];
     if (!instance) {
-        [NSException raise:@"NoOhmoc" format:@"Ohmoc not started on thread %@", threadId];
+        [OOCException raise:@"NoOhmoc" format:@"Ohmoc not started on thread %@", threadId];
     }
     if (!instance.rlite) {
-        [NSException raise:@"rliteMissing" format:@"rlite not started on thread %@", threadId];
+        [OOCException raise:@"rliteMissing" format:@"rlite not started on thread %@", threadId];
     }
     return instance;
 }
@@ -53,7 +53,7 @@ static NSMutableDictionary* threadToInstance = nil;
     NSThread* thread = [NSThread currentThread];
     NSString* threadId = [NSString stringWithFormat:@"%p", thread];
     if ([threadToInstance valueForKey:threadId]) {
-        [NSException raise:@"TooManyOhmoc" format:@"There is already an Ohmoc instance running in thread %@", threadId];
+        [OOCException raise:@"TooManyOhmoc" format:@"There is already an Ohmoc instance running in thread %@", threadId];
     }
 
     [self _init];
@@ -129,8 +129,9 @@ static NSMutableDictionary* threadToInstance = nil;
         NSException* exc = retval;
         if ([exc.reason rangeOfString:@"UniqueIndexViolation"].length != 0) {
             [[[OOCUniqueIndexViolationException alloc] initWithName:exc.name reason:exc.reason userInfo:exc.userInfo] raise];
+        } else {
+            [[[OOCException alloc] initWithName:exc.name reason:exc.reason userInfo:exc.userInfo] raise];
         }
-        [exc raise];
     }
     return retval;
 }

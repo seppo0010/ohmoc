@@ -108,7 +108,7 @@
 }
 
 - (NSString*)key {
-    [NSException raise:@"Must not call OOCSet.key" format:@"Use blockWithKey instead"];
+    [OOCException raise:@"Must not call OOCSet.key" format:@"Use blockWithKey instead"];
     return nil;
 }
 

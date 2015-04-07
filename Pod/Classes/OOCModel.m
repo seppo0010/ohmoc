@@ -82,7 +82,7 @@ static NSString* lua_delete = nil;
                 Class subclass = NSClassFromString(protocol);
                 if (subclass && [subclass isSubclassOfClass:[OOCModel class]]) {
                     if (property.subtype) {
-                        [NSException raise:@"MultipleSubtypes" format:@"Two models subtypes found for '%@'", type];
+                        [OOCException raise:@"MultipleSubtypes" format:@"Two models subtypes found for '%@'", type];
                     }
                     property.subtype = subclass;
                 }
@@ -95,7 +95,7 @@ static NSString* lua_delete = nil;
     if (className.length > 0) {
         property.klass = NSClassFromString(className);
         if (!property.klass) {
-            [NSException raise:@"ClassNotFound" format:@"Unable to find class name for type '%@'", type];
+            [OOCException raise:@"ClassNotFound" format:@"Unable to find class name for type '%@'", type];
         }
     }
     return property;
@@ -154,7 +154,7 @@ static NSString* lua_delete = nil;
         if ([property isKindOfClass:[OOCModelObjectProperty class]] && [[(OOCModelObjectProperty*)property protocols] containsObject:@"OOCCollection"]) {
             NSArray* components = [propertyName componentsSeparatedByString:@"__"];
             if (components.count != 2) {
-                [NSException raise:@"TooManyComponents" format:@"When specifying a collection protocol there must be a property and its subproperty, got %@", propertyName];
+                [OOCException raise:@"TooManyComponents" format:@"When specifying a collection protocol there must be a property and its subproperty, got %@", propertyName];
             }
             OOCModelObjectProperty* object = [properties valueForKey:[components objectAtIndex:0]];
             object.referenceProperty = [components objectAtIndex:1];
@@ -310,7 +310,7 @@ static NSString* lua_delete = nil;
     if ([classProperties valueForKey:key]) {
         OOCModelProperty* property = [classProperties valueForKey:key];
         if (!property) {
-            [NSException raise:@"UnknownKey" format:@"Unknown key %@", key];
+            [OOCException raise:@"UnknownKey" format:@"Unknown key %@", key];
         }
         if (property.readonly) {
             return;
@@ -357,18 +357,18 @@ static NSString* lua_delete = nil;
         NSString* shortkey = [key substringToIndex:key.length - 3];
         OOCModelProperty* property = [classProperties valueForKey:shortkey];
         if (!property) {
-            [NSException raise:@"UnknownKey" format:@"Unknown key %@", key];
+            [OOCException raise:@"UnknownKey" format:@"Unknown key %@", key];
         }
         if (property.readonly) {
             return;
         }
         if (![property isKindOfClass:[OOCModelObjectProperty class]]) {
-            [NSException raise:@"ExpectedObject" format:@"Property is not an object property for key '%@'", key];
+            [OOCException raise:@"ExpectedObject" format:@"Property is not an object property for key '%@'", key];
         }
         OOCModelObjectProperty* objProperty = (OOCModelObjectProperty*)property;
         [self setValue:[objProperty.klass get:[[NSString alloc] initWithData:value encoding:NSUTF8StringEncoding]] forKey:shortkey];
     } else {
-        [NSException raise:@"UnknownProperty" format:@"Uknown property %@", key];
+        [OOCException raise:@"UnknownProperty" format:@"Uknown property %@", key];
     }
 }
 
@@ -491,11 +491,7 @@ static NSString* lua_delete = nil;
         lua_delete = [NSString stringWithCString:deletelua encoding:NSUTF8StringEncoding];
     }
 
-    id ret = [self.ohmoc command:@[@"EVAL", lua_delete, @"0", [@{@"name": NSStringFromClass([self class]), @"id": self.id, @"key": self.key} messagePack], [uniques messagePack], [[spec.tracked allObjects] messagePack]]];
-    if ([ret isKindOfClass:[NSException class]]) {
-        // ugh;
-        [ret raise];
-    }
+    [self.ohmoc command:@[@"EVAL", lua_delete, @"0", [@{@"name": NSStringFromClass([self class]), @"id": self.id, @"key": self.key} messagePack], [uniques messagePack], [[spec.tracked allObjects] messagePack]]];
 }
 
 - (id)get:(NSString*)att {

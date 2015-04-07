@@ -56,7 +56,7 @@
 
 - (id)command:(NSArray*)command binary:(BOOL)binary {
     if ([NSOperationQueue currentQueue] != queue) {
-        [NSException raise:@"CommandFromWrongThread" format:@"Calling command:binary: from outside the operation queue in OhmocAsync"];
+        [OOCException raise:@"CommandFromWrongThread" format:@"Calling command:binary: from outside the operation queue in OhmocAsync"];
     }
     return [super command:command binary:binary];
 }
