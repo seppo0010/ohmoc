@@ -18,15 +18,6 @@
     queue.maxConcurrentOperationCount = 1;
 }
 
-- (void)find:(NSDictionary*)dict model:(Class)modelClass callback:(void(^)(OOCSet*))callback {
-    [queue addOperationWithBlock:^{
-        id r = [self find:dict model:modelClass];
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            if (callback) callback(r);
-        }];
-    }];
-}
-
 - (void)with:(NSString*)property is:(id)value model:(Class)modelClass callback:(void(^)(id))callback {
     [queue addOperationWithBlock:^{
         id r = [self with:property is:value model:modelClass];
