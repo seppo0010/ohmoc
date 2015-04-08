@@ -631,6 +631,9 @@ static NSString* lua_delete = nil;
 }
 
 + (OOCCollection*)collectionWithProperty:(NSString*)propertyName scoreBetween:(double)min and:(double)max andProperty:(NSString*)filterProperty is:(id)groupByValue range:(NSRange)range reverse:(BOOL)reverse ohmoc:(Ohmoc*)ohmoc {
+    if (!ohmoc) {
+        ohmoc = [Ohmoc instance];
+    }
     NSDictionary* properties = [self spec].properties;
     OOCModelProperty* property;
 
@@ -677,7 +680,7 @@ static NSString* lua_delete = nil;
 }
 
 + (OOCCollection*)collectionWithProperty:(NSString*)property scoreBetween:(double)min and:(double)max range:(NSRange)range reverse:(BOOL)reverse {
-    return [self collectionWithProperty:property scoreBetween:min and:max range:range reverse:reverse ohmoc:[Ohmoc instance]];
+    return [self collectionWithProperty:property scoreBetween:min and:max range:range reverse:reverse ohmoc:nil];
 }
 
 + (OOCCollection*)collectionWithProperty:(NSString*)property scoreBetween:(double)min and:(double)max range:(NSRange)range {
@@ -692,7 +695,7 @@ static NSString* lua_delete = nil;
 }
 
 + (OOCCollection*)collectionWithProperty:(NSString*)propertyName scoreBetween:(double)min and:(double)max andProperty:(NSString*)filterProperty is:(id)groupByValue range:(NSRange)range {
-    return [self collectionWithProperty:propertyName scoreBetween:min and:max andProperty:filterProperty is:groupByValue range:range reverse:FALSE ohmoc:[Ohmoc instance]];
+    return [self collectionWithProperty:propertyName scoreBetween:min and:max andProperty:filterProperty is:groupByValue range:range reverse:FALSE ohmoc:nil];
 }
 
 + (OOCCollection*)collectionWithProperty:(NSString*)property scoreBetween:(double)min and:(double)max ohmoc:(Ohmoc*)ohmoc {
