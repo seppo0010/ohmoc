@@ -695,4 +695,10 @@ static NSString* lua_delete = nil;
     return [self collectionWithProperty:propertyName scoreBetween:min and:max andProperty:filterProperty is:groupByValue range:range reverse:FALSE ohmoc:[Ohmoc instance]];
 }
 
++ (OOCCollection*)collectionWithProperty:(NSString*)property scoreBetween:(double)min and:(double)max ohmoc:(Ohmoc*)ohmoc {
+    NSRange range;
+    range.location = 0;
+    range.length = UINT_MAX;
+    return [self collectionWithProperty:property scoreBetween:min and:max range:range reverse:FALSE ohmoc:ohmoc];
+}
 @end

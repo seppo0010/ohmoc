@@ -60,6 +60,7 @@
 + (OOCCollection*)collectionWithProperty:(NSString*)property scoreBetween:(double)min and:(double)max range:(NSRange)range reverse:(BOOL)reverse;
 + (OOCCollection*)collectionWithProperty:(NSString*)property scoreBetween:(double)min and:(double)max range:(NSRange)range;
 + (OOCCollection*)collectionWithProperty:(NSString*)property scoreBetween:(double)min and:(double)max;
++ (OOCCollection*)collectionWithProperty:(NSString*)property scoreBetween:(double)min and:(double)max ohmoc:(Ohmoc*)ohmoc;
 
 + (NSArray*) filters:(NSDictionary*)filters;
 + (OOCModelSpec*)spec;

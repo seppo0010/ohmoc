@@ -120,6 +120,21 @@ describe(@"async", ^{
             }];
         });
     });
+    it(@"supports zset", ^{
+        waitUntil(^(DoneCallback done) {
+            [ohmoc create:@{@"status": @"draft", @"order": @100} model:[OOCPost2 class] callback:nil];
+            [ohmoc create:@{@"status": @"draft", @"order": @20.4} model:[OOCPost2 class] callback:nil];
+            [ohmoc create:@{@"status": @"published", @"order": @14.3} model:[OOCPost2 class] callback:nil];
+
+            OOCCollection* res = [OOCPost2 collectionWithProperty:@"order" scoreBetween:-INFINITY and:INFINITY ohmoc:ohmoc];
+            [res arrayValueCallback:^(NSArray* arr){
+                NSArray* orders = [arr valueForKey:@"order"];
+                NSArray* expected = @[@14.3, @20.4, @100];
+                XCTAssertEqualObjects(expected, orders);
+                done();
+            }];
+        });
+    });
 });
 
 SpecEnd
