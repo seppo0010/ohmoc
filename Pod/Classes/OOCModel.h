@@ -54,11 +54,13 @@
 + (OOCSet*)all;
 + (OOCModel*)getCached:(NSString*)id;
 + (BOOL)isCached:(NSString*)id;
++ (OOCCollection*)collectionWithProperty:(NSString*)propertyName scoreBetween:(double)min and:(double)max andProperty:(NSString*)filterProperty is:(id)groupByValue range:(NSRange)range reverse:(BOOL)reverse ohmoc:(Ohmoc*)ohmoc;
++ (OOCCollection*)collectionWithProperty:(NSString*)propertyName scoreBetween:(double)min and:(double)max andProperty:(NSString*)filterProperty is:(id)groupByValue range:(NSRange)range;
 + (OOCCollection*)collectionWithProperty:(NSString*)property scoreBetween:(double)min and:(double)max range:(NSRange)range reverse:(BOOL)reverse ohmoc:(Ohmoc*)ohmoc;
 + (OOCCollection*)collectionWithProperty:(NSString*)property scoreBetween:(double)min and:(double)max range:(NSRange)range reverse:(BOOL)reverse;
 + (OOCCollection*)collectionWithProperty:(NSString*)property scoreBetween:(double)min and:(double)max range:(NSRange)range;
-
 + (OOCCollection*)collectionWithProperty:(NSString*)property scoreBetween:(double)min and:(double)max;
+
 + (NSArray*) filters:(NSDictionary*)filters;
 + (OOCModelSpec*)spec;
 + (NSString*)stringForIndex:(NSString*)key value:(id)v;

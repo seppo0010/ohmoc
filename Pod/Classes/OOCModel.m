@@ -410,10 +410,6 @@ static NSString* lua_delete = nil;
     return [arr componentsJoinedByString:@":"];
 }
 
-+ (NSString*)sortedIndexKeyForPropertyName:(NSString*)propertyName groupByValue:(id)groupByValue {
-    return [self sortedIndexKeyForProperty:[[self spec].properties valueForKey:propertyName] groupByValue:groupByValue];
-}
-
 - (NSDictionary*) updateSortedIndices {
     NSMutableDictionary* indices = [NSMutableDictionary dictionary];
     OOCModelSpec* spec = [[self class] spec];
@@ -634,17 +630,29 @@ static NSString* lua_delete = nil;
     return [[Ohmoc instance] allModels:self];
 }
 
-+ (OOCCollection*)collectionWithProperty:(NSString*)property scoreBetween:(double)min and:(double)max range:(NSRange)range reverse:(BOOL)reverse ohmoc:(Ohmoc*)ohmoc {
-    if (![[[self spec].properties valueForKey:property] hasSortedIndex]) {
-        [OOCIndexNotFoundException raise:@"SortedIndexMissing" format:@"Trying to query for property %@ on class %@ but no index was found", property, NSStringFromClass(self)];
++ (OOCCollection*)collectionWithProperty:(NSString*)propertyName scoreBetween:(double)min and:(double)max andProperty:(NSString*)filterProperty is:(id)groupByValue range:(NSRange)range reverse:(BOOL)reverse ohmoc:(Ohmoc*)ohmoc {
+    NSDictionary* properties = [self spec].properties;
+    OOCModelProperty* property;
+
+    if (filterProperty) {
+        property = [properties valueForKey:[NSString stringWithFormat:@"%@__%@", propertyName, filterProperty]];
+        if (!property.groupBy || !property.hasSortedIndex) {
+            [OOCIndexNotFoundException raise:@"SortedIndexMissing" format:@"Trying to query for property %@ with group by %@ on class %@ but no index was found", propertyName, filterProperty, NSStringFromClass(self)];
+        }
+    } else {
+        property = [properties valueForKey:propertyName];
+        if (![property hasSortedIndex]) {
+            [OOCIndexNotFoundException raise:@"SortedIndexMissing" format:@"Trying to query for property %@ on class %@ but no index was found", propertyName, NSStringFromClass(self)];
+        }
     }
+
     return [OOCList collectionWithBlock:^(void(^block)(NSString*)) {
         NSString* key = [ohmoc tmpKey];
         NSString* minStr = min == (double)-INFINITY ? @"-inf" : [NSString stringWithFormat:@"%lf", min];
         NSString* maxStr = max == (double)INFINITY ? @"+inf" : [NSString stringWithFormat:@"%lf", max];
         NSArray* _ids = [ohmoc command:@[
                                          reverse ? @"ZREVRANGEBYSCORE" : @"ZRANGEBYSCORE",
-                                         [self sortedIndexKeyForPropertyName:property groupByValue:nil],
+                                         [self sortedIndexKeyForProperty:property groupByValue:groupByValue],
                                          reverse ? maxStr : minStr,
                                          reverse ? minStr : maxStr,
                                          @"LIMIT",
@@ -664,6 +672,10 @@ static NSString* lua_delete = nil;
     } ohmoc:ohmoc modelClass:self];
 }
 
++ (OOCCollection*)collectionWithProperty:(NSString*)property scoreBetween:(double)min and:(double)max range:(NSRange)range reverse:(BOOL)reverse ohmoc:(Ohmoc*)ohmoc {
+    return [self collectionWithProperty:property scoreBetween:min and:max andProperty:nil is:nil range:range reverse:reverse ohmoc:ohmoc];
+}
+
 + (OOCCollection*)collectionWithProperty:(NSString*)property scoreBetween:(double)min and:(double)max range:(NSRange)range reverse:(BOOL)reverse {
     return [self collectionWithProperty:property scoreBetween:min and:max range:range reverse:reverse ohmoc:[Ohmoc instance]];
 }
@@ -677,6 +689,10 @@ static NSString* lua_delete = nil;
     range.location = 0;
     range.length = UINT_MAX;
     return [self collectionWithProperty:property scoreBetween:min and:max range:range];
+}
+
++ (OOCCollection*)collectionWithProperty:(NSString*)propertyName scoreBetween:(double)min and:(double)max andProperty:(NSString*)filterProperty is:(id)groupByValue range:(NSRange)range {
+    return [self collectionWithProperty:propertyName scoreBetween:min and:max andProperty:filterProperty is:groupByValue range:range reverse:FALSE ohmoc:[Ohmoc instance]];
 }
 
 @end

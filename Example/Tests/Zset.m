@@ -116,6 +116,18 @@ describe(@"zset", ^{
     it(@"throws an exception when the index does not exist", ^{
         XCTAssertThrowsSpecific([OOCUser collectionWithProperty:@"fname" scoreBetween:-INFINITY and:INFINITY], OOCIndexNotFoundException);
     });
+    it(@"searches using group by", ^{
+        OOCPost2* p1 = [OOCPost2 create:@{@"status": @"draft", @"order": @100}];
+        [OOCPost2 create:@{@"status": @"draft", @"order": @20.4}];
+        [OOCPost2 create:@{@"status": @"published", @"order": @14.3}];
+
+        NSRange range;
+        range.location = 0;
+        range.length = 10;
+        NSArray* res = [[OOCPost2 collectionWithProperty:@"order" scoreBetween:30 and:INFINITY andProperty:@"status" is:@"draft" range:range reverse:FALSE ohmoc:[Ohmoc instance]] arrayValue];
+        XCTAssertEqual(res.count, 1);
+        XCTAssertEqualObjects([res objectAtIndex:0], p1);
+    });
 });
 
 SpecEnd
