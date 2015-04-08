@@ -92,6 +92,18 @@ describe(@"zset", ^{
         XCTAssertEqual(res.count, 1);
         XCTAssertEqual([res objectAtIndex:0], p2);
     });
+    it(@"can fetch a collection using an offset", ^{
+        [OOCPost2 create:@{@"status": @"draft", @"order": @100}];
+        OOCPost2* p2 = [OOCPost2 create:@{@"status": @"draft", @"order": @20.4}];
+        [OOCPost2 create:@{@"status": @"published", @"order": @14.3}];
+
+        NSRange range;
+        range.location = 1;
+        range.length = 20;
+        NSArray* res  = [[OOCPost2 collectionWithProperty:@"order" scoreBetween:0 and:30 range:range] arrayValue];
+        XCTAssertEqual(res.count, 1);
+        XCTAssertEqual([res objectAtIndex:0], p2);
+    });
 
     it(@"can fetch an empty collection", ^{
         [OOCPost2 create:@{@"status": @"draft", @"order": @100}];
