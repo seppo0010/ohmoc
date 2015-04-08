@@ -15,6 +15,8 @@
 @property BOOL readonly; // the property is (readonly)
 @property BOOL isUnique; // OOCUnique protocol is used
 @property BOOL hasIndex; // OOCIndex protocol is used
+@property BOOL hasSortedIndex; // OOCSortedIndex protocol is used
+@property NSString* groupBy; // zset groups
 @end
 
 @interface OOCModelBasicProperty : OOCModelProperty
@@ -33,6 +35,7 @@
 @property NSSet* indices;
 @property NSSet* uniques;
 @property NSSet* tracked;
+@property NSSet* sorted;
 @end
 
 @class OOCCollection;

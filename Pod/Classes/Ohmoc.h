@@ -17,6 +17,7 @@
 #import "OOCMutableSet.h"
 #import "OOCList.h"
 #import "OOCIndex.h"
+#import "OOCSortedIndex.h"
 
 @class ObjCHirlite;
 @interface Ohmoc : NSObject {

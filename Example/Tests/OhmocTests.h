@@ -12,6 +12,7 @@
 #import "OOCUser.h"
 #import "OOCUser2.h"
 #import "OOCPost.h"
+#import "OOCPost2.h"
 #import "OOCEvent.h"
 #import "OOCContact.h"
 #import "OOCComment.h"

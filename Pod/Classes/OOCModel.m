@@ -54,6 +54,7 @@ static NSString* lua_delete = nil;
 + (OOCModelProperty*)parse:(NSString*)name type:(NSString*)type {
     if (type.length == 1) {
         OOCModelBasicProperty* property = [[OOCModelBasicProperty alloc] init];
+        property.name = name;
         property.identifier = [type cStringUsingEncoding:NSUTF8StringEncoding][0];
         return property;
     }
@@ -78,6 +79,8 @@ static NSString* lua_delete = nil;
                 property.isUnique = true;
             } else if ([protocol isEqualToString:@"OOCIndex"]) {
                 property.hasIndex = true;
+            } else if ([protocol isEqualToString:@"OOCSortedIndex"]) {
+                property.hasSortedIndex = true;
             } else {
                 Class subclass = NSClassFromString(protocol);
                 if (subclass && [subclass isSubclassOfClass:[OOCModel class]]) {
@@ -148,6 +151,8 @@ static NSString* lua_delete = nil;
             OOCModelProperty* property = [properties valueForKey:[propertyName substringToIndex:propertyName.length - 4]];
             property.isUnique = metaProperty.isUnique;
             property.hasIndex = metaProperty.hasIndex;
+            property.hasSortedIndex = metaProperty.hasSortedIndex;
+            property.groupBy = metaProperty.groupBy;
             property.readonly = metaProperty.readonly;
             [properties removeObjectForKey:propertyName];
         }
@@ -160,9 +165,19 @@ static NSString* lua_delete = nil;
             object.referenceProperty = [components objectAtIndex:1];
             [properties removeObjectForKey:propertyName];
         }
+        else if ([property isKindOfClass:[OOCModelObjectProperty class]] && [[(OOCModelObjectProperty*)property protocols] containsObject:@"OOCSortedIndexGroupBy"]) {
+            NSArray* components = [propertyName componentsSeparatedByString:@"__"];
+            if (components.count != 2) {
+                [OOCException raise:@"TooManyComponents" format:@"When specifying a collection protocol there must be a property and its subproperty, got %@", propertyName];
+            }
+            property.name = [components objectAtIndex:0];
+            property.groupBy = [components objectAtIndex:1];
+            property.hasSortedIndex = TRUE;
+        }
     }
 
     NSMutableSet* indices = [NSMutableSet set];
+    NSMutableSet* sorted = [NSMutableSet set];
     NSMutableSet* uniques = [NSMutableSet set];
     for (NSString* propertyName in properties) {
         OOCModelProperty* property = [properties valueForKey:propertyName];
@@ -172,6 +187,9 @@ static NSString* lua_delete = nil;
         if (property.hasIndex) {
             [indices addObject:propertyName];
         }
+        if (property.hasSortedIndex) {
+            [sorted addObject:propertyName];
+        }
     }
 
     OOCModelSpec* spec = [[OOCModelSpec alloc] init];
@@ -179,6 +197,7 @@ static NSString* lua_delete = nil;
     spec.indices = [indices copy];
     spec.uniques = [uniques copy];
     spec.tracked = [tracked copy];
+    spec.sorted = [sorted copy];
     return spec;
 }
 
@@ -261,7 +280,7 @@ static NSString* lua_delete = nil;
             if ([property isKindOfClass:[OOCModelObjectProperty class]]) {
                 OOCModelObjectProperty* objProperty = (OOCModelObjectProperty*)property;
                 Class klass = objProperty.klass;
-                if ([klass isSubclassOfClass:[OOCSet class]] || [klass isSubclassOfClass:[OOCList class]]) {
+                if ([klass isSubclassOfClass:[OOCCollection class]]) {
                     OOCCollection* collection = [klass collectionWithModel:self property:propertyName ohmoc:self.ohmoc modelClass:objProperty.subtype];
                     [self setValue:collection forKey:propertyName];
                 }
@@ -382,6 +401,78 @@ static NSString* lua_delete = nil;
     [self.ohmoc setCached:self];
 }
 
++ (NSString*)sortedIndexKeyForProperty:(OOCModelProperty*)property groupByValue:(id)groupByValue {
+    NSMutableArray* arr = [NSMutableArray arrayWithObjects:NSStringFromClass(self), @"sorted", property.name, nil];
+    if (property.groupBy) {
+        [arr addObject:property.groupBy];
+        [arr addObject:groupByValue];
+    }
+    return [arr componentsJoinedByString:@":"];
+}
+
+- (NSDictionary*) updateSortedIndices {
+    NSMutableDictionary* indices = [NSMutableDictionary dictionary];
+    OOCModelSpec* spec = [[self class] spec];
+    NSDictionary* properties = spec.properties;
+    for (NSString* propName in spec.sorted) {
+        OOCModelProperty* property = [properties valueForKey:propName];
+        id groupByValue = nil;
+        if (property.groupBy) {
+            groupByValue = [self valueForKey:property.groupBy];
+        }
+        NSString* key = [[self class] sortedIndexKeyForProperty:property groupByValue:groupByValue];
+        [indices setValue:property forKey:key];
+    }
+    return [indices copy];
+}
+
+- (void) pruneSortedIndices {
+    if (!self.id) {
+        return;
+    }
+    NSDictionary* indices = [self updateSortedIndices];
+    for (NSString* key in indices) {
+        OOCModelProperty* property = [indices valueForKey:key];
+        if (!property.groupBy) {
+            return;
+        }
+        double oldValue = [[self.ohmoc command:@[@"HGET", self.key, property.groupBy]] doubleValue];
+        double newValue = [[self valueForKey:property.name] doubleValue];
+        // comparing doubles with == ?! What is this?
+        // In theory if the value was not changed, is just the result of
+        // deserializing the serialized value, so it should be ok. Right?
+        // Worst case scenario, we'll be wasting some CPU cycles
+        if (oldValue != newValue) {
+            NSString* key = [[self class] sortedIndexKeyForProperty:property groupByValue:[self valueForKey:property.name]];
+            [self.ohmoc command:@[@"ZREM", key, self.id]];
+        }
+    }
+}
+
+- (void) addSortedIndices{
+    NSDictionary* indices = [self updateSortedIndices];
+    for (NSString* key in indices) {
+        OOCModelProperty* property = [indices valueForKey:key];
+        id value = [self valueForKey:property.name];
+        if (!value || [value isKindOfClass:[NSNull class]]) {
+            [self.ohmoc command:@[@"ZREM", key, self.id]];
+        } else {
+            if (![value respondsToSelector:@selector(doubleValue)]) {
+                [OOCException raise:@"InvalidSortedProperty" format:@"To use a property as a sorted index, it must implement doubleValue"];
+            }
+            NSString* score = [NSString stringWithFormat:@"%lf", [value doubleValue]];
+            [self.ohmoc command:@[@"ZADD", key, score, self.id]];
+        }
+    }
+}
+
+- (void) removeSortedIndices {
+    NSDictionary* indices = [self updateSortedIndices];
+    for (NSString* key in indices) {
+        [self.ohmoc command:@[@"ZREM", key, self.id]];
+    }
+}
+
 - (void) save {
     NSDictionary* features;
     NSString* name = NSStringFromClass([self class]);
@@ -454,11 +545,15 @@ static NSString* lua_delete = nil;
         lua_save = [NSString stringWithCString:savelua encoding:NSUTF8StringEncoding];
     }
 
+    if (self.id) {
+        [self pruneSortedIndices];
+    }
     id ret = [self.ohmoc command:@[@"EVAL", lua_save, @"0", [features messagePack], [properties messagePack], [indices messagePack], [uniques messagePack]]];
     [self setId:ret];
     for (NSString* key in binaryProperties) {
         [self set:key value:[binaryProperties valueForKey:key]];
     }
+    [self addSortedIndices];
     [self.ohmoc setCached:self];
 }
 
@@ -491,6 +586,7 @@ static NSString* lua_delete = nil;
         lua_delete = [NSString stringWithCString:deletelua encoding:NSUTF8StringEncoding];
     }
 
+    [self removeSortedIndices];
     [self.ohmoc command:@[@"EVAL", lua_delete, @"0", [@{@"name": NSStringFromClass([self class]), @"id": self.id, @"key": self.key} messagePack], [uniques messagePack], [[spec.tracked allObjects] messagePack]]];
 }
 

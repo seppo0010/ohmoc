@@ -47,6 +47,8 @@
 		C9929C821AD479710033873B /* OOCTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = C9929C751AD479710033873B /* OOCTypes.m */; };
 		C9929C831AD479710033873B /* OOCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = C9929C771AD479710033873B /* OOCUser.m */; };
 		C9929C841AD479710033873B /* OOCUser2.m in Sources */ = {isa = PBXBuildFile; fileRef = C9929C791AD479710033873B /* OOCUser2.m */; };
+		C9929C881AD4A1EE0033873B /* OOCPost2.m in Sources */ = {isa = PBXBuildFile; fileRef = C9929C871AD4A1EE0033873B /* OOCPost2.m */; };
+		C9929C8A1AD4A25E0033873B /* Zset.m in Sources */ = {isa = PBXBuildFile; fileRef = C9929C891AD4A25E0033873B /* Zset.m */; };
 		C9C9087B1AD354850096DE98 /* Async.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C9087A1AD354850096DE98 /* Async.m */; };
 /* End PBXBuildFile section */
 
@@ -127,6 +129,9 @@
 		C9929C771AD479710033873B /* OOCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCUser.m; sourceTree = "<group>"; };
 		C9929C781AD479710033873B /* OOCUser2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCUser2.h; sourceTree = "<group>"; };
 		C9929C791AD479710033873B /* OOCUser2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCUser2.m; sourceTree = "<group>"; };
+		C9929C861AD4A1EE0033873B /* OOCPost2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCPost2.h; sourceTree = "<group>"; };
+		C9929C871AD4A1EE0033873B /* OOCPost2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCPost2.m; sourceTree = "<group>"; };
+		C9929C891AD4A25E0033873B /* Zset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Zset.m; sourceTree = "<group>"; };
 		C9C9087A1AD354850096DE98 /* Async.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Async.m; sourceTree = "<group>"; };
 		FF124D2D1785CCA7F469E827 /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -248,6 +253,7 @@
 				C922FEF71AD327D000B73538 /* Set.m */,
 				C922FEFE1AD32E7600B73538 /* Types.m */,
 				C922FEF91AD327F000B73538 /* Uniques.m */,
+				C9929C891AD4A25E0033873B /* Zset.m */,
 				C9929C641AD479710033873B /* OOCAuthor.h */,
 				C9929C651AD479710033873B /* OOCAuthor.m */,
 				C9929C661AD479710033873B /* OOCBook.h */,
@@ -270,6 +276,8 @@
 				C9929C771AD479710033873B /* OOCUser.m */,
 				C9929C781AD479710033873B /* OOCUser2.h */,
 				C9929C791AD479710033873B /* OOCUser2.m */,
+				C9929C861AD4A1EE0033873B /* OOCPost2.h */,
+				C9929C871AD4A1EE0033873B /* OOCPost2.m */,
 				6003F5B6195388D20070C39A /* Supporting Files */,
 			);
 			path = Tests;
@@ -479,6 +487,7 @@
 				6003F5BC195388D20070C39A /* Model.m in Sources */,
 				C9929C7F1AD479710033873B /* OOCNode.m in Sources */,
 				C9929C7B1AD479710033873B /* OOCBook.m in Sources */,
+				C9929C881AD4A1EE0033873B /* OOCPost2.m in Sources */,
 				C9929C7D1AD479710033873B /* OOCContact.m in Sources */,
 				C9929C801AD479710033873B /* OOCPerson.m in Sources */,
 				C922FEE91AD325FF00B73538 /* Association.m in Sources */,
@@ -492,6 +501,7 @@
 				C922FEEE1AD3271E00B73538 /* Enumerable.m in Sources */,
 				C922FEF21AD3277400B73538 /* FilteringBookAuthor.m in Sources */,
 				C922FEFA1AD327F000B73538 /* Uniques.m in Sources */,
+				C9929C8A1AD4A25E0033873B /* Zset.m in Sources */,
 				C9929C821AD479710033873B /* OOCTypes.m in Sources */,
 				C922FEF61AD327B600B73538 /* List.m in Sources */,
 				C922FEF01AD3275000B73538 /* Filtering.m in Sources */,
