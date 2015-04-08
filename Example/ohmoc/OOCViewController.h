@@ -13,6 +13,7 @@
     IBOutlet UITableView *_tableView;
     AppInfo* appInfo;
     NSDateFormatter* formatter;
+    NSArray* events;
 }
 
 @end

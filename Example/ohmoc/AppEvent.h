@@ -17,4 +17,11 @@
 @property id<OOCIndex> nameMeta;
 @property NSDate* date;
 
+@property (readonly) double d_date;
+@property (readonly) id<OOCSortedIndex> d_dateMeta;
+@property (readonly) int day;
+@property id<OOCSortedIndexGroupBy> d_date__day;
+
++ (int) today;
+
 @end
