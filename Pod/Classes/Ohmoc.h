@@ -25,6 +25,8 @@
     ObjCHirlite* _rlite;
     long tmpkey;
 
+    NSUInteger multiRepliesCount;
+    NSMutableDictionary* multiRepliesCallback;
     NSMutableDictionary* cache;
 }
 
@@ -60,5 +62,9 @@
 - (NSString*)tmpKey;
 - (id)command:(NSArray*)command;
 - (id)command:(NSArray*)command binary:(BOOL)binary;
+
+- (void)multi;
+- (void)exec;
+- (void)command:(NSArray*)command binary:(BOOL)binary callback:(void(^)(id))callback;
 
 @end

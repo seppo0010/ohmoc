@@ -49,6 +49,7 @@
 		C9929C841AD479710033873B /* OOCUser2.m in Sources */ = {isa = PBXBuildFile; fileRef = C9929C791AD479710033873B /* OOCUser2.m */; };
 		C9929C881AD4A1EE0033873B /* OOCPost2.m in Sources */ = {isa = PBXBuildFile; fileRef = C9929C871AD4A1EE0033873B /* OOCPost2.m */; };
 		C9929C8A1AD4A25E0033873B /* Zset.m in Sources */ = {isa = PBXBuildFile; fileRef = C9929C891AD4A25E0033873B /* Zset.m */; };
+		C9BB6A6C1AD5A29A00695613 /* Batch.m in Sources */ = {isa = PBXBuildFile; fileRef = C9BB6A6B1AD5A29A00695613 /* Batch.m */; };
 		C9C9087B1AD354850096DE98 /* Async.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C9087A1AD354850096DE98 /* Async.m */; };
 /* End PBXBuildFile section */
 
@@ -132,6 +133,7 @@
 		C9929C861AD4A1EE0033873B /* OOCPost2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCPost2.h; sourceTree = "<group>"; };
 		C9929C871AD4A1EE0033873B /* OOCPost2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCPost2.m; sourceTree = "<group>"; };
 		C9929C891AD4A25E0033873B /* Zset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Zset.m; sourceTree = "<group>"; };
+		C9BB6A6B1AD5A29A00695613 /* Batch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Batch.m; sourceTree = "<group>"; };
 		C9C9087A1AD354850096DE98 /* Async.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Async.m; sourceTree = "<group>"; };
 		FF124D2D1785CCA7F469E827 /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -243,6 +245,7 @@
 				C922FEEA1AD3269600B73538 /* OhmocTests.h */,
 				C922FEE81AD325FF00B73538 /* Association.m */,
 				C9C9087A1AD354850096DE98 /* Async.m */,
+				C9BB6A6B1AD5A29A00695613 /* Batch.m */,
 				C922FEEB1AD326CD00B73538 /* Core.m */,
 				C922FEED1AD3271E00B73538 /* Enumerable.m */,
 				C922FEEF1AD3275000B73538 /* Filtering.m */,
@@ -493,6 +496,7 @@
 				C922FEE91AD325FF00B73538 /* Association.m in Sources */,
 				C9929C7A1AD479710033873B /* OOCAuthor.m in Sources */,
 				C922FEEC1AD326CD00B73538 /* Core.m in Sources */,
+				C9BB6A6C1AD5A29A00695613 /* Batch.m in Sources */,
 				C922FEFF1AD32E7600B73538 /* Types.m in Sources */,
 				C9929C811AD479710033873B /* OOCPost.m in Sources */,
 				C9929C831AD479710033873B /* OOCUser.m in Sources */,

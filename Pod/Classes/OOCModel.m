@@ -548,13 +548,14 @@ static NSString* lua_delete = nil;
     if (self.id) {
         [self pruneSortedIndices];
     }
-    id ret = [self.ohmoc command:@[@"EVAL", lua_save, @"0", [features messagePack], [properties messagePack], [indices messagePack], [uniques messagePack]]];
-    [self setId:ret];
-    for (NSString* key in binaryProperties) {
-        [self set:key value:[binaryProperties valueForKey:key]];
-    }
-    [self addSortedIndices];
-    [self.ohmoc setCached:self];
+    [self.ohmoc command:@[@"EVAL", lua_save, @"0", [features messagePack], [properties messagePack], [indices messagePack], [uniques messagePack]] binary:FALSE callback:^(id ret){
+        [self setId:ret];
+        for (NSString* key in binaryProperties) {
+            [self set:key value:[binaryProperties valueForKey:key]];
+        }
+        [self addSortedIndices];
+        [self.ohmoc setCached:self];
+    }];
 }
 
 - (NSString*)indexForProperty:(NSString *)propertyName {

@@ -20,7 +20,7 @@
   "public_header_files": "Pod/Classes/**/*.h",
   "dependencies": {
     "objc-rlite": [
-      "~> 0.1.5"
+      "~> 0.1.6"
     ],
     "msgpack": [
       "~> 0.1.3"

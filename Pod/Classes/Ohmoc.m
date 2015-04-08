@@ -138,6 +138,7 @@ static NSMutableDictionary* threadToInstance = nil;
 }
 
 - (id)command:(NSArray*)command binary:(BOOL)binary {
+    multiRepliesCount++;
     id retval = [_rlite command:command binary:binary];
     if ([retval isKindOfClass:[NSException class]]) {
         NSException* exc = retval;
@@ -253,6 +254,40 @@ static NSMutableDictionary* threadToInstance = nil;
 - (void)removeCached:(OOCModel*)model {
     NSString* cacheKey = [@[NSStringFromClass(model.class), model.id] componentsJoinedByString:@":"];
     [cache removeObjectForKey:cacheKey];
+}
+
+- (void)ensureMulti:(BOOL)state {
+    if ((!multiRepliesCallback) == state) {
+        [OOCException raise:@"NoMulti" format:@"Must call multi once before calling exec"];
+    }
+}
+
+- (void)multi {
+    [self ensureMulti:FALSE];
+    // call multi before counting the replies
+    [self command:@[@"MULTI"]];
+
+    multiRepliesCount = 0;
+    multiRepliesCallback = [NSMutableDictionary dictionary];
+}
+
+- (void)exec {
+    [self ensureMulti:TRUE];
+    NSArray* reply = [self command:@[@"EXEC"]];
+    for (NSNumber* pos in multiRepliesCallback) {
+        void(^callback)(id) = [multiRepliesCallback objectForKey:pos];
+        callback([reply objectAtIndex:[pos unsignedIntegerValue]]);
+    }
+    multiRepliesCallback = nil;
+}
+
+- (void)command:(NSArray*)command binary:(BOOL)binary callback:(void(^)(id))callback {
+    if (multiRepliesCallback) {
+        [multiRepliesCallback setObject:callback forKey:[NSNumber numberWithUnsignedInteger:multiRepliesCount]];
+        [self command:command binary:binary];
+    } else {
+        callback([self command:command binary:binary]);
+    }
 }
 
 @end

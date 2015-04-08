@@ -28,7 +28,7 @@
 #define COCOAPODS_POD_AVAILABLE_objc_rlite
 #define COCOAPODS_VERSION_MAJOR_objc_rlite 0
 #define COCOAPODS_VERSION_MINOR_objc_rlite 1
-#define COCOAPODS_VERSION_PATCH_objc_rlite 5
+#define COCOAPODS_VERSION_PATCH_objc_rlite 6
 
 // ohmoc
 #define COCOAPODS_POD_AVAILABLE_ohmoc
