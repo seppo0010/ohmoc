@@ -153,6 +153,7 @@ static NSMutableDictionary* threadToInstance = nil;
 - (id)command:(NSArray*)command {
     return [self command:command binary:FALSE];
 }
+
 - (BOOL)exists:(NSString*)id model:(Class)modelClass {
     return [[self command:@[@"SISMEMBER", [@[NSStringFromClass(modelClass), @"all"] componentsJoinedByString:@":"], id]] boolValue];
 }

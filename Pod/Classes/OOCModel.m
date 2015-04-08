@@ -410,6 +410,10 @@ static NSString* lua_delete = nil;
     return [arr componentsJoinedByString:@":"];
 }
 
++ (NSString*)sortedIndexKeyForPropertyName:(NSString*)propertyName groupByValue:(id)groupByValue {
+    return [self sortedIndexKeyForProperty:[[self spec].properties valueForKey:propertyName] groupByValue:groupByValue];
+}
+
 - (NSDictionary*) updateSortedIndices {
     NSMutableDictionary* indices = [NSMutableDictionary dictionary];
     OOCModelSpec* spec = [[self class] spec];
@@ -628,6 +632,48 @@ static NSString* lua_delete = nil;
 
 + (OOCSet*)all {
     return [[Ohmoc instance] allModels:self];
+}
+
++ (OOCCollection*)collectionWithProperty:(NSString*)property scoreBetween:(double)min and:(double)max range:(NSRange)range reverse:(BOOL)reverse ohmoc:(Ohmoc*)ohmoc {
+    return [OOCList collectionWithBlock:^(void(^block)(NSString*)) {
+        NSString* key = [ohmoc tmpKey];
+        NSString* minStr = min == (double)-INFINITY ? @"-inf" : [NSString stringWithFormat:@"%lf", min];
+        NSString* maxStr = max == (double)INFINITY ? @"+inf" : [NSString stringWithFormat:@"%lf", max];
+        NSArray* _ids = [ohmoc command:@[
+                                         reverse ? @"ZREVRANGEBYSCORE" : @"ZRANGEBYSCORE",
+                                         [self sortedIndexKeyForPropertyName:property groupByValue:nil],
+                                         reverse ? maxStr : minStr,
+                                         reverse ? minStr : maxStr,
+                                         @"LIMIT",
+                                         [NSString stringWithFormat:@"%lu", (long unsigned)range.location],
+                                         [NSString stringWithFormat:@"%lu", (long unsigned)range.length + (long unsigned)range.location - 1]
+                                         ]];
+        if (_ids.count == 0) {
+            block(key);
+            return;
+        }
+        NSMutableArray* command = [NSMutableArray arrayWithCapacity:_ids.count + 2];
+        [command addObjectsFromArray:@[@"RPUSH", key]];
+        [command addObjectsFromArray:_ids];
+        [ohmoc command:command];
+        block(key);
+        [ohmoc command:@[@"DEL", key]];
+    } ohmoc:ohmoc modelClass:self];
+}
+
++ (OOCCollection*)collectionWithProperty:(NSString*)property scoreBetween:(double)min and:(double)max range:(NSRange)range reverse:(BOOL)reverse {
+    return [self collectionWithProperty:property scoreBetween:min and:max range:range reverse:reverse ohmoc:[Ohmoc instance]];
+}
+
++ (OOCCollection*)collectionWithProperty:(NSString*)property scoreBetween:(double)min and:(double)max range:(NSRange)range {
+    return [self collectionWithProperty:property scoreBetween:min and:max range:range reverse:FALSE];
+}
+
++ (OOCCollection*)collectionWithProperty:(NSString*)property scoreBetween:(double)min and:(double)max {
+    NSRange range;
+    range.location = 0;
+    range.length = UINT_MAX;
+    return [self collectionWithProperty:property scoreBetween:min and:max range:range];
 }
 
 @end

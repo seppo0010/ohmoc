@@ -57,6 +57,50 @@ describe(@"zset", ^{
         score = [[Ohmoc instance] command:@[@"ZSCORE", @"OOCPost2:sorted:order:status:draft", @"1"]];
         XCTAssertEqualObjects(score, @"123.45");
     });
+
+    it(@"can fetch a collection with a range", ^{
+        [OOCPost2 create:@{@"status": @"draft", @"order": @100}];
+        OOCPost2* p2 = [OOCPost2 create:@{@"status": @"draft", @"order": @20.4}];
+        OOCPost2* p3 = [OOCPost2 create:@{@"status": @"published", @"order": @14.3}];
+
+        NSArray* res  = [[OOCPost2 collectionWithProperty:@"order" scoreBetween:-INFINITY and:30] arrayValue];
+        XCTAssertEqual(res.count, 2);
+        XCTAssertEqual([res objectAtIndex:0], p3);
+        XCTAssertEqual([res objectAtIndex:1], p2);
+    });
+
+    it(@"can fetch a reversed collection with a range", ^{
+        [OOCPost2 create:@{@"status": @"draft", @"order": @100}];
+        OOCPost2* p2 = [OOCPost2 create:@{@"status": @"draft", @"order": @20.4}];
+        OOCPost2* p3 = [OOCPost2 create:@{@"status": @"published", @"order": @14.3}];
+
+        NSRange range;
+        range.location = 0;
+        range.length = 10;
+        NSArray* res  = [[OOCPost2 collectionWithProperty:@"order" scoreBetween:-INFINITY and:30 range:range reverse:TRUE] arrayValue];
+        XCTAssertEqual(res.count, 2);
+        XCTAssertEqual([res objectAtIndex:1], p3);
+        XCTAssertEqual([res objectAtIndex:0], p2);
+    });
+
+    it(@"can fetch a collection using a minimum", ^{
+        [OOCPost2 create:@{@"status": @"draft", @"order": @100}];
+        OOCPost2* p2 = [OOCPost2 create:@{@"status": @"draft", @"order": @20.4}];
+        [OOCPost2 create:@{@"status": @"published", @"order": @14.3}];
+
+        NSArray* res  = [[OOCPost2 collectionWithProperty:@"order" scoreBetween:20 and:30] arrayValue];
+        XCTAssertEqual(res.count, 1);
+        XCTAssertEqual([res objectAtIndex:0], p2);
+    });
+
+    it(@"can fetch an empty collection", ^{
+        [OOCPost2 create:@{@"status": @"draft", @"order": @100}];
+        [OOCPost2 create:@{@"status": @"draft", @"order": @20.4}];
+        [OOCPost2 create:@{@"status": @"published", @"order": @14.3}];
+
+        NSArray* res  = [[OOCPost2 collectionWithProperty:@"order" scoreBetween:10000 and:INFINITY] arrayValue];
+        XCTAssertEqual(res.count, 0);
+    });
 });
 
 SpecEnd
