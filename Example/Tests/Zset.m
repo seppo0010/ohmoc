@@ -101,6 +101,9 @@ describe(@"zset", ^{
         NSArray* res  = [[OOCPost2 collectionWithProperty:@"order" scoreBetween:10000 and:INFINITY] arrayValue];
         XCTAssertEqual(res.count, 0);
     });
+    it(@"throws an exception when the index does not exist", ^{
+        XCTAssertThrowsSpecific([OOCUser collectionWithProperty:@"fname" scoreBetween:-INFINITY and:INFINITY], OOCIndexNotFoundException);
+    });
 });
 
 SpecEnd

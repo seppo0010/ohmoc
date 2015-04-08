@@ -635,6 +635,9 @@ static NSString* lua_delete = nil;
 }
 
 + (OOCCollection*)collectionWithProperty:(NSString*)property scoreBetween:(double)min and:(double)max range:(NSRange)range reverse:(BOOL)reverse ohmoc:(Ohmoc*)ohmoc {
+    if (![[[self spec].properties valueForKey:property] hasSortedIndex]) {
+        [OOCIndexNotFoundException raise:@"SortedIndexMissing" format:@"Trying to query for property %@ on class %@ but no index was found", property, NSStringFromClass(self)];
+    }
     return [OOCList collectionWithBlock:^(void(^block)(NSString*)) {
         NSString* key = [ohmoc tmpKey];
         NSString* minStr = min == (double)-INFINITY ? @"-inf" : [NSString stringWithFormat:@"%lf", min];
