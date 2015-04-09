@@ -43,28 +43,32 @@ describe(@"batch", ^{
         XCTAssertEqualObjects(posts, expected);
         XCTAssertEqual(post, [posts objectAtIndex:0]);
     });
-    it(@"can update multiple objects", ^{
+    it(@"cannot edit object being created", ^{
         Ohmoc* ohmoc = [Ohmoc instance];
         @autoreleasepool {
             [ohmoc multi];
-            OOCPerson* p1 = [OOCPerson create];
-            OOCPerson* p2 = [OOCPerson create];
-            OOCPerson* p3 = [OOCPerson create];
-            [ohmoc exec];
-
-            [ohmoc multi];
-            p1.name = @"Person 1";
-            [p1 save];
-            p2.name = @"Person 2";
-            [p2 save];
-            p3.name = @"Person 3";
-            [p3 save];
+            OOCUser* user = [OOCUser create];
+            user.fname = (id)@"charlie";
+            XCTAssertThrowsSpecific([user save], OOCMissingIDException);
             [ohmoc exec];
         }
-        XCTAssertFalse([OOCPerson isCached:@"1"]);
-        NSArray* names = [[[[OOCPerson all] arrayValue] valueForKey:@"name"] sortedArrayUsingSelector:@selector(compare:)];
-        NSArray* expected = @[@"Person 1", @"Person 2", @"Person 3"];
-        XCTAssertEqualObjects(names, expected);
+        XCTAssertEqual([[OOCUser all] size], 1);
+    });
+    it(@"can edit object multiple times not being created", ^{
+        Ohmoc* ohmoc = [Ohmoc instance];
+        @autoreleasepool {
+            OOCUser* user = [OOCUser create];
+            [ohmoc multi];
+            user.fname = (id)@"charlie";
+            [user save];
+            user.lname = (id)@"brown";
+            [user save];
+            [ohmoc exec];
+        }
+        XCTAssertEqual([[OOCUser all] size], 1);
+        OOCUser* user = [[OOCUser all] first];
+        XCTAssertEqualObjects(user.fname, @"charlie");
+        XCTAssertEqualObjects(user.lname, @"brown");
     });
 });
 

@@ -42,6 +42,7 @@
 @class OOCSet;
 @interface OOCModel : OOCObject {
     NSString<OOCUnique>* _id;
+    BOOL saving;
 }
 
 @property (readonly) NSString<OOCUnique>* id;

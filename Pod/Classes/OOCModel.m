@@ -474,6 +474,9 @@ static NSString* lua_delete = nil;
 }
 
 - (void) save {
+    if (saving && !self.id) {
+        [OOCMissingIDException raise:@"MissingID" format:@"MissingID %@. If you are in a multi/exec block, you can only call save once per new object", self];
+    }
     NSDictionary* features;
     NSString* name = NSStringFromClass([self class]);
     if (self.id) {
@@ -548,7 +551,9 @@ static NSString* lua_delete = nil;
     if (self.id) {
         [self pruneSortedIndices];
     }
+    saving = TRUE;
     [self.ohmoc command:@[@"EVAL", lua_save, @"0", [features messagePack], [properties messagePack], [indices messagePack], [uniques messagePack]] binary:FALSE callback:^(id ret){
+        saving = FALSE;
         [self setId:ret];
         for (NSString* key in binaryProperties) {
             [self set:key value:[binaryProperties valueForKey:key]];
